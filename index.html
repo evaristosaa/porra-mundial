@@ -332,29 +332,59 @@ let state = {
 };
 
 // ============================================================
-// PERSISTENCIA (servidor compartido)
+// PERSISTENCIA (JSONBin.io + fallback servidor local)
 // ============================================================
+const JSONBIN_KEY = '$2a$10$SX/Tga6OZNj39lOOCx8Wt.Z67olnfg5wpbqXSg6lP16mHWe5G0p0m';
+const JSONBIN_BIN = '6a2a8819da38895dfeac7329';
+const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`;
+
 function cargarState() {
-  fetch('/api/state')
-    .then(r => r.json())
-    .then(data => {
-      if (data && data.version) {
-        if (data.participantes && data.participantes.length > 0) state.participantes = data.participantes;
-        if (data.apuestas)    state.apuestas = data.apuestas;
-        if (data.porras && data.porras.length > 0) state.porras = data.porras;
-        if (data.pagos)       state.pagos = data.pagos;
-        if (typeof data.boteAcumulado === 'number') state.boteAcumulado = data.boteAcumulado;
-      }
-      renderAll();
-    })
-    .catch(() => {
-      // sin servidor → usar lo que hay en state (defaults)
-      renderAll();
-    });
+  // Intentar JSONBin primero (funciona desde cualquier navegador)
+  fetch(JSONBIN_URL + '/latest', {
+    headers: { 'X-Master-Key': JSONBIN_KEY }
+  })
+  .then(r => r.json())
+  .then(resp => {
+    const data = resp.record;
+    if (data && data.version) {
+      if (data.participantes && data.participantes.length > 0) state.participantes = data.participantes;
+      if (data.apuestas)    state.apuestas = data.apuestas;
+      if (data.porras && data.porras.length > 0) state.porras = data.porras;
+      if (data.pagos)       state.pagos = data.pagos;
+      if (typeof data.boteAcumulado === 'number') state.boteAcumulado = data.boteAcumulado;
+    }
+    renderAll();
+  })
+  .catch(() => {
+    // Fallback: servidor local
+    fetch('/api/state')
+      .then(r => r.json())
+      .then(data => {
+        if (data && data.version) {
+          if (data.participantes && data.participantes.length > 0) state.participantes = data.participantes;
+          if (data.apuestas)    state.apuestas = data.apuestas;
+          if (data.porras && data.porras.length > 0) state.porras = data.porras;
+          if (data.pagos)       state.pagos = data.pagos;
+          if (typeof data.boteAcumulado === 'number') state.boteAcumulado = data.boteAcumulado;
+        }
+        renderAll();
+      })
+      .catch(() => renderAll());
+  });
 }
 
 function guardarState() {
   const data = { version: 1, ...state };
+  // Guardar en JSONBin
+  fetch(JSONBIN_URL, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Master-Key': JSONBIN_KEY
+    },
+    body: JSON.stringify(data)
+  }).catch(() => {});
+  // Fallback: servidor local
   fetch('/api/state', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
