@@ -6,998 +6,700 @@
 <title>⚽ Porra Mundial 2026 — Habitat Qualis</title>
 <style>
   :root {
-    --verde: #1a7f3c;
-    --rojo: #c0392b;
-    --amarillo: #f1c40f;
-    --azul: #2980b9;
-    --oscuro: #1a1a2e;
-    --gris: #2c2c54;
-    --claro: #f5f5f5;
+    --verde: #1a7f3c; --rojo: #c0392b; --amarillo: #f1c40f;
+    --azul: #2980b9; --oscuro: #1a1a2e; --gris: #2c2c54;
     --blanco: #ffffff;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', sans-serif;
-    background: var(--oscuro);
-    color: var(--blanco);
-    min-height: 100vh;
-  }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--oscuro); color: var(--blanco); min-height: 100vh; }
 
-  /* HEADER */
   .hero {
     background: linear-gradient(135deg, #1a7f3c 0%, #0d4f25 50%, #c0392b 100%);
-    padding: 30px 20px 20px;
-    text-align: center;
-    border-bottom: 4px solid var(--amarillo);
-    position: relative;
-    overflow: hidden;
+    padding: 28px 20px 18px; text-align: center;
+    border-bottom: 4px solid var(--amarillo); position: relative; overflow: hidden;
   }
-  .hero::before {
-    content: '⚽🏆⚽🏆⚽🏆⚽🏆⚽🏆⚽';
-    position: absolute; top: 5px; left: 0; right: 0;
-    font-size: 12px; opacity: 0.3; letter-spacing: 8px;
-  }
-  .hero h1 {
-    font-size: 2rem; font-weight: 900; text-transform: uppercase;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-    letter-spacing: 2px;
-  }
+  .hero::before { content: '⚽🏆⚽🏆⚽🏆⚽🏆⚽🏆⚽'; position: absolute; top: 5px; left: 0; right: 0; font-size: 11px; opacity: 0.25; letter-spacing: 8px; }
+  .hero h1 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 8px rgba(0,0,0,.5); letter-spacing: 2px; }
   .hero h1 span { color: var(--amarillo); }
-  .hero p { margin-top: 6px; font-size: 0.95rem; opacity: 0.85; }
+  .hero p { margin-top: 5px; font-size: 0.9rem; opacity: 0.85; }
 
-  /* NAV TABS */
-  .tabs {
-    display: flex; overflow-x: auto;
-    background: var(--gris);
-    border-bottom: 2px solid var(--amarillo);
-  }
-  .tab-btn {
-    flex: 1; min-width: 90px; padding: 12px 8px;
-    background: none; border: none; color: #aaa;
-    font-size: 0.82rem; font-weight: 600; cursor: pointer;
-    text-transform: uppercase; letter-spacing: 0.5px;
-    transition: all 0.2s; white-space: nowrap;
-  }
-  .tab-btn.active { color: var(--amarillo); border-bottom: 3px solid var(--amarillo); background: rgba(241,196,15,0.08); }
-  .tab-btn:hover { color: var(--blanco); }
+  .tabs { display: flex; overflow-x: auto; background: var(--gris); border-bottom: 2px solid var(--amarillo); }
+  .tab-btn { flex: 1; min-width: 80px; padding: 11px 6px; background: none; border: none; color: #aaa; font-size: 0.78rem; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: all .2s; white-space: nowrap; }
+  .tab-btn.active { color: var(--amarillo); border-bottom: 3px solid var(--amarillo); background: rgba(241,196,15,.08); }
 
-  /* PANELS */
-  .panel { display: none; padding: 20px; max-width: 900px; margin: 0 auto; }
+  .panel { display: none; padding: 16px; max-width: 900px; margin: 0 auto; }
   .panel.active { display: block; }
 
-  /* CARDS */
-  .card {
-    background: var(--gris); border-radius: 12px;
-    padding: 16px; margin-bottom: 16px;
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .card h3 { font-size: 1rem; margin-bottom: 10px; color: var(--amarillo); }
+  .card { background: var(--gris); border-radius: 12px; padding: 14px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,.08); }
+  .card h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--amarillo); }
 
   /* BOTE */
-  .bote-banner {
-    background: linear-gradient(135deg, #f1c40f, #e67e22);
-    border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(241,196,15,0.3);
-  }
-  .bote-banner .bote-label { font-size: 0.85rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; }
-  .bote-banner .bote-cantidad { font-size: 3rem; font-weight: 900; color: #1a1a2e; line-height: 1; }
-  .bote-banner .bote-sub { font-size: 0.8rem; color: #333; margin-top: 4px; }
+  .bote-banner { background: linear-gradient(135deg, #f1c40f, #e67e22); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(241,196,15,.3); }
+  .bote-label { font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; }
+  .bote-cantidad { font-size: 3rem; font-weight: 900; color: #1a1a2e; line-height: 1; }
+  .bote-sub { font-size: 0.78rem; color: #444; margin-top: 4px; }
 
-  /* ESTADO JORNADAS */
-  .jornada-card {
-    background: var(--gris); border-radius: 12px; padding: 16px; margin-bottom: 12px;
-    border-left: 4px solid var(--amarillo);
-  }
-  .jornada-card.ganada { border-left-color: var(--verde); }
-  .jornada-card.acumulada { border-left-color: var(--rojo); }
-  .jornada-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .jornada-title { font-weight: 700; font-size: 1rem; }
-  .badge {
-    padding: 3px 10px; border-radius: 20px; font-size: 0.72rem;
-    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .badge-pendiente { background: rgba(241,196,15,0.2); color: var(--amarillo); }
-  .badge-ganada { background: rgba(26,127,60,0.3); color: #4caf50; }
-  .badge-acumulada { background: rgba(192,57,43,0.3); color: #e74c3c; }
-  .badge-abierta { background: rgba(41,128,185,0.3); color: #5dade2; }
+  /* PORRAS */
+  .porra-card { background: var(--gris); border-radius: 12px; padding: 14px; margin-bottom: 10px; border-left: 4px solid var(--amarillo); }
+  .porra-card.activa { border-left-color: #2ecc71; }
+  .porra-card.ganada { border-left-color: #f1c40f; }
+  .porra-card.acumulada { border-left-color: #e74c3c; }
+  .porra-card.pendiente { border-left-color: #555; opacity: .6; }
 
-  /* PARTIDOS */
-  .partido {
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(0,0,0,0.2); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;
-  }
-  .partido-equipos { font-weight: 600; font-size: 0.9rem; }
+  .badge { padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+  .badge-activa { background: rgba(46,204,113,.2); color: #2ecc71; }
+  .badge-ganada { background: rgba(241,196,15,.2); color: #f1c40f; }
+  .badge-acumulada { background: rgba(231,76,60,.2); color: #e74c3c; }
+  .badge-pendiente { background: rgba(255,255,255,.08); color: #888; }
+
+  /* PARTIDO */
+  .partido-row { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,.2); border-radius: 8px; padding: 10px 12px; margin-top: 8px; }
+  .partido-equipos { font-weight: 700; font-size: 0.92rem; }
   .partido-fecha { font-size: 0.72rem; color: #888; margin-top: 2px; }
-  .resultado-real {
-    background: var(--verde); color: white;
-    padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.9rem;
-    min-width: 50px; text-align: center;
-  }
-  .resultado-pendiente {
-    background: rgba(255,255,255,0.1); color: #888;
-    padding: 4px 10px; border-radius: 6px; font-size: 0.85rem;
-    min-width: 50px; text-align: center;
-  }
+  .resultado-badge { background: var(--verde); color: white; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; }
+  .resultado-pendiente { background: rgba(255,255,255,.08); color: #666; padding: 4px 10px; border-radius: 6px; font-size: 0.82rem; }
 
   /* RANKING */
-  .ranking-item {
-    display: flex; align-items: center; gap: 12px;
-    background: rgba(0,0,0,0.2); border-radius: 10px;
-    padding: 12px; margin-bottom: 8px;
-    transition: background 0.2s;
-  }
-  .ranking-item:hover { background: rgba(255,255,255,0.05); }
-  .ranking-pos {
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 0.9rem; flex-shrink: 0;
-  }
+  .ranking-item { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,.2); border-radius: 10px; padding: 11px 14px; margin-bottom: 7px; }
+  .rank-pos { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem; flex-shrink: 0; }
   .pos-1 { background: var(--amarillo); color: #333; }
   .pos-2 { background: #bdc3c7; color: #333; }
   .pos-3 { background: #cd7f32; color: white; }
-  .pos-n { background: rgba(255,255,255,0.1); color: #aaa; }
-  .ranking-nombre { flex: 1; font-weight: 600; }
-  .ranking-puntos { font-size: 1.1rem; font-weight: 700; color: var(--amarillo); }
-  .ranking-pendiente { font-size: 0.72rem; color: #888; margin-top: 2px; }
-
-  /* QUIÉN FALTA */
-  .faltan-banner {
-    background: rgba(192,57,43,0.2); border: 1px solid rgba(192,57,43,0.4);
-    border-radius: 10px; padding: 14px; margin-bottom: 16px;
-  }
-  .faltan-banner h4 { color: #e74c3c; margin-bottom: 8px; font-size: 0.9rem; }
-  .faltan-list { display: flex; flex-wrap: wrap; gap: 8px; }
-  .faltan-chip {
-    background: rgba(192,57,43,0.3); border-radius: 20px;
-    padding: 4px 12px; font-size: 0.8rem; color: #e74c3c;
-  }
-  .listos-banner {
-    background: rgba(26,127,60,0.2); border: 1px solid rgba(26,127,60,0.4);
-    border-radius: 10px; padding: 14px; margin-bottom: 16px;
-  }
-  .listos-banner h4 { color: #4caf50; margin-bottom: 8px; font-size: 0.9rem; }
-  .listos-list { display: flex; flex-wrap: wrap; gap: 8px; }
-  .listos-chip {
-    background: rgba(26,127,60,0.3); border-radius: 20px;
-    padding: 4px 12px; font-size: 0.8rem; color: #4caf50;
-  }
+  .pos-n { background: rgba(255,255,255,.1); color: #aaa; }
+  .rank-nombre { flex: 1; font-weight: 600; font-size: 0.92rem; }
+  .rank-euros { font-size: 1.1rem; font-weight: 800; color: var(--amarillo); }
+  .rank-aciertos { font-size: 0.7rem; color: #888; margin-top: 1px; }
 
   /* APUESTAS TABLE */
-  .apuestas-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-  .apuestas-table th {
-    background: rgba(241,196,15,0.15); color: var(--amarillo);
-    padding: 8px; text-align: center; font-size: 0.75rem;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .apuestas-table td { padding: 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .apuestas-table tr:last-child td { border-bottom: none; }
-  .apuesta-ok { color: #4caf50; font-weight: 700; }
-  .apuesta-fail { color: #e74c3c; }
-  .apuesta-pending { color: #888; }
-  .nombre-col { text-align: left !important; font-weight: 600; }
+  .ap-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .ap-table th { background: rgba(241,196,15,.12); color: var(--amarillo); padding: 7px 5px; text-align: center; font-size: 0.72rem; text-transform: uppercase; }
+  .ap-table td { padding: 7px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .ap-table tr:last-child td { border-bottom: none; }
+  .ap-ok { color: #2ecc71; font-weight: 700; }
+  .ap-fail { color: #e74c3c; }
+  .ap-pend { color: #666; }
+  .td-nombre { text-align: left !important; font-weight: 600; padding-left: 8px !important; }
 
-  /* ADMIN */
-  .admin-section { margin-bottom: 24px; }
-  .admin-section h3 { color: var(--amarillo); margin-bottom: 12px; font-size: 0.95rem; border-bottom: 1px solid rgba(241,196,15,0.3); padding-bottom: 6px; }
-  .form-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 10px; }
-  .form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 120px; }
-  .form-group label { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
-  .form-group input, .form-group select {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    color: white; padding: 8px 10px; border-radius: 8px; font-size: 0.9rem;
-  }
+  /* FORMS */
+  .form-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 8px; }
+  .form-group { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 110px; }
+  .form-group label { font-size: 0.72rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-group input, .form-group select { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: white; padding: 8px 10px; border-radius: 8px; font-size: 0.88rem; }
   .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--amarillo); }
-  .btn {
-    padding: 9px 18px; border: none; border-radius: 8px; cursor: pointer;
-    font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;
-    transition: all 0.2s;
-  }
+  .btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.5px; transition: all .2s; }
   .btn-primary { background: var(--amarillo); color: #333; }
-  .btn-primary:hover { background: #e6b800; transform: translateY(-1px); }
+  .btn-primary:hover { background: #e6b800; }
   .btn-danger { background: var(--rojo); color: white; }
   .btn-success { background: var(--verde); color: white; }
-  .btn-sm { padding: 5px 12px; font-size: 0.75rem; }
-
-  /* RESULTADO INPUT */
-  .resultado-input {
-    display: flex; align-items: center; gap: 6px;
-  }
-  .resultado-input input {
-    width: 40px; text-align: center;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
-    color: white; padding: 6px; border-radius: 6px; font-size: 0.9rem; font-weight: 700;
-  }
-  .resultado-input span { color: #888; font-weight: 700; }
-
-  /* TOAST */
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    background: var(--verde); color: white; padding: 12px 24px;
-    border-radius: 30px; font-weight: 600; font-size: 0.9rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 9999;
-    opacity: 0; transition: opacity 0.3s;
-    pointer-events: none;
-  }
-  .toast.show { opacity: 1; }
+  .btn-sm { padding: 5px 10px; font-size: 0.72rem; }
+  .btn-ghost { background: rgba(255,255,255,.08); color: #ccc; }
 
   /* MODAL */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7); z-index: 1000;
-    align-items: center; justify-content: center; padding: 20px;
-  }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--gris); border-radius: 16px; padding: 24px;
-    width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
-    border: 1px solid rgba(241,196,15,0.3);
-  }
-  .modal h3 { color: var(--amarillo); margin-bottom: 16px; font-size: 1.1rem; }
-  .modal-close {
-    float: right; background: none; border: none; color: #888;
-    font-size: 1.4rem; cursor: pointer; line-height: 1;
-  }
-  .modal-close:hover { color: white; }
+  .modal { background: var(--gris); border-radius: 16px; padding: 22px; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(241,196,15,.3); }
+  .modal h3 { color: var(--amarillo); margin-bottom: 14px; font-size: 1rem; }
+  .modal-close { float: right; background: none; border: none; color: #888; font-size: 1.4rem; cursor: pointer; line-height: 1; }
 
-  /* APUESTA FORM */
-  .apuesta-partido { margin-bottom: 14px; }
-  .apuesta-partido label { font-size: 0.85rem; color: #ccc; margin-bottom: 6px; display: block; }
-  .apuesta-partido .equipos { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+  .res-input { display: flex; align-items: center; gap: 6px; }
+  .res-input input { width: 46px; text-align: center; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: white; padding: 7px; border-radius: 6px; font-size: 1.1rem; font-weight: 700; }
 
-  /* RESPONSIVE */
-  @media (max-width: 500px) {
-    .hero h1 { font-size: 1.4rem; }
-    .bote-cantidad { font-size: 2.4rem !important; }
-    .apuestas-table { font-size: 0.75rem; }
-    .apuestas-table th, .apuestas-table td { padding: 5px 4px; }
-  }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--verde); color: white; padding: 11px 22px; border-radius: 30px; font-weight: 600; font-size: 0.88rem; box-shadow: 0 4px 20px rgba(0,0,0,.4); z-index: 9999; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
 
-  /* EMOJI BIG */
-  .emoji-big { font-size: 2rem; }
-  .section-empty { text-align: center; padding: 40px; color: #888; }
-  .section-empty .emoji-big { margin-bottom: 10px; }
-  .divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 16px 0; }
-  .text-muted { color: #888; font-size: 0.8rem; }
+  .chip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip { padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; }
+  .chip-red { background: rgba(231,76,60,.2); color: #e74c3c; }
+  .chip-green { background: rgba(46,204,113,.2); color: #2ecc71; }
+  .chip-blue { background: rgba(41,128,185,.2); color: #5dade2; }
+
+  .divider { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: 12px 0; }
+  .text-muted { color: #666; font-size: 0.8rem; }
+  .empty-state { text-align: center; padding: 36px; color: #666; }
   .flex-between { display: flex; justify-content: space-between; align-items: center; }
-  .mt-8 { margin-top: 8px; }
+
+  /* CALENDARIO */
+  .cal-gbtn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 700; background: rgba(255,255,255,.08); color: #aaa; transition: all .15s; }
+  .cal-gbtn.active-g { background: var(--amarillo); color: #333; }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 1.35rem; }
+    .bote-cantidad { font-size: 2.4rem !important; }
+    .ap-table { font-size: 0.72rem; }
+  }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="hero">
   <h1>⚽ Porra <span>Mundial 2026</span></h1>
-  <p>🏘️ Urbanización Habitat Qualis · ¡Que empiece el espectáculo!</p>
+  <p>🏘️ Urbanización Habitat Qualis · ¡A por el bote!</p>
 </div>
 
-<!-- TABS -->
 <div class="tabs">
-  <button class="tab-btn active" onclick="showTab('inicio')">🏠 Inicio</button>
-  <button class="tab-btn" onclick="showTab('apuestas')">🎯 Mis Apuestas</button>
-  <button class="tab-btn" onclick="showTab('ranking')">🏆 Ranking</button>
-  <button class="tab-btn" onclick="showTab('estado')">📊 Estado</button>
-  <button class="tab-btn" onclick="showTab('calendario')">📅 Calendario</button>
-  <button class="tab-btn" onclick="checkAdmin()">⚙️ Admin</button>
+  <button class="tab-btn active" onclick="showTab('inicio',this)">🏠 Inicio</button>
+  <button class="tab-btn" onclick="showTab('apuestas',this)">🎯 Mis Apuestas</button>
+  <button class="tab-btn" onclick="showTab('ranking',this)">🏆 Ranking</button>
+  <button class="tab-btn" onclick="showTab('estado',this)">📊 Estado</button>
+  <button class="tab-btn" onclick="showTab('calendario',this)">📅 Calendario</button>
+  <button class="tab-btn" onclick="checkAdmin(this)">⚙️ Admin</button>
 </div>
 
-<!-- ======= INICIO ======= -->
+<!-- INICIO -->
 <div id="tab-inicio" class="panel active">
-
-  <div class="bote-banner" id="bote-banner">
+  <div class="bote-banner">
     <div class="bote-label">💰 Bote acumulado</div>
     <div class="bote-cantidad" id="bote-total">0 €</div>
-    <div class="bote-sub" id="bote-sub">Jornada 1 · 0/0 participantes han pagado</div>
+    <div class="bote-sub" id="bote-sub">Cargando...</div>
   </div>
-
-  <div id="faltan-container"></div>
-  <div id="listos-container"></div>
-
+  <div id="inicio-avisos"></div>
   <div class="card">
-    <h3>🗓️ Próxima Jornada</h3>
-    <div id="proxima-jornada-content"></div>
+    <h3>🎯 Porra activa</h3>
+    <div id="inicio-porra-activa"></div>
   </div>
-
   <div class="card">
-    <h3>🔥 Últimos resultados</h3>
-    <div id="ultimos-resultados-content"></div>
+    <h3>📋 Últimas porras</h3>
+    <div id="inicio-ultimas"></div>
   </div>
-
+  <div class="card" style="border-left:3px solid #5dade2">
+    <h3 style="color:#5dade2">📜 Reglas</h3>
+    <div style="font-size:0.82rem;line-height:1.7;color:#ccc">
+      <p>💸 <b>40€ por persona</b> comprometidos antes del primer partido</p>
+      <p>⚽ <b>8 porras</b>: 3 de liguilla + 16avos + 8avos + cuartos + semis + final</p>
+      <p>🎯 Cada porra: <b>2 partidos</b> (uno libre + 🇪🇸 España) → hay que acertar los <b>dos resultados exactos</b> para llevarse el bote</p>
+      <p>🔁 Si nadie acierta los dos → el bote <b>se acumula</b> a la siguiente porra</p>
+      <p>✅ Resultados repetidos <b>permitidos</b></p>
+      <p>🙅 La apuesta se hace <b>una sola vez</b> — una vez enviada, solo el admin puede modificarla</p>
+      <p>🎉 Lo que sobre tras la final → decidís entre todos (barbacoa, karting...)</p>
+    </div>
+  </div>
 </div>
 
-<!-- ======= MIS APUESTAS ======= -->
+<!-- MIS APUESTAS -->
 <div id="tab-apuestas" class="panel">
   <div class="card">
     <h3>👤 Selecciona tu nombre</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Participante</label>
-        <select id="select-participante" onchange="cargarApuestasParticipante()">
-          <option value="">-- Elige tu nombre --</option>
-        </select>
-      </div>
-    </div>
+    <div id="nombre-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px;margin-top:8px"></div>
   </div>
-  <div id="apuestas-jornadas-container"></div>
+  <div id="apuestas-container"></div>
 </div>
 
-<!-- ======= RANKING ======= -->
+<!-- RANKING -->
 <div id="tab-ranking" class="panel">
-  <div class="card" style="padding:12px 0">
+  <div class="card" style="padding:10px 0">
     <div id="ranking-list"></div>
   </div>
   <div class="card">
-    <h3>📋 Detalle de apuestas</h3>
-    <div style="overflow-x:auto">
-      <table class="apuestas-table" id="detalle-table">
-        <thead><tr id="detalle-header"></tr></thead>
-        <tbody id="detalle-body"></tbody>
-      </table>
-    </div>
+    <h3>📋 Detalle por porra</h3>
+    <div style="overflow-x:auto"><table class="ap-table" id="detalle-table"><thead><tr id="detalle-header"></tr></thead><tbody id="detalle-body"></tbody></table></div>
   </div>
 </div>
 
-<!-- ======= ESTADO ======= -->
+<!-- ESTADO -->
 <div id="tab-estado" class="panel">
   <div class="card">
-    <h3>📋 Apuestas por jornada</h3>
-    <div id="estado-apuestas-detalle"></div>
+    <h3>📋 Apuestas por porra</h3>
+    <div id="estado-detalle"></div>
   </div>
 </div>
 
-<!-- ======= CALENDARIO ======= -->
+<!-- CALENDARIO -->
 <div id="tab-calendario" class="panel">
-
-  <div class="card" style="padding:10px 14px;margin-bottom:12px">
-    <div style="font-size:0.72rem;color:#aaa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Filtrar por grupo</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap" id="cal-filter-btns">
-      <button class="btn btn-sm cal-gbtn active-g" data-g="all" onclick="filtrarGrupo('all',this)">Todos</button>
-      <button class="btn btn-sm cal-gbtn" data-g="A" onclick="filtrarGrupo('A',this)">Grupo A</button>
-      <button class="btn btn-sm cal-gbtn" data-g="B" onclick="filtrarGrupo('B',this)">Grupo B</button>
-      <button class="btn btn-sm cal-gbtn" data-g="C" onclick="filtrarGrupo('C',this)">Grupo C</button>
-      <button class="btn btn-sm cal-gbtn" data-g="D" onclick="filtrarGrupo('D',this)">Grupo D</button>
-      <button class="btn btn-sm cal-gbtn" data-g="E" onclick="filtrarGrupo('E',this)">Grupo E</button>
-      <button class="btn btn-sm cal-gbtn" data-g="F" onclick="filtrarGrupo('F',this)">Grupo F</button>
-      <button class="btn btn-sm cal-gbtn" data-g="G" onclick="filtrarGrupo('G',this)">Grupo G</button>
-      <button class="btn btn-sm cal-gbtn" data-g="H" onclick="filtrarGrupo('H',this)">Grupo H 🇪🇸</button>
-      <button class="btn btn-sm cal-gbtn" data-g="I" onclick="filtrarGrupo('I',this)">Grupo I</button>
-      <button class="btn btn-sm cal-gbtn" data-g="J" onclick="filtrarGrupo('J',this)">Grupo J</button>
-      <button class="btn btn-sm cal-gbtn" data-g="K" onclick="filtrarGrupo('K',this)">Grupo K</button>
-      <button class="btn btn-sm cal-gbtn" data-g="L" onclick="filtrarGrupo('L',this)">Grupo L</button>
+  <div class="card" style="padding:10px 12px;margin-bottom:12px">
+    <div style="font-size:0.7rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Filtrar por grupo</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="cal-gbtn active-g" onclick="filtrarGrupo('all',this)">Todos</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('A',this)">Grupo A</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('B',this)">Grupo B</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('C',this)">Grupo C</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('D',this)">Grupo D</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('E',this)">Grupo E</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('F',this)">Grupo F</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('G',this)">Grupo G</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('H',this)">Grupo H 🇪🇸</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('I',this)">Grupo I</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('J',this)">Grupo J</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('K',this)">Grupo K</button>
+      <button class="cal-gbtn" onclick="filtrarGrupo('L',this)">Grupo L</button>
     </div>
   </div>
-
-  <div id="cal-grupos-container"></div>
-  <div style="text-align:center;color:#555;font-size:0.72rem;padding:12px 0">⏰ Horario peninsular español (CEST) · 🌙 = madrugada</div>
-
+  <div id="cal-container"></div>
+  <div style="text-align:center;color:#555;font-size:0.7rem;padding:10px 0">⏰ Horario peninsular español (CEST) · 🌙 = madrugada</div>
 </div>
 
-<!-- ======= ADMIN ======= -->
+<!-- ADMIN -->
 <div id="tab-admin" class="panel">
-  <div class="card" style="background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.3)">
-    <p style="font-size:0.82rem;color:#e74c3c">⚠️ Zona de administrador. Solo para Juanma — Presidente Vitalicio 👑</p>
+  <div class="card" style="background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.3);margin-bottom:14px">
+    <p style="font-size:0.8rem;color:#e74c3c">⚠️ Solo para Juanma — Presidente Vitalicio 👑</p>
   </div>
-
-  <!-- Participantes -->
-  <div class="card admin-section">
-    <h3>👥 Gestionar participantes</h3>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Nombre participante</label>
-        <input type="text" id="nuevo-participante" placeholder="Ej: Evaristo">
-      </div>
-      <button class="btn btn-primary" onclick="agregarParticipante()">+ Añadir</button>
-    </div>
-    <div id="lista-participantes"></div>
+  <div class="card">
+    <h3>💸 Registrar pagos (40€/persona)</h3>
+    <div id="admin-pagos"></div>
   </div>
-
-  <!-- Resultados reales -->
-  <div class="card admin-section">
-    <h3>⚽ Introducir resultados reales</h3>
-    <div id="admin-resultados"></div>
+  <div class="card">
+    <h3>⚽ Configurar porra activa</h3>
+    <div id="admin-porra"></div>
   </div>
-
-  <!-- Jornada ganada / acumulada -->
-  <div class="card admin-section">
-    <h3>💰 Resolver jornadas</h3>
-    <div id="admin-jornadas-resolver"></div>
+  <div class="card">
+    <h3>✅ Introducir resultado real</h3>
+    <div id="admin-resultado"></div>
   </div>
-
-  <!-- Reset -->
-  <div class="card admin-section">
+  <div class="card">
+    <h3>🏆 Resolver porra</h3>
+    <div id="admin-resolver"></div>
+  </div>
+  <div class="card">
     <h3>🗑️ Danger Zone</h3>
     <button class="btn btn-danger" onclick="resetTodo()">⚠️ Resetear todo</button>
   </div>
 </div>
 
-<!-- MODAL APUESTAS -->
+<!-- MODAL APUESTA -->
 <div class="modal-overlay" id="modal-apuesta">
   <div class="modal">
     <button class="modal-close" onclick="cerrarModal()">✕</button>
     <h3 id="modal-title">Poner apuesta</h3>
     <div id="modal-content"></div>
-    <div style="margin-top:16px;display:flex;gap:10px">
-      <button class="btn btn-primary" style="flex:1" onclick="guardarApuesta()">💾 Guardar apuesta</button>
-      <button class="btn" style="background:rgba(255,255,255,0.1)" onclick="cerrarModal()">Cancelar</button>
+    <div style="margin-top:14px;display:flex;gap:8px">
+      <button class="btn btn-primary" style="flex:1" onclick="guardarApuesta()">💾 Guardar</button>
+      <button class="btn btn-ghost" onclick="cerrarModal()">Cancelar</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// =================== DATOS POR DEFECTO ===================
-const JORNADAS_DEFAULT = [
-  {
-    id: 1,
-    nombre: "Jornada 1",
-    precioParticipacion: 5,
-    estado: "abierta", // abierta | cerrada | ganada | acumulada
-    ganador: null,
-    partidos: [
-      { id: "j1p1", equipoA: "Brasil", equipoB: "Marruecos", fecha: "Sáb 13 Jun · 00:00h", resultadoReal: null },
-      { id: "j1p2", equipoA: "España", equipoB: "Cabo Verde", fecha: "Lun 15 Jun · 18:00h", resultadoReal: null }
-    ]
-  },
-  {
-    id: 2,
-    nombre: "Jornada 2",
-    precioParticipacion: 5,
-    estado: "pendiente",
-    ganador: null,
-    partidos: [
-      { id: "j2p1", equipoA: "España", equipoB: "Arabia Saudita", fecha: "Dom 21 Jun · 18:00h", resultadoReal: null },
-      { id: "j2p2", equipoA: "Argentina", equipoB: "Austria", fecha: "Lun 22 Jun · 19:00h", resultadoReal: null }
-    ]
-  },
-  {
-    id: 3,
-    nombre: "Jornada 3",
-    precioParticipacion: 5,
-    estado: "pendiente",
-    ganador: null,
-    partidos: [
-      { id: "j3p1", equipoA: "Uruguay", equipoB: "España", fecha: "Sáb 27 Jun · 02:00h", resultadoReal: null },
-      { id: "j3p2", equipoA: "Colombia", equipoB: "Portugal", fecha: "Mar 23 Jun · 19:00h", resultadoReal: null }
-    ]
-  }
+// ============================================================
+// DATOS POR DEFECTO
+// ============================================================
+const PARTICIPANTES_DEFAULT = [
+  "Evaristo","Juanma","Jorge","Giancarlo","Jesús","José","Juan Antonio",
+  "Rafa","Miguel","Abraham","Santi","Benjamín","Rogelio","Carlos","Israel","Iván","Pablo"
 ];
 
-// =================== STATE ===================
+// 8 porras: cada una tiene 2 partidos (España + otro)
+// estado: pendiente | activa | ganada | acumulada
+// apuesta: { p1: "2-1", p2: "0-0" } → hay que acertar los DOS
+const PORRAS_DEFAULT = [
+  { id:1, nombre:"Porra 1 - Liguilla",
+    p1:{ local:"Brasil",   visitante:"Marruecos",   fecha:"Sáb 13 Jun", hora:"00:00🌙", resultadoReal:null },
+    p2:{ local:"España",   visitante:"Cabo Verde",  fecha:"Lun 15 Jun", hora:"18:00",   resultadoReal:null },
+    estado:"activa",  ganador:null },
+  { id:2, nombre:"Porra 2 - Liguilla",
+    p1:{ local:"Argentina",visitante:"Argelia",     fecha:"Mar 16 Jun", hora:"03:00🌙", resultadoReal:null },
+    p2:{ local:"España",   visitante:"Arabia Saudí",fecha:"Dom 21 Jun", hora:"18:00",   resultadoReal:null },
+    estado:"pendiente",ganador:null },
+  { id:3, nombre:"Porra 3 - Liguilla",
+    p1:{ local:"TBD",      visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    p2:{ local:"Uruguay",  visitante:"España",      fecha:"Vie 26 Jun", hora:"02:00🌙", resultadoReal:null },
+    estado:"pendiente",ganador:null },
+  { id:4, nombre:"Porra 4 - 16avos",
+    p1:{ local:"TBD",      visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    p2:{ local:"España",   visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    estado:"pendiente",ganador:null },
+  { id:5, nombre:"Porra 5 - Octavos",
+    p1:{ local:"TBD",      visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    p2:{ local:"España",   visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    estado:"pendiente",ganador:null },
+  { id:6, nombre:"Porra 6 - Cuartos",
+    p1:{ local:"TBD",      visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    p2:{ local:"España",   visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    estado:"pendiente",ganador:null },
+  { id:7, nombre:"Porra 7 - Semis",
+    p1:{ local:"TBD",      visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    p2:{ local:"España",   visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    estado:"pendiente",ganador:null },
+  { id:8, nombre:"Porra 8 - Final 🏆",
+    p1:{ local:"TBD",      visitante:"TBD",         fecha:"Dom 19 Jul", hora:"21:00",   resultadoReal:null },
+    p2:{ local:"España",   visitante:"TBD",         fecha:"Dom 19 Jul", hora:"21:00",   resultadoReal:null },
+    estado:"pendiente",ganador:null },
+];
+
+const PRECIO_TOTAL   = 40;  // euros por persona
+const NUM_PORRAS     = 8;
+const PRECIO_PORRA   = 5;   // euros por porra
+
+// ============================================================
+// ESTADO
+// ============================================================
 let state = {
-  participantes: [],
-  apuestas: {}, // { nombreParticipante: { partidoId: "2-1", ... } }
-  jornadas: JSON.parse(JSON.stringify(JORNADAS_DEFAULT)),
-  pagos: {}, // { jornadaId: [nombres que han pagado] }
+  participantes: [...PARTICIPANTES_DEFAULT],
+  apuestas: {},      // { "Evaristo": { 1: "2-1", 2: "0-0", ... } }
+  porras: JSON.parse(JSON.stringify(PORRAS_DEFAULT)),
+  pagos: [],         // nombres que han pagado los 40€
   boteAcumulado: 0
 };
 
-// =================== PERSISTENCIA ===================
+// ============================================================
+// PERSISTENCIA (servidor compartido)
+// ============================================================
 function cargarState() {
   fetch('/api/state')
     .then(r => r.json())
-    .then(parsed => {
-      if (parsed && Object.keys(parsed).length > 0) {
-        state = { ...state, ...parsed };
-        if (!state.jornadas || state.jornadas.length === 0) state.jornadas = JSON.parse(JSON.stringify(JORNADAS_DEFAULT));
-        if (!state.pagos) state.pagos = {};
-        if (!state.participantes || state.participantes.length === 0) {
-          state.participantes = [...PARTICIPANTES_DEFAULT];
-        }
-      } else {
-        state.participantes = [...PARTICIPANTES_DEFAULT];
+    .then(data => {
+      if (data && data.version) {
+        if (data.participantes && data.participantes.length > 0) state.participantes = data.participantes;
+        if (data.apuestas)    state.apuestas = data.apuestas;
+        if (data.porras && data.porras.length > 0) state.porras = data.porras;
+        if (data.pagos)       state.pagos = data.pagos;
+        if (typeof data.boteAcumulado === 'number') state.boteAcumulado = data.boteAcumulado;
       }
-      render();
-      renderCalendario();
+      renderAll();
     })
     .catch(() => {
-      // fallback a localStorage si el servidor no responde
-      try {
-        const saved = localStorage.getItem('porra-mundial-2026');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          state = { ...state, ...parsed };
-          if (!state.jornadas || state.jornadas.length === 0) state.jornadas = JSON.parse(JSON.stringify(JORNADAS_DEFAULT));
-          if (!state.pagos) state.pagos = {};
-        }
-        if (!state.participantes || state.participantes.length === 0) state.participantes = [...PARTICIPANTES_DEFAULT];
-      } catch(e) {}
-      render();
-      renderCalendario();
+      // sin servidor → usar lo que hay en state (defaults)
+      renderAll();
     });
 }
 
 function guardarState() {
-  // Guardar en servidor (compartido entre todos)
+  const data = { version: 1, ...state };
   fetch('/api/state', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(state)
-  }).catch(() => {
-    // fallback a localStorage
-    localStorage.setItem('porra-mundial-2026', JSON.stringify(state));
-  });
-  // Guardar también en localStorage como backup
-  localStorage.setItem('porra-mundial-2026', JSON.stringify(state));
+    body: JSON.stringify(data)
+  }).catch(() => {});
+  localStorage.setItem('porra-2026', JSON.stringify(data));
 }
 
-// =================== RENDER ===================
-function render() {
-  renderBote();
-  renderFaltan();
-  renderProximaJornada();
-  renderUltimosResultados();
+// ============================================================
+// RENDER GLOBAL
+// ============================================================
+function renderAll() {
+  renderInicio();
   renderSelectParticipante();
+  renderApuestasParticipante();
   renderRanking();
-  renderDetalleApuestas();
-  renderEstadoJornadas();
-  renderAdminParticipantes();
-  renderAdminResultados();
-  renderAdminJornadasResolver();
-  renderApuestasJornadas();
+  renderEstado();
+  renderAdminPagos();
+  renderAdminPorra();
+  renderAdminResultado();
+  renderAdminResolver();
+  renderCalendario();
 }
 
-function renderBote() {
-  const bote = calcularBote();
-  document.getElementById('bote-total').textContent = bote + ' €';
-  const jActual = state.jornadas.find(j => j.estado === 'abierta') || state.jornadas[0];
-  const pagados = (state.pagos[jActual.id] || []).length;
-  const total = state.participantes.length;
-  document.getElementById('bote-sub').textContent = `${jActual.nombre} · ${pagados}/${total} participantes han pagado`;
-}
-
+// ============================================================
+// INICIO
+// ============================================================
 function calcularBote() {
-  let bote = state.boteAcumulado;
-  // Sumar pagos de jornada activa
-  const jActual = state.jornadas.find(j => j.estado === 'abierta');
-  if (jActual) {
-    const pagados = (state.pagos[jActual.id] || []).length;
-    bote += pagados * jActual.precioParticipacion;
-  }
-  return bote;
-}
-
-function renderFaltan() {
-  const jActual = state.jornadas.find(j => j.estado === 'abierta');
-  const fc = document.getElementById('faltan-container');
-  const lc = document.getElementById('listos-container');
-  if (!jActual || state.participantes.length === 0) { fc.innerHTML = ''; lc.innerHTML = ''; return; }
-
-  const pagados = state.pagos[jActual.id] || [];
-  const faltan = state.participantes.filter(p => !pagados.includes(p));
-  const listos = state.participantes.filter(p => pagados.includes(p));
-
-  // Quién falta por poner apuesta
-  const sinApuesta = state.participantes.filter(p => {
-    return jActual.partidos.some(part => !state.apuestas[p]?.[part.id]);
+  const pagados   = state.pagos.length;
+  const boteBase  = pagados * PRECIO_TOTAL;
+  // Restar lo ya entregado como premios
+  let entregado = 0;
+  state.porras.forEach(p => {
+    if (p.estado === 'ganada') entregado += calcularBotePorra(p.id);
   });
+  // El bote real es lo acumulado sin ganar
+  return state.boteAcumulado;
+}
 
-  if (sinApuesta.length > 0) {
-    fc.innerHTML = `<div class="faltan-banner">
-      <h4>⏳ Faltan por apostar (${sinApuesta.length})</h4>
-      <div class="faltan-list">${sinApuesta.map(p => `<span class="faltan-chip">😬 ${p}</span>`).join('')}</div>
+function calcularBotePorra(porraId) {
+  // bote porra = 5€ × nº pagados + acumulado previo (ya está en boteAcumulado antes de ganar)
+  return state.pagos.length * PRECIO_PORRA;
+}
+
+function renderInicio() {
+  // Bote
+  document.getElementById('bote-total').textContent = state.boteAcumulado + ' €';
+  const activa = state.porras.find(p => p.estado === 'activa');
+  const pagados = state.pagos.length;
+  document.getElementById('bote-sub').textContent =
+    `${pagados}/${state.participantes.length} han pagado · ${activa ? activa.nombre : 'Sin porra activa'}`;
+
+  // Avisos: quién falta por pagar
+  const sinPagar = state.participantes.filter(p => !state.pagos.includes(p));
+  const sinApostar = activa ? state.participantes.filter(p => { const ap = state.apuestas[p]?.[activa.id]; return !ap?.p1 || !ap?.p2; }) : [];
+  let avisos = '';
+  if (sinPagar.length > 0) {
+    avisos += `<div style="background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);border-radius:10px;padding:12px;margin-bottom:10px">
+      <div style="color:#e74c3c;font-weight:700;font-size:0.85rem;margin-bottom:6px">💸 Faltan por pagar (${sinPagar.length})</div>
+      <div class="chip-list">${sinPagar.map(p=>`<span class="chip chip-red">${p}</span>`).join('')}</div>
     </div>`;
-  } else {
-    fc.innerHTML = `<div class="listos-banner"><h4>✅ ¡Todos han puesto su apuesta!</h4></div>`;
   }
-
-  if (faltan.length > 0) {
-    lc.innerHTML = `<div class="faltan-banner" style="background:rgba(41,128,185,0.15);border-color:rgba(41,128,185,0.4)">
-      <h4 style="color:#5dade2">💸 Faltan por pagar (${faltan.length})</h4>
-      <div class="faltan-list">${faltan.map(p => `<span class="faltan-chip" style="background:rgba(41,128,185,0.2);color:#5dade2">🤑 ${p}</span>`).join('')}</div>
+  if (sinApostar.length > 0) {
+    avisos += `<div style="background:rgba(243,156,18,.15);border:1px solid rgba(243,156,18,.3);border-radius:10px;padding:12px;margin-bottom:10px">
+      <div style="color:#f39c12;font-weight:700;font-size:0.85rem;margin-bottom:6px">⏳ Faltan por apostar (${sinApostar.length})</div>
+      <div class="chip-list">${sinApostar.map(p=>`<span class="chip" style="background:rgba(243,156,18,.15);color:#f39c12">${p}</span>`).join('')}</div>
     </div>`;
   }
-}
+  document.getElementById('inicio-avisos').innerHTML = avisos;
 
-function renderProximaJornada() {
-  const jActual = state.jornadas.find(j => j.estado === 'abierta' || j.estado === 'pendiente');
-  const el = document.getElementById('proxima-jornada-content');
-  if (!jActual) { el.innerHTML = '<p class="text-muted">¡Porra terminada! 🎉</p>'; return; }
-  el.innerHTML = jActual.partidos.map(p => `
-    <div class="partido">
-      <div>
-        <div class="partido-equipos">🆚 ${p.equipoA} vs ${p.equipoB}</div>
-        <div class="partido-fecha">📅 ${p.fecha}</div>
+  // Porra activa
+  const elActiva = document.getElementById('inicio-porra-activa');
+  if (!activa) { elActiva.innerHTML = '<p class="text-muted">No hay porra activa ahora mismo</p>'; }
+  else {
+    elActiva.innerHTML = `
+      <div class="flex-between" style="margin-bottom:8px">
+        <span style="font-weight:700;color:#2ecc71">${activa.nombre}</span>
+        <span style="color:var(--amarillo);font-weight:800">${state.boteAcumulado} €</span>
       </div>
-      ${p.resultadoReal
-        ? `<div class="resultado-real">✅ ${p.resultadoReal}</div>`
-        : `<div class="resultado-pendiente">Por jugar</div>`}
-    </div>`).join('');
-}
-
-function renderUltimosResultados() {
-  const el = document.getElementById('ultimos-resultados-content');
-  const conResultados = state.jornadas.flatMap(j =>
-    j.partidos.filter(p => p.resultadoReal).map(p => ({...p, jornada: j.nombre}))
-  );
-  if (conResultados.length === 0) {
-    el.innerHTML = '<p class="text-muted">Aún no hay resultados. ¡El Mundial empieza mañana! ⚽</p>';
-    return;
+      ${['p1','p2'].map(k => {
+        const pt = activa[k];
+        const resHtml = pt.resultadoReal
+          ? '<div class="resultado-badge">' + pt.resultadoReal + '</div>'
+          : '<div class="resultado-pendiente">Por jugar</div>';
+        return '<div class="partido-row" style="margin-top:6px"><div>' +
+          '<div class="partido-equipos">' + (k==='p2'?'🇪🇸':'⚽') + ' ' + pt.local + ' vs ' + pt.visitante + '</div>' +
+          '<div class="partido-fecha">📅 ' + pt.fecha + ' · ' + pt.hora + '</div>' +
+          '</div>' + resHtml + '</div>';
+      }).join('')}`;
   }
-  el.innerHTML = conResultados.slice(-4).reverse().map(p => `
-    <div class="partido">
-      <div>
-        <div class="partido-equipos">${p.equipoA} vs ${p.equipoB}</div>
-        <div class="partido-fecha">${p.jornada}</div>
-      </div>
-      <div class="resultado-real">${p.resultadoReal}</div>
-    </div>`).join('');
+
+  // Últimas porras
+  const elUlt = document.getElementById('inicio-ultimas');
+  const cerradas = state.porras.filter(p => p.estado === 'ganada' || p.estado === 'acumulada').slice(-3).reverse();
+  if (cerradas.length === 0) { elUlt.innerHTML = '<p class="text-muted">Aún no hay porras cerradas</p>'; }
+  else {
+    elUlt.innerHTML = cerradas.map(p => `
+      <div class="flex-between" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+        <div>
+          <div style="font-weight:600;font-size:0.88rem">${p.nombre}</div>
+          <div style="font-size:0.72rem;color:#888">${p.p1.local} vs ${p.p1.visitante} (${p.p1.resultadoReal||'?'}) · 🇪🇸 ${p.p2.local} vs ${p.p2.visitante} (${p.p2.resultadoReal||'?'})</div>
+        </div>
+        ${p.estado === 'ganada'
+          ? `<span style="color:#f1c40f;font-size:0.8rem;font-weight:700">🏆 ${p.ganador}</span>`
+          : `<span style="color:#e74c3c;font-size:0.8rem">↗️ Acumulado</span>`}
+      </div>`).join('');
+  }
 }
+
+// ============================================================
+// MIS APUESTAS
+// ============================================================
+let _participanteSeleccionado = null;
 
 function renderSelectParticipante() {
-  const sel = document.getElementById('select-participante');
-  const val = sel.value;
-  sel.innerHTML = '<option value="">-- Elige tu nombre --</option>' +
-    state.participantes.map(p => `<option value="${p}" ${p===val?'selected':''}>${p}</option>`).join('');
+  const grid = document.getElementById('nombre-grid');
+  if (!grid) return;
+  grid.innerHTML = state.participantes.map(p => {
+    const activo = p === _participanteSeleccionado;
+    return `<button onclick="seleccionarParticipante('${p}')" style="
+      padding:9px 8px;border:2px solid ${activo ? 'var(--amarillo)' : 'rgba(255,255,255,.12)'};
+      border-radius:10px;background:${activo ? 'rgba(241,196,15,.15)' : 'rgba(255,255,255,.06)'};
+      color:${activo ? 'var(--amarillo)' : '#ccc'};font-weight:${activo ? '800' : '500'};
+      font-size:.85rem;cursor:pointer;transition:all .15s;text-align:center"
+    >${activo ? '✅ ' : ''}${p}</button>`;
+  }).join('');
 }
 
-function cargarApuestasParticipante() {
-  renderApuestasJornadas();
+function seleccionarParticipante(nombre) {
+  _participanteSeleccionado = nombre;
+  renderSelectParticipante();
+  renderApuestasParticipante();
 }
 
-function renderApuestasJornadas() {
-  const participante = document.getElementById('select-participante').value;
-  const container = document.getElementById('apuestas-jornadas-container');
-  if (!participante) { container.innerHTML = '<div class="section-empty"><div class="emoji-big">👆</div><p>Selecciona tu nombre arriba</p></div>'; return; }
-
-  container.innerHTML = state.jornadas.map(j => {
-    const todasApuestadas = j.partidos.every(p => state.apuestas[participante]?.[p.id]);
-    const puedApostar = j.estado === 'abierta' || j.estado === 'pendiente';
-    return `<div class="card">
-      <div class="flex-between" style="margin-bottom:10px">
-        <h3>${j.nombre}</h3>
-        <span class="badge badge-${j.estado}">${j.estado}</span>
+function renderApuestasParticipante() {
+  const container = document.getElementById('apuestas-container');
+  if (!container) return;
+  const participante = _participanteSeleccionado;
+  if (!participante) {
+    container.innerHTML = '<div class="empty-state">👆 Selecciona tu nombre arriba</div>';
+    return;
+  }
+  const apuestas = state.apuestas[participante] || {};
+  container.innerHTML = state.porras.map(p => {
+    const ap = apuestas[p.id] || {};
+    const esActiva = p.estado === 'activa';
+    const pendiente = p.estado === 'pendiente';
+    const ok1 = p.p1.resultadoReal && ap.p1 === p.p1.resultadoReal;
+    const ok2 = p.p2.resultadoReal && ap.p2 === p.p2.resultadoReal;
+    const fail1 = p.p1.resultadoReal && ap.p1 && ap.p1 !== p.p1.resultadoReal;
+    const fail2 = p.p2.resultadoReal && ap.p2 && ap.p2 !== p.p2.resultadoReal;
+    const tieneApuesta = ap.p1 && ap.p2;
+    return `<div class="porra-card ${p.estado}" style="opacity:${pendiente?.6:1}">
+      <div class="flex-between" style="margin-bottom:8px">
+        <span style="font-weight:700;font-size:0.9rem">${p.nombre}</span>
+        <span class="badge badge-${p.estado}">${p.estado}</span>
       </div>
-      ${j.partidos.map(p => {
-        const apuesta = state.apuestas[participante]?.[p.id];
-        const esCorrecta = p.resultadoReal && apuesta === p.resultadoReal;
-        const esFallada = p.resultadoReal && apuesta && apuesta !== p.resultadoReal;
-        return `<div class="partido">
+      ${[['p1',p.p1,ap.p1,ok1,fail1],['p2',p.p2,ap.p2,ok2,fail2]].map(([k,pt,apk,okk,failk]) => `
+        <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.15);border-radius:8px;padding:7px 10px;margin-bottom:4px">
           <div>
-            <div class="partido-equipos">${p.equipoA} vs ${p.equipoB}</div>
-            <div class="partido-fecha">📅 ${p.fecha}</div>
+            <div style="font-size:.83rem;font-weight:600">${k==='p2'?'🇪🇸':''} ${pt.local} vs ${pt.visitante}</div>
+            <div style="font-size:.7rem;color:#888">${pt.fecha} ${pt.hora}</div>
           </div>
-          <div style="text-align:right">
-            ${apuesta
-              ? `<div class="${esCorrecta?'apuesta-ok':esFallada?'apuesta-fail':''}" style="font-weight:700">${apuesta} ${esCorrecta?'✅':esFallada?'❌':''}</div>`
-              : `<div class="text-muted">Sin apostar</div>`}
+          <div style="font-weight:800;font-size:1rem;color:${okk?'#2ecc71':failk?'#e74c3c':'#aaa'}">
+            ${apk || '—'} ${okk?'✅':failk?'❌':''}
           </div>
-        </div>`;
-      }).join('')}
-      ${puedApostar ? `<button class="btn btn-primary mt-8" style="width:100%" onclick="abrirModalApuesta('${participante}',${j.id})">
-        ${todasApuestadas ? '✏️ Editar apuesta' : '🎯 Poner apuesta'}
-      </button>` : ''}
+        </div>`).join('')}
+      <div style="display:flex;justify-content:flex-end;margin-top:8px">
+        ${esActiva ? (
+          tieneApuesta
+            ? `<button class="btn btn-primary btn-sm" onclick="pedirClaveYApostar('${participante}',${p.id})">✏️ Editar</button>`
+            : `<button class="btn btn-primary btn-sm" onclick="abrirModal('${participante}',${p.id})">🎯 Apostar</button>`
+        ) : ''}
+      </div>
     </div>`;
   }).join('');
 }
 
+// ============================================================
+// RANKING
+// ============================================================
+function calcularStats() {
+  const stats = {};
+  state.participantes.forEach(p => stats[p] = { euros: 0, aciertos: 0 });
+  state.porras.forEach(porra => {
+    if (porra.estado === 'ganada' && porra.ganador) {
+      // Los euros ya están gestionados en marcarGanada
+    }
+    const resOk1 = porra.p1.resultadoReal;
+    const resOk2 = porra.p2.resultadoReal;
+    if (resOk1 || resOk2) {
+      state.participantes.forEach(p => {
+        const ap = state.apuestas[p]?.[porra.id] || {};
+        if (resOk1 && ap.p1 === resOk1) stats[p].aciertos++;
+        if (resOk2 && ap.p2 === resOk2) stats[p].aciertos++;
+      });
+    }
+  });
+  // euros: cada vez que alguien gana una porra sumamos el bote que había
+  state.porras.forEach(porra => {
+    if (porra.estado === 'ganada' && porra.ganador && stats[porra.ganador]) {
+      stats[porra.ganador].euros += (porra.boteGanado || 0);
+    }
+  });
+  return stats;
+}
+
 function renderRanking() {
-  const puntos = calcularPuntos();
-  const sorted = Object.entries(puntos).sort((a,b) => {
+  const stats = calcularStats();
+  const sorted = Object.entries(stats).sort((a,b) => {
     if (b[1].euros !== a[1].euros) return b[1].euros - a[1].euros;
     return b[1].aciertos - a[1].aciertos;
   });
   const el = document.getElementById('ranking-list');
-
-  if (sorted.length === 0) {
-    el.innerHTML = '<div class="section-empty"><div class="emoji-big">🏆</div><p>Sin participantes aún</p></div>';
-    return;
-  }
-
-  el.innerHTML = sorted.map(([nombre, pts], i) => {
-    const posClass = i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':'pos-n';
-    const emoji = i===0?'👑':i===1?'🥈':i===2?'🥉':'';
-    return `<div class="ranking-item" style="padding:12px 16px">
-      <div class="ranking-pos ${posClass}">${i+1}</div>
-      <div class="ranking-nombre">${emoji} ${nombre}</div>
+  if (!el) return;
+  el.innerHTML = sorted.map(([nombre, s], i) => {
+    const cls = i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':'pos-n';
+    const em  = i===0?'👑':i===1?'🥈':i===2?'🥉':'';
+    return `<div class="ranking-item">
+      <div class="rank-pos ${cls}">${i+1}</div>
+      <div class="rank-nombre">${em} ${nombre}</div>
       <div style="text-align:right">
-        <div class="ranking-puntos">${pts.euros > 0 ? pts.euros + ' €' : '0 €'}</div>
-        <div class="ranking-pendiente">${pts.aciertos} acierto${pts.aciertos !== 1 ? 's' : ''}</div>
+        <div class="rank-euros">${s.euros > 0 ? s.euros+' €' : '—'}</div>
+        <div class="rank-aciertos">${s.aciertos} acierto${s.aciertos!==1?'s':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Tabla detalle
+  const hdr = document.getElementById('detalle-header');
+  const bdy = document.getElementById('detalle-body');
+  if (!hdr || !bdy) return;
+  const porrasVis = state.porras.filter(p => p.estado !== 'pendiente');
+  if (porrasVis.length === 0) { hdr.innerHTML=''; bdy.innerHTML='<tr><td colspan="3" class="text-muted" style="padding:16px;text-align:center">Sin datos aún</td></tr>'; return; }
+  hdr.innerHTML = '<th class="td-nombre">Nombre</th>' +
+    porrasVis.map(p=>`<th>${p.p1.local.substring(0,3).toUpperCase()} vs ${p.p1.visitante.substring(0,3).toUpperCase()}<br><span style="font-size:.58rem;color:#888">${p.p1.fecha}</span><br><span style="font-size:.7rem;color:#e91e8c">+ 🇪🇸 ${p.p2.visitante.substring(0,3).toUpperCase()}</span></th>`).join('') +
+    '<th>€</th><th>✅</th>';
+  bdy.innerHTML = sorted.map(([nombre]) => {
+    const celdas = porrasVis.map(p => {
+      const ap = state.apuestas[nombre]?.[p.id] || {};
+      const ok1 = p.p1.resultadoReal && ap.p1 === p.p1.resultadoReal;
+      const ok2 = p.p2.resultadoReal && ap.p2 === p.p2.resultadoReal;
+      const f1 = p.p1.resultadoReal && ap.p1 && !ok1;
+      const f2 = p.p2.resultadoReal && ap.p2 && !ok2;
+      const txt = `${ap.p1||'—'}/${ap.p2||'—'}`;
+      const cls = (ok1&&ok2)?'ap-ok':(f1||f2)?'ap-fail':'ap-pend';
+      return `<td class="${cls}">${txt}</td>`;
+    }).join('');
+    const s = stats[nombre];
+    return `<tr><td class="td-nombre">${nombre}</td>${celdas}<td style="color:var(--amarillo);font-weight:700">${s.euros>0?s.euros+' €':'—'}</td><td style="color:#aaa">${s.aciertos}</td></tr>`;
+  }).join('');
+}
+
+// ============================================================
+// ESTADO
+// ============================================================
+function renderEstado() {
+  const el = document.getElementById('estado-detalle');
+  if (!el) return;
+  if (state.participantes.length === 0) { el.innerHTML='<p class="text-muted">Sin participantes</p>'; return; }
+  el.innerHTML = state.porras.map(porra => {
+    const isPend = porra.estado === 'pendiente';
+    return `<div style="margin-bottom:22px;opacity:${isPend?.5:1}">
+      <div class="flex-between" style="margin-bottom:7px">
+        <div style="font-weight:700;color:var(--amarillo);font-size:0.88rem">${porra.nombre}</div>
+        <span class="badge badge-${porra.estado}">${porra.estado}</span>
+      </div>
+      <div style="font-size:0.78rem;color:#888;margin-bottom:8px">
+        ⚽ ${porra.p1.local} vs ${porra.p1.visitante} · 📅 ${porra.p1.fecha} ${porra.p1.hora} ${porra.p1.resultadoReal?`· <b style="color:#2ecc71">${porra.p1.resultadoReal}</b>`:''}
+        <br>🇪🇸 ${porra.p2.local} vs ${porra.p2.visitante} · 📅 ${porra.p2.fecha} ${porra.p2.hora} ${porra.p2.resultadoReal?`· <b style="color:#2ecc71">${porra.p2.resultadoReal}</b>`:''}
+      </div>
+      <div style="overflow-x:auto">
+        <table class="ap-table">
+          <thead><tr>
+            <th style="text-align:left;padding-left:8px">Jugador</th>
+            <th>⚽ Partido</th>
+            <th>🇪🇸 España</th>
+            <th>Estado</th>
+          </tr></thead>
+          <tbody>
+            ${state.participantes.map(nombre => {
+              const ap = state.apuestas[nombre]?.[porra.id] || {};
+              const ok1 = porra.p1.resultadoReal && ap.p1 === porra.p1.resultadoReal;
+              const ok2 = porra.p2.resultadoReal && ap.p2 === porra.p2.resultadoReal;
+              const f1 = porra.p1.resultadoReal && ap.p1 && !ok1;
+              const f2 = porra.p2.resultadoReal && ap.p2 && !ok2;
+              const gana = ok1 && ok2;
+              return `<tr>
+                <td class="td-nombre">${nombre}</td>
+                <td class="${ok1?'ap-ok':f1?'ap-fail':'ap-pend'}">${ap.p1||'—'}${ok1?' ✅':f1?' ❌':''}</td>
+                <td class="${ok2?'ap-ok':f2?'ap-fail':'ap-pend'}">${ap.p2||'—'}${ok2?' ✅':f2?' ❌':''}</td>
+                <td>${
+                  porra.estado==='ganada' && porra.ganador===nombre
+                    ? '<span style="color:#f1c40f;font-size:.75rem">🏆 Ganador</span>'
+                    : gana ? '<span style="color:#2ecc71;font-size:.75rem">✅ ¡Acierto!</span>'
+                    : (ok1||ok2) ? '<span style="color:#f39c12;font-size:.75rem">½ Parcial</span>'
+                    : (f1||f2) ? '<span style="color:#e74c3c;font-size:.75rem">❌ Fallo</span>'
+                    : '<span style="color:#888;font-size:.75rem">Pendiente</span>'
+                }</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
       </div>
     </div>`;
   }).join('');
 }
 
-function calcularPuntos() {
-  const puntos = {};
-  state.participantes.forEach(p => puntos[p] = { total: 0, aciertos: 0, euros: 0 });
+// ============================================================
+// MODAL APUESTA
+// ============================================================
+let _modalParticipante = null;
+let _modalPorraId = null;
 
-  state.jornadas.forEach(j => {
-    // Euros ganados por ganar jornada
-    if (j.estado === 'ganada' && j.ganador && puntos[j.ganador] !== undefined) {
-      const pagados = (state.pagos[j.id] || []).length;
-      const boteJornada = pagados * j.precioParticipacion;
-      puntos[j.ganador].euros += boteJornada;
-    }
-    // Aciertos por partido
-    j.partidos.forEach(part => {
-      if (!part.resultadoReal) return;
-      state.participantes.forEach(p => {
-        const apuesta = state.apuestas[p]?.[part.id];
-        if (apuesta === part.resultadoReal) {
-          puntos[p].aciertos += 1;
-        }
-      });
-    });
-  });
-  // Añadir bote acumulado pendiente de asignar (no contabilizado aún)
-  // total = euros para ordenación
-  state.participantes.forEach(p => { puntos[p].total = puntos[p].euros; });
-  return puntos;
-}
-
-function renderDetalleApuestas() {
-  const jornadas = state.jornadas.filter(j => j.estado !== 'pendiente');
-  const header = document.getElementById('detalle-header');
-  const body = document.getElementById('detalle-body');
-
-  const partidos = jornadas.flatMap(j => j.partidos);
-  if (partidos.length === 0 || state.participantes.length === 0) {
-    header.innerHTML = ''; body.innerHTML = '<tr><td colspan="10" class="text-muted" style="padding:20px;text-align:center">Sin datos</td></tr>';
-    return;
-  }
-
-  header.innerHTML = '<th class="nombre-col">Nombre</th>' +
-    partidos.map(p => `<th>${p.equipoA.substring(0,3).toUpperCase()}-${p.equipoB.substring(0,3).toUpperCase()}</th>`).join('') +
-    '<th>€ Ganados</th><th>Aciertos</th>';
-
-  const puntos = calcularPuntos();
-  const sortedParticipantes = [...state.participantes].sort((a,b) => {
-    const pa = puntos[a], pb = puntos[b];
-    if (pb.euros !== pa.euros) return pb.euros - pa.euros;
-    return pb.aciertos - pa.aciertos;
-  });
-  body.innerHTML = sortedParticipantes.map(participante => {
-    const celdas = partidos.map(p => {
-      const apuesta = state.apuestas[participante]?.[p.id] || '-';
-      const ok = p.resultadoReal && apuesta === p.resultadoReal;
-      const fail = p.resultadoReal && apuesta !== '-' && apuesta !== p.resultadoReal;
-      return `<td class="${ok?'apuesta-ok':fail?'apuesta-fail':'apuesta-pending'}">${apuesta}${ok?' ✅':fail?' ❌':''}</td>`;
-    }).join('');
-    return `<tr><td class="nombre-col">${participante}</td>${celdas}<td style="color:var(--amarillo);font-weight:700">${puntos[participante]?.euros||0} €</td><td style="color:#aaa">${puntos[participante]?.aciertos||0}</td></tr>`;
-  }).join('');
-}
-
-function renderEstadoJornadas() {
-  // Tabla de apuestas por jornada
-  const el2 = document.getElementById('estado-apuestas-detalle');
-  if (!el2) return;
-  if (state.participantes.length === 0) { el2.innerHTML = '<p class="text-muted">Sin participantes</p>'; return; }
-
-  el2.innerHTML = state.jornadas.map(j => {
-    const partidos = j.partidos;
-    return `
-      <div style="margin-bottom:24px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div style="font-weight:700;color:var(--amarillo);font-size:0.9rem;text-transform:uppercase;letter-spacing:0.5px">${j.nombre}</div>
-          <span class="badge badge-${j.estado}">${j.estado}</span>
+function abrirModal(participante, porraId) {
+  _modalParticipante = participante;
+  _modalPorraId = porraId;
+  const porra = state.porras.find(p => p.id === porraId);
+  const apActual = state.apuestas[participante]?.[porraId] || {};
+  document.getElementById('modal-title').textContent = `🎯 ${participante} · ${porra.nombre}`;
+  document.getElementById('modal-content').innerHTML =
+    [['p1','⚽'],['p2','🇪🇸']].map(([k,ico]) => {
+      const pt = porra[k];
+      const apK = apActual[k] || '';
+      const [gAk, gBk] = apK ? apK.split('-') : ['',''];
+      return `<div style="margin-bottom:14px">
+        <div style="text-align:center;margin-bottom:8px">
+          <div style="font-weight:700;font-size:.95rem">${ico} ${pt.local} vs ${pt.visitante}</div>
+          <div style="font-size:.75rem;color:#888">📅 ${pt.fecha} · ${pt.hora}</div>
         </div>
-        <div style="overflow-x:auto">
-          <table class="apuestas-table">
-            <thead>
-              <tr>
-                <th style="text-align:left">Jugador</th>
-                ${partidos.map(p => `<th>${p.equipoA.substring(0,3).toUpperCase()}<br><span style="font-size:0.6rem;opacity:0.5">vs</span><br>${p.equipoB.substring(0,3).toUpperCase()}<br><span style="font-size:0.6rem;color:#888;font-weight:400">${p.fecha}</span></th>`).join('')}
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${state.participantes.map(nombre => {
-                const apuestas = state.apuestas[nombre] || {};
-                const tieneTodasApuestas = partidos.every(p => apuestas[p.id]);
-                const aciertos = partidos.filter(p => p.resultadoReal && apuestas[p.id] === p.resultadoReal).length;
-                const celdas = partidos.map(p => {
-                  const apuesta = apuestas[p.id];
-                  const ok = p.resultadoReal && apuesta === p.resultadoReal;
-                  const fail = p.resultadoReal && apuesta && apuesta !== p.resultadoReal;
-                  if (!apuesta) return `<td class="apuesta-pending">—</td>`;
-                  return `<td class="${ok?'apuesta-ok':fail?'apuesta-fail':''}">${apuesta}${ok?' ✅':fail?' ❌':''}</td>`;
-                }).join('');
-                const estadoChip = !tieneTodasApuestas
-                  ? `<span style="color:#e74c3c;font-size:0.75rem">⏳ Pendiente</span>`
-                  : j.estado === 'ganada' && j.ganador === nombre
-                    ? `<span style="color:#f1c40f;font-size:0.75rem">🏆 Ganador</span>`
-                    : aciertos === partidos.length && j.estado !== 'abierta'
-                      ? `<span style="color:#4caf50;font-size:0.75rem">✅ ${aciertos}/${partidos.length}</span>`
-                      : `<span style="color:#888;font-size:0.75rem">${aciertos}/${partidos.length}</span>`;
-                return `<tr>
-                  <td style="text-align:left;font-weight:600">${nombre}</td>
-                  ${celdas}
-                  <td>${estadoChip}</td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+          <div style="text-align:center">
+            <div style="font-size:.7rem;color:#aaa;margin-bottom:3px">${pt.local}</div>
+            <input type="number" min="0" max="20" id="gol-${k}-a" value="${gAk}" placeholder="0" style="width:55px;font-size:1.5rem;text-align:center;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:white;padding:7px;border-radius:8px;font-weight:900">
+          </div>
+          <div style="font-size:1.6rem;font-weight:900;color:#888;padding-top:16px">—</div>
+          <div style="text-align:center">
+            <div style="font-size:.7rem;color:#aaa;margin-bottom:3px">${pt.visitante}</div>
+            <input type="number" min="0" max="20" id="gol-${k}-b" value="${gBk}" placeholder="0" style="width:55px;font-size:1.5rem;text-align:center;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:white;padding:7px;border-radius:8px;font-weight:900">
+          </div>
         </div>
       </div>`;
-  }).join('');
-}
-
-function renderAdminParticipantes() {
-  const el = document.getElementById('lista-participantes');
-  if (state.participantes.length === 0) { el.innerHTML = '<p class="text-muted" style="margin-top:8px">Sin participantes</p>'; return; }
-  el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">` +
-    state.participantes.map(p => `
-      <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.08);padding:5px 10px;border-radius:20px">
-        <span style="font-size:0.85rem">${p}</span>
-        <button onclick="eliminarParticipante('${p}')" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:0.85rem;padding:0">✕</button>
-      </div>`).join('') + `</div>`;
-}
-
-function renderAdminResultados() {
-  const el = document.getElementById('admin-resultados');
-  const jornadas = state.jornadas.filter(j => j.estado === 'abierta' || j.estado === 'cerrada');
-  if (jornadas.length === 0) { el.innerHTML = '<p class="text-muted">No hay jornadas abiertas</p>'; return; }
-
-  el.innerHTML = jornadas.flatMap(j => j.partidos.map(p => `
-    <div style="margin-bottom:14px">
-      <div style="font-size:0.82rem;color:#aaa;margin-bottom:6px">${j.nombre} · ${p.fecha}</div>
-      <div class="form-row" style="align-items:center">
-        <div style="font-weight:600;flex:1">${p.equipoA} vs ${p.equipoB}</div>
-        <div class="resultado-input">
-          <input type="number" min="0" max="20" id="res-a-${p.id}" value="${p.resultadoReal ? p.resultadoReal.split('-')[0] : ''}" placeholder="0">
-          <span>-</span>
-          <input type="number" min="0" max="20" id="res-b-${p.id}" value="${p.resultadoReal ? p.resultadoReal.split('-')[1] : ''}" placeholder="0">
-        </div>
-        <button class="btn btn-success btn-sm" onclick="guardarResultado('${p.id}',${j.id})">✅ Guardar</button>
-      </div>
-    </div>`)).join('<hr class="divider">');
-}
-
-function renderAdminJornadasResolver() {
-  const el = document.getElementById('admin-jornadas-resolver');
-  const jornadas = state.jornadas.filter(j => j.estado === 'abierta' || j.estado === 'cerrada');
-  if (jornadas.length === 0) { el.innerHTML = '<p class="text-muted">No hay jornadas que resolver</p>'; return; }
-
-  el.innerHTML = jornadas.map(j => {
-    const todosResultados = j.partidos.every(p => p.resultadoReal);
-    const ganadores = todosResultados ? getGanadoresJornada(j) : [];
-    return `<div class="card" style="margin-bottom:12px">
-      <div class="flex-between" style="margin-bottom:10px">
-        <b>${j.nombre}</b>
-        <span class="badge badge-${j.estado}">${j.estado}</span>
-      </div>
-      ${todosResultados
-        ? ganadores.length > 0
-          ? `<p style="color:#4caf50;margin-bottom:10px">🏆 Ganador${ganadores.length>1?'es':''}: <b>${ganadores.join(', ')}</b></p>`
-          : `<p style="color:#e74c3c;margin-bottom:10px">😢 Nadie ha acertado ambos resultados → se acumula el bote</p>`
-        : `<p class="text-muted" style="margin-bottom:10px">⏳ Faltan resultados por introducir</p>`}
-
-      ${todosResultados && ganadores.length > 0 ? `
-        <div class="form-row">
-          <div class="form-group">
-            <label>Marcar ganador</label>
-            <select id="ganador-sel-${j.id}">
-              ${ganadores.map(g => `<option value="${g}">${g}</option>`).join('')}
-            </select>
-          </div>
-          <button class="btn btn-success btn-sm" onclick="marcarGanada(${j.id})">🏆 Marcar ganada</button>
-        </div>` : ''}
-      ${todosResultados && ganadores.length === 0 ? `
-        <button class="btn btn-danger btn-sm" onclick="marcarAcumulada(${j.id})">💸 Acumular bote</button>
-      ` : ''}
-
-      <div style="margin-top:10px">
-        <div class="form-group">
-          <label>Marcar quién ha pagado</label>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
-            ${state.participantes.map(p => {
-              const pago = (state.pagos[j.id]||[]).includes(p);
-              return `<button onclick="togglePago(${j.id},'${p}')" class="btn btn-sm" style="background:${pago?'rgba(26,127,60,0.4)':'rgba(255,255,255,0.08)'};color:${pago?'#4caf50':'#aaa'}">
-                ${pago?'✅':'⬜'} ${p}
-              </button>`;
-            }).join('')}
-          </div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// =================== LÓGICA ===================
-function getGanadoresJornada(jornada) {
-  return state.participantes.filter(p => {
-    return jornada.partidos.every(part => state.apuestas[p]?.[part.id] === part.resultadoReal);
-  });
-}
-
-function agregarParticipante() {
-  const input = document.getElementById('nuevo-participante');
-  const nombre = input.value.trim();
-  if (!nombre) return;
-  if (state.participantes.includes(nombre)) { showToast('⚠️ Ya existe ese participante', 'error'); return; }
-  state.participantes.push(nombre);
-  input.value = '';
-  guardarState();
-  render();
-  showToast(`✅ ${nombre} añadido`);
-}
-
-function eliminarParticipante(nombre) {
-  if (!confirm(`¿Eliminar a ${nombre}?`)) return;
-  state.participantes = state.participantes.filter(p => p !== nombre);
-  delete state.apuestas[nombre];
-  guardarState();
-  render();
-  showToast(`🗑️ ${nombre} eliminado`);
-}
-
-function guardarResultado(partidoId, jornadaId) {
-  const valA = document.getElementById(`res-a-${partidoId}`).value;
-  const valB = document.getElementById(`res-b-${partidoId}`).value;
-  if (valA === '' || valB === '') { showToast('⚠️ Introduce los dos goles', 'error'); return; }
-  const resultado = `${valA}-${valB}`;
-  const jornada = state.jornadas.find(j => j.id === jornadaId);
-  const partido = jornada.partidos.find(p => p.id === partidoId);
-  partido.resultadoReal = resultado;
-  if (jornada.estado === 'abierta') jornada.estado = 'cerrada';
-  guardarState();
-  render();
-  showToast(`✅ Resultado guardado: ${resultado}`);
-}
-
-function marcarGanada(jornadaId) {
-  const jornada = state.jornadas.find(j => j.id === jornadaId);
-  const ganador = document.getElementById(`ganador-sel-${jornadaId}`)?.value;
-  if (!ganador) return;
-  jornada.estado = 'ganada';
-  jornada.ganador = ganador;
-  // Resetear bote acumulado
-  state.boteAcumulado = 0;
-  // Abrir siguiente jornada
-  const siguiente = state.jornadas.find(j => j.estado === 'pendiente');
-  if (siguiente) siguiente.estado = 'abierta';
-  guardarState();
-  render();
-  showToast(`🏆 ¡${ganador} ha ganado la jornada!`);
-}
-
-function marcarAcumulada(jornadaId) {
-  const jornada = state.jornadas.find(j => j.id === jornadaId);
-  jornada.estado = 'acumulada';
-  // Acumular bote
-  const pagados = (state.pagos[jornadaId] || []).length;
-  state.boteAcumulado += pagados * jornada.precioParticipacion;
-  // Abrir siguiente
-  const siguiente = state.jornadas.find(j => j.estado === 'pendiente');
-  if (siguiente) siguiente.estado = 'abierta';
-  guardarState();
-  render();
-  showToast(`💸 Bote acumulado: ${state.boteAcumulado}€`);
-}
-
-function togglePago(jornadaId, nombre) {
-  if (!state.pagos[jornadaId]) state.pagos[jornadaId] = [];
-  const idx = state.pagos[jornadaId].indexOf(nombre);
-  if (idx >= 0) state.pagos[jornadaId].splice(idx, 1);
-  else state.pagos[jornadaId].push(nombre);
-  guardarState();
-  render();
-}
-
-// =================== MODAL APUESTA ===================
-let modalJornadaId = null;
-let modalParticipante = null;
-
-function abrirModalApuesta(participante, jornadaId) {
-  modalJornadaId = jornadaId;
-  modalParticipante = participante;
-  const jornada = state.jornadas.find(j => j.id === jornadaId);
-  document.getElementById('modal-title').textContent = `🎯 Apuesta de ${participante} · ${jornada.nombre}`;
-
-  const apuestasActuales = state.apuestas[participante] || {};
-  document.getElementById('modal-content').innerHTML = jornada.partidos.map(p => `
-    <div class="apuesta-partido">
-      <div class="equipos">⚽ ${p.equipoA} vs ${p.equipoB}</div>
-      <div class="partido-fecha" style="margin-bottom:8px">📅 ${p.fecha}</div>
-      <div class="resultado-input">
-        <input type="number" min="0" max="20" id="modal-a-${p.id}" value="${apuestasActuales[p.id]?.split('-')[0]||''}" placeholder="0" style="font-size:1.2rem;width:50px;padding:8px">
-        <span style="font-size:1.2rem;font-weight:900;color:#fff">-</span>
-        <input type="number" min="0" max="20" id="modal-b-${p.id}" value="${apuestasActuales[p.id]?.split('-')[1]||''}" placeholder="0" style="font-size:1.2rem;width:50px;padding:8px">
-      </div>
-    </div>`).join('<hr class="divider">');
-
+    }).join('<hr style="border:none;border-top:1px solid rgba(255,255,255,.08);margin:6px 0">');
   document.getElementById('modal-apuesta').classList.add('open');
+  setTimeout(() => document.getElementById('gol-p1-a')?.focus(), 100);
 }
 
 function cerrarModal() {
@@ -1005,350 +707,409 @@ function cerrarModal() {
 }
 
 function guardarApuesta() {
-  const jornada = state.jornadas.find(j => j.id === modalJornadaId);
-  if (!state.apuestas[modalParticipante]) state.apuestas[modalParticipante] = {};
-
-  let valid = true;
-  jornada.partidos.forEach(p => {
-    const valA = document.getElementById(`modal-a-${p.id}`)?.value;
-    const valB = document.getElementById(`modal-b-${p.id}`)?.value;
-    if (valA === '' || valB === '') { valid = false; return; }
-    state.apuestas[modalParticipante][p.id] = `${valA}-${valB}`;
-  });
-
-  if (!valid) { showToast('⚠️ Rellena todos los resultados', 'error'); return; }
-
+  const p1a = document.getElementById('gol-p1-a')?.value;
+  const p1b = document.getElementById('gol-p1-b')?.value;
+  const p2a = document.getElementById('gol-p2-a')?.value;
+  const p2b = document.getElementById('gol-p2-b')?.value;
+  if (p1a===''||p1b===''||p2a===''||p2b==='') { toast('⚠️ Rellena todos los resultados', 'error'); return; }
+  if (!state.apuestas[_modalParticipante]) state.apuestas[_modalParticipante] = {};
+  state.apuestas[_modalParticipante][_modalPorraId] = { p1: `${p1a}-${p1b}`, p2: `${p2a}-${p2b}` };
   guardarState();
   cerrarModal();
-  render();
-  showToast(`✅ Apuesta guardada para ${modalParticipante}`);
+  renderApuestasParticipante();
+  renderEstado();
+  renderRanking();
+  renderInicio();
+  toast(`✅ Apuesta guardada: ${p1a}-${p1b} / ${p2a}-${p2b}`);
 }
 
-// =================== UTILS ===================
-function checkAdmin() {
-  if (sessionStorage.getItem('porra-admin') === '1') {
-    showTab('admin');
-    // fix active tab button
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-btn')[4].classList.add('active');
-    return;
+// ============================================================
+// ADMIN
+// ============================================================
+function renderAdminPagos() {
+  const el = document.getElementById('admin-pagos');
+  if (!el) return;
+  const pagados = state.pagos.length;
+  el.innerHTML = `<p style="font-size:.82rem;color:#aaa;margin-bottom:10px">${pagados}/${state.participantes.length} han pagado · Bote total: <b style="color:var(--amarillo)">${pagados * PRECIO_TOTAL} €</b></p>
+  <div class="chip-list">
+    ${state.participantes.map(p => {
+      const pago = state.pagos.includes(p);
+      return `<button onclick="togglePago('${p}')" style="padding:6px 12px;border:none;border-radius:20px;cursor:pointer;font-size:.8rem;font-weight:700;background:${pago?'rgba(46,204,113,.3)':'rgba(255,255,255,.08)'};color:${pago?'#2ecc71':'#aaa'}">
+        ${pago?'✅':'⬜'} ${p}
+      </button>`;
+    }).join('')}
+  </div>`;
+}
+
+function togglePago(nombre) {
+  const idx = state.pagos.indexOf(nombre);
+  if (idx >= 0) state.pagos.splice(idx, 1);
+  else state.pagos.push(nombre);
+  // Recalcular bote acumulado de la porra activa
+  recalcularBote();
+  guardarState();
+  renderAll();
+  toast(state.pagos.includes(nombre) ? `✅ ${nombre} ha pagado` : `❌ ${nombre} sin pagar`);
+}
+
+function recalcularBote() {
+  // El bote acumulado = suma de porras sin ganar × 5€ × pagados
+  // Simple: nº pagados × 5€ × porras sin ganador consecutivas desde la actual
+  const pagados = state.pagos.length;
+  let acum = 0;
+  for (const p of state.porras) {
+    if (p.estado === 'acumulada') acum += pagados * PRECIO_PORRA;
+    if (p.estado === 'activa') { acum += pagados * PRECIO_PORRA; break; }
+    if (p.estado === 'ganada') acum = 0; // se reinicia tras cada ganador
   }
-  const pwd = prompt('🔐 Contraseña de administrador:');
-  if (pwd === null) return;
-  // Hash simple
-  if (btoa(pwd) === 'UXVhbGlzMjAyNiE=') {
-    sessionStorage.setItem('porra-admin', '1');
-    showTab('admin');
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-btn')[4].classList.add('active');
-    showToast('✅ Bienvenido, Presidente Vitalicio 👑');
-  } else {
-    showToast('❌ Contraseña incorrecta', 'error');
+  state.boteAcumulado = acum;
+}
+
+function renderAdminPorra() {
+  const el = document.getElementById('admin-porra');
+  if (!el) return;
+  el.innerHTML = state.porras.map(p => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <div>
+        <div style="font-weight:600;font-size:.85rem">${p.nombre} <span class="badge badge-${p.estado}">${p.estado}</span></div>
+        <div style="font-size:.72rem;color:#888">⚽ ${p.p1.local} vs ${p.p1.visitante} · ${p.p1.fecha} <span style='color:#e91e8c'>+ 🇪🇸 ${p.p2.local} vs ${p.p2.visitante} · ${p.p2.fecha}</span></div>
+      </div>
+      <div style="display:flex;gap:5px">
+        ${p.estado==='pendiente' ? `<button class="btn btn-success btn-sm" onclick="activarPorra(${p.id})">Activar</button>` : ''}
+        <button class="btn btn-ghost btn-sm" onclick="editarPorra(${p.id})">✏️</button>
+      </div>
+    </div>`).join('');
+}
+
+function activarPorra(id) {
+  state.porras.forEach(p => { if (p.estado === 'activa') p.estado = 'pendiente'; });
+  const p = state.porras.find(p => p.id === id);
+  if (p) p.estado = 'activa';
+  recalcularBote();
+  guardarState(); renderAll();
+  toast(`✅ ${p.nombre} activada`);
+}
+
+function editarPorra(id) {
+  const p = state.porras.find(x => x.id === id);
+  if (!p) return;
+  for (const k of ['p1','p2']) {
+    const label = k==='p1' ? '⚽ Partido libre' : '🇪🇸 Partido España';
+    const local = prompt(`${label} - Equipo local:`, p[k].local); if (local===null) return;
+    const visit = prompt(`${label} - Visitante:`, p[k].visitante); if (visit===null) return;
+    const fecha = prompt(`${label} - Fecha:`, p[k].fecha); if (fecha===null) return;
+    const hora  = prompt(`${label} - Hora:`, p[k].hora); if (hora===null) return;
+    p[k] = { ...p[k], local, visitante: visit, fecha, hora };
   }
+  guardarState(); renderAll();
+  toast('✅ Porra actualizada');
 }
 
-
-function showTab(tabName) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tabName).classList.add('active');
-  event.target.classList.add('active');
-  if (tabName === 'calendario') renderCalendario();
+function renderAdminResultado() {
+  const el = document.getElementById('admin-resultado');
+  if (!el) return;
+  const activa = state.porras.find(p => p.estado === 'activa');
+  if (!activa) { el.innerHTML = '<p class="text-muted">No hay porra activa</p>'; return; }
+  el.innerHTML = `
+    <p style="font-size:.82rem;color:#aaa;margin-bottom:10px">${activa.nombre}</p>
+    ${[['p1','⚽'],['p2','🇪🇸']].map(([k,ico]) => {
+      const pt = activa[k];
+      const [gA,gB] = pt.resultadoReal ? pt.resultadoReal.split('-') : ['',''];
+      return `<div style="margin-bottom:10px">
+        <div style="font-size:.78rem;color:#aaa;margin-bottom:5px">${ico} ${pt.local} vs ${pt.visitante} · ${pt.fecha}</div>
+        <div class="form-row">
+          <div class="res-input">
+            <input type="number" min="0" max="20" id="res-${k}-a" value="${gA}" placeholder="0">
+            <span style="color:#888;font-size:1.1rem;font-weight:700">-</span>
+            <input type="number" min="0" max="20" id="res-${k}-b" value="${gB}" placeholder="0">
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+    <button class="btn btn-success" onclick="guardarResultado(${activa.id})">✅ Guardar resultados</button>`;
 }
 
-function showToast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.background = type === 'error' ? '#c0392b' : '#1a7f3c';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+function guardarResultado(porraId) {
+  const p1a = document.getElementById('res-p1-a')?.value;
+  const p1b = document.getElementById('res-p1-b')?.value;
+  const p2a = document.getElementById('res-p2-a')?.value;
+  const p2b = document.getElementById('res-p2-b')?.value;
+  const p = state.porras.find(x => x.id === porraId);
+  if (p1a!==''&&p1b!=='') p.p1.resultadoReal = `${p1a}-${p1b}`;
+  if (p2a!==''&&p2b!=='') p.p2.resultadoReal = `${p2a}-${p2b}`;
+  guardarState(); renderAll();
+  toast(`✅ Resultados guardados`);
+}
+
+function renderAdminResolver() {
+  const el = document.getElementById('admin-resolver');
+  if (!el) return;
+  const activa = state.porras.find(p => p.estado === 'activa');
+  if (!activa || (!activa.p1.resultadoReal && !activa.p2.resultadoReal)) { el.innerHTML = '<p class="text-muted">Introduce primero los resultados reales</p>'; return; }
+
+  const ganadores = state.participantes.filter(p => {
+    const ap = state.apuestas[p]?.[activa.id] || {};
+    return ap.p1 === activa.p1.resultadoReal && ap.p2 === activa.p2.resultadoReal;
+  });
+
+  el.innerHTML = `
+    <p style="font-size:.82rem;margin-bottom:12px">${activa.nombre} · ${activa.p1.local} vs ${activa.p1.visitante}: <b style="color:#2ecc71">${activa.p1.resultadoReal||'?'}</b> · 🇪🇸 ${activa.p2.local} vs ${activa.p2.visitante}: <b style="color:#2ecc71">${activa.p2.resultadoReal||'?'}</b></p>
+    ${ganadores.length > 0
+      ? `<p style="color:#2ecc71;margin-bottom:10px">🏆 Ganador${ganadores.length>1?'es':''}: <b>${ganadores.join(', ')}</b></p>
+         <div class="form-row">
+           <div class="form-group"><label>Ganador</label>
+             <select id="sel-ganador">${ganadores.map(g=>`<option value="${g}">${g}</option>`).join('')}</select>
+           </div>
+           <button class="btn btn-primary" onclick="marcarGanada(${activa.id})">🏆 Marcar ganada</button>
+         </div>`
+      : `<p style="color:#e74c3c;margin-bottom:10px">😢 Nadie ha acertado → acumular bote</p>
+         <button class="btn btn-danger" onclick="marcarAcumulada(${activa.id})">💸 Acumular y pasar a siguiente</button>`
+    }`;
+}
+
+function marcarGanada(porraId) {
+  const p = state.porras.find(x => x.id === porraId);
+  const ganador = document.getElementById('sel-ganador')?.value;
+  if (!ganador) return;
+  p.boteGanado = state.boteAcumulado;
+  p.estado = 'ganada';
+  p.ganador = ganador;
+  state.boteAcumulado = 0;
+  // Activar siguiente pendiente
+  const siguiente = state.porras.find(x => x.estado === 'pendiente');
+  if (siguiente) siguiente.estado = 'activa';
+  recalcularBote();
+  guardarState(); renderAll();
+  toast(`🏆 ¡${ganador} gana ${p.boteGanado} €!`);
+}
+
+function marcarAcumulada(porraId) {
+  const p = state.porras.find(x => x.id === porraId);
+  p.estado = 'acumulada';
+  const siguiente = state.porras.find(x => x.estado === 'pendiente');
+  if (siguiente) siguiente.estado = 'activa';
+  recalcularBote();
+  guardarState(); renderAll();
+  toast(`💸 Bote acumulado: ${state.boteAcumulado} €`);
 }
 
 function resetTodo() {
-  if (!confirm('¿Seguro que quieres borrar TODO? No hay vuelta atrás.')) return;
-  if (!confirm('¿En serio? ¿TODOS los datos?')) return;
-  localStorage.removeItem('porra-mundial-2026');
+  if (!confirm('¿Resetear TODO?')) return;
+  if (!confirm('¿Seguro seguro?')) return;
   state = {
-    participantes: [],
+    participantes: [...PARTICIPANTES_DEFAULT],
     apuestas: {},
-    jornadas: JSON.parse(JSON.stringify(JORNADAS_DEFAULT)),
-    pagos: {},
+    porras: JSON.parse(JSON.stringify(PORRAS_DEFAULT)),
+    pagos: [],
     boteAcumulado: 0
   };
-  render();
-  showToast('🗑️ Todo reseteado');
+  guardarState(); renderAll();
+  toast('🗑️ Todo reseteado');
 }
 
-// =================== PARTICIPANTES DEFAULT ===================
-const PARTICIPANTES_DEFAULT = [
-  "Evaristo",
-  "Juanma",
-  "Jorge",
-  "Giancarlo",
-  "Jesús",
-  "José",
-  "Juan Antonio",
-  "Rafa",
-  "Miguel",
-  "Abraham",
-  "Santi",
-  "Benjamín",
-  "Rogelio",
-  "Carlos",
-  "Israel",
-  "Iván",
-  "Pablo"
+// ============================================================
+// CALENDARIO
+// ============================================================
+const GRUPOS_MUNDIAL = [
+  { grupo:'A', equipos:['México 🇲🇽','Sudáfrica 🇿🇦','Corea del Sur 🇰🇷','Rep. Checa 🇨🇿'], partidos:[
+    {j:1,fecha:'Jue 11 Jun',hora:'21:00', local:'México',        visitante:'Sudáfrica',    sede:'Estadio Azteca, CDMX'},
+    {j:1,fecha:'Jue 11 Jun',hora:'04:00🌙',local:'Corea del Sur', visitante:'Rep. Checa',  sede:'Estadio Akron, Guadalajara'},
+    {j:2,fecha:'Jue 18 Jun',hora:'18:00', local:'Rep. Checa',    visitante:'Sudáfrica',    sede:'Mercedes-Benz Stadium, Atlanta'},
+    {j:2,fecha:'Jue 18 Jun',hora:'03:00🌙',local:'México',        visitante:'Corea del Sur',sede:'Estadio Akron, Guadalajara'},
+    {j:3,fecha:'Mié 24 Jun',hora:'03:00🌙',local:'México',        visitante:'Rep. Checa',  sede:'Estadio Azteca, CDMX'},
+    {j:3,fecha:'Mié 24 Jun',hora:'03:00🌙',local:'Sudáfrica',     visitante:'Corea del Sur',sede:'Estadio BBVA, Monterrey'},
+  ]},
+  { grupo:'B', equipos:['Canadá 🇨🇦','Bosnia 🇧🇦','Qatar 🇶🇦','Suiza 🇨🇭'], partidos:[
+    {j:1,fecha:'Vie 12 Jun',hora:'21:00', local:'Canadá',  visitante:'Bosnia', sede:'BMO Field, Toronto'},
+    {j:1,fecha:'Sáb 13 Jun',hora:'21:00', local:'Qatar',   visitante:'Suiza',  sede:"Levi's Stadium, Santa Clara"},
+    {j:2,fecha:'Jue 18 Jun',hora:'21:00', local:'Suiza',   visitante:'Bosnia', sede:'SoFi Stadium, Los Angeles'},
+    {j:2,fecha:'Jue 18 Jun',hora:'00:00🌙',local:'Canadá',  visitante:'Qatar',  sede:'BC Place, Vancouver'},
+    {j:3,fecha:'Mié 24 Jun',hora:'21:00', local:'Canadá',  visitante:'Suiza',  sede:'BC Place, Vancouver'},
+    {j:3,fecha:'Mié 24 Jun',hora:'21:00', local:'Bosnia',  visitante:'Qatar',  sede:'Lumen Field, Seattle'},
+  ]},
+  { grupo:'C', equipos:['Brasil 🇧🇷','Marruecos 🇲🇦','Haití 🇭🇹','Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿'], partidos:[
+    {j:1,fecha:'Sáb 13 Jun',hora:'00:00🌙',local:'Brasil',   visitante:'Marruecos',sede:'MetLife Stadium, New Jersey'},
+    {j:1,fecha:'Sáb 13 Jun',hora:'03:00🌙',local:'Haití',    visitante:'Escocia',  sede:'Gillette Stadium, Boston'},
+    {j:2,fecha:'Vie 19 Jun',hora:'03:00🌙',local:'Brasil',   visitante:'Haití',    sede:'Lincoln Financial Field, Philadelphia'},
+    {j:2,fecha:'Vie 19 Jun',hora:'00:00🌙',local:'Escocia',  visitante:'Marruecos',sede:'Gillette Stadium, Boston'},
+    {j:3,fecha:'Mié 24 Jun',hora:'00:00🌙',local:'Escocia',  visitante:'Brasil',   sede:'Hard Rock Stadium, Miami'},
+    {j:3,fecha:'Mié 24 Jun',hora:'00:00🌙',local:'Marruecos',visitante:'Haití',    sede:'Mercedes-Benz Stadium, Atlanta'},
+  ]},
+  { grupo:'D', equipos:['EE.UU. 🇺🇸','Paraguay 🇵🇾','Australia 🇦🇺','Turquía 🇹🇷'], partidos:[
+    {j:1,fecha:'Vie 12 Jun',hora:'03:00🌙',local:'EE.UU.',    visitante:'Paraguay', sede:'SoFi Stadium, Los Angeles'},
+    {j:1,fecha:'Sáb 13 Jun',hora:'06:00🌙',local:'Australia', visitante:'Turquía',  sede:'BC Place, Vancouver'},
+    {j:2,fecha:'Vie 19 Jun',hora:'06:00🌙',local:'Turquía',   visitante:'Paraguay', sede:"Levi's Stadium, Santa Clara"},
+    {j:2,fecha:'Vie 19 Jun',hora:'21:00', local:'EE.UU.',    visitante:'Australia',sede:'Lumen Field, Seattle'},
+    {j:3,fecha:'Jue 25 Jun',hora:'04:00🌙',local:'EE.UU.',    visitante:'Turquía',  sede:'SoFi Stadium, Los Angeles'},
+    {j:3,fecha:'Jue 25 Jun',hora:'04:00🌙',local:'Paraguay',  visitante:'Australia',sede:"Levi's Stadium, Santa Clara"},
+  ]},
+  { grupo:'E', equipos:['Alemania 🇩🇪','Curazao 🇨🇼','Costa de Marfil 🇨🇮','Ecuador 🇪🇨'], partidos:[
+    {j:1,fecha:'Dom 14 Jun',hora:'19:00', local:'Alemania',       visitante:'Curazao',       sede:'NRG Stadium, Houston'},
+    {j:1,fecha:'Dom 14 Jun',hora:'01:00🌙',local:'Costa de Marfil',visitante:'Ecuador',      sede:'Lincoln Financial Field, Philadelphia'},
+    {j:2,fecha:'Sáb 20 Jun',hora:'22:00', local:'Alemania',       visitante:'Costa de Marfil',sede:'BMO Field, Toronto'},
+    {j:2,fecha:'Dom 21 Jun',hora:'02:00🌙',local:'Ecuador',        visitante:'Curazao',      sede:'Arrowhead Stadium, Kansas City'},
+    {j:3,fecha:'Jue 25 Jun',hora:'22:00', local:'Ecuador',        visitante:'Alemania',      sede:'MetLife Stadium, New Jersey'},
+    {j:3,fecha:'Jue 25 Jun',hora:'22:00', local:'Curazao',        visitante:'Costa de Marfil',sede:'Lincoln Financial Field, Philadelphia'},
+  ]},
+  { grupo:'F', equipos:['Países Bajos 🇳🇱','Japón 🇯🇵','Suecia 🇸🇪','Túnez 🇹🇳'], partidos:[
+    {j:1,fecha:'Dom 14 Jun',hora:'22:00', local:'Países Bajos',visitante:'Japón', sede:'AT&T Stadium, Arlington'},
+    {j:1,fecha:'Dom 14 Jun',hora:'04:00🌙',local:'Suecia',      visitante:'Túnez', sede:'Estadio BBVA, Monterrey'},
+    {j:2,fecha:'Sáb 20 Jun',hora:'19:00', local:'Países Bajos',visitante:'Suecia',sede:'NRG Stadium, Houston'},
+    {j:2,fecha:'Sáb 20 Jun',hora:'06:00🌙',local:'Túnez',       visitante:'Japón', sede:'Estadio BBVA, Monterrey'},
+    {j:3,fecha:'Jue 25 Jun',hora:'01:00🌙',local:'Túnez',       visitante:'Países Bajos',sede:'Arrowhead Stadium, Kansas City'},
+    {j:3,fecha:'Jue 25 Jun',hora:'01:00🌙',local:'Japón',       visitante:'Suecia',sede:'AT&T Stadium, Arlington'},
+  ]},
+  { grupo:'G', equipos:['Bélgica 🇧🇪','Egipto 🇪🇬','Irán 🇮🇷','Nueva Zelanda 🇳🇿'], partidos:[
+    {j:1,fecha:'Lun 15 Jun',hora:'21:00', local:'Bélgica',       visitante:'Egipto',       sede:'Lumen Field, Seattle'},
+    {j:1,fecha:'Lun 15 Jun',hora:'03:00🌙',local:'Irán',          visitante:'Nueva Zelanda',sede:'SoFi Stadium, Los Angeles'},
+    {j:2,fecha:'Dom 21 Jun',hora:'21:00', local:'Bélgica',       visitante:'Irán',         sede:'SoFi Stadium, Los Angeles'},
+    {j:2,fecha:'Lun 22 Jun',hora:'03:00🌙',local:'Nueva Zelanda', visitante:'Egipto',       sede:'BC Place, Vancouver'},
+    {j:3,fecha:'Vie 26 Jun',hora:'05:00🌙',local:'Nueva Zelanda', visitante:'Bélgica',      sede:'BC Place, Vancouver'},
+    {j:3,fecha:'Vie 26 Jun',hora:'05:00🌙',local:'Egipto',        visitante:'Irán',         sede:'Lumen Field, Seattle'},
+  ]},
+  { grupo:'H', equipos:['España 🇪🇸','Cabo Verde 🇨🇻','Arabia Saudí 🇸🇦','Uruguay 🇺🇾'], partidos:[
+    {j:1,fecha:'Lun 15 Jun',hora:'18:00', local:'España',      visitante:'Cabo Verde',  sede:'Mercedes-Benz Stadium, Atlanta'},
+    {j:1,fecha:'Lun 15 Jun',hora:'00:00🌙',local:'Arabia Saudí',visitante:'Uruguay',    sede:'Hard Rock Stadium, Miami'},
+    {j:2,fecha:'Dom 21 Jun',hora:'18:00', local:'España',      visitante:'Arabia Saudí',sede:'Mercedes-Benz Stadium, Atlanta'},
+    {j:2,fecha:'Dom 21 Jun',hora:'00:00🌙',local:'Uruguay',     visitante:'Cabo Verde', sede:'Hard Rock Stadium, Miami'},
+    {j:3,fecha:'Vie 26 Jun',hora:'02:00🌙',local:'Uruguay',     visitante:'España',     sede:'Estadio Akron, Guadalajara'},
+    {j:3,fecha:'Vie 26 Jun',hora:'02:00🌙',local:'Cabo Verde',  visitante:'Arabia Saudí',sede:'NRG Stadium, Houston'},
+  ]},
+  { grupo:'I', equipos:['Francia 🇫🇷','Senegal 🇸🇳','Irak 🇮🇶','Noruega 🇳🇴'], partidos:[
+    {j:1,fecha:'Mar 16 Jun',hora:'21:00', local:'Francia', visitante:'Senegal',sede:'MetLife Stadium, New Jersey'},
+    {j:1,fecha:'Mar 16 Jun',hora:'00:00🌙',local:'Irak',    visitante:'Noruega',sede:'Gillette Stadium, Boston'},
+    {j:2,fecha:'Lun 22 Jun',hora:'23:00', local:'Francia', visitante:'Irak',   sede:'Lincoln Financial Field, Philadelphia'},
+    {j:2,fecha:'Mar 23 Jun',hora:'02:00🌙',local:'Noruega', visitante:'Senegal',sede:'MetLife Stadium, New Jersey'},
+    {j:3,fecha:'Vie 26 Jun',hora:'21:00', local:'Noruega', visitante:'Francia',sede:'Gillette Stadium, Boston'},
+    {j:3,fecha:'Vie 26 Jun',hora:'21:00', local:'Senegal', visitante:'Irak',   sede:'BMO Field, Toronto'},
+  ]},
+  { grupo:'J', equipos:['Argentina 🇦🇷','Argelia 🇩🇿','Austria 🇦🇹','Jordania 🇯🇴'], partidos:[
+    {j:1,fecha:'Mar 16 Jun',hora:'03:00🌙',local:'Argentina',visitante:'Argelia', sede:'Arrowhead Stadium, Kansas City'},
+    {j:1,fecha:'Mar 16 Jun',hora:'06:00🌙',local:'Austria',  visitante:'Jordania',sede:"Levi's Stadium, Santa Clara"},
+    {j:2,fecha:'Lun 22 Jun',hora:'19:00', local:'Argentina',visitante:'Austria', sede:'AT&T Stadium, Arlington'},
+    {j:2,fecha:'Lun 22 Jun',hora:'05:00🌙',local:'Jordania', visitante:'Argelia', sede:"Levi's Stadium, Santa Clara"},
+    {j:3,fecha:'Sáb 27 Jun',hora:'04:00🌙',local:'Jordania', visitante:'Argentina',sede:'AT&T Stadium, Arlington'},
+    {j:3,fecha:'Sáb 27 Jun',hora:'04:00🌙',local:'Argelia',  visitante:'Austria', sede:'Arrowhead Stadium, Kansas City'},
+  ]},
+  { grupo:'K', equipos:['Portugal 🇵🇹','R.D. Congo 🇨🇩','Uzbekistán 🇺🇿','Colombia 🇨🇴'], partidos:[
+    {j:1,fecha:'Mié 17 Jun',hora:'19:00', local:'Portugal',    visitante:'R.D. Congo', sede:'NRG Stadium, Houston'},
+    {j:1,fecha:'Mié 17 Jun',hora:'04:00🌙',local:'Uzbekistán', visitante:'Colombia',   sede:'Estadio Azteca, CDMX'},
+    {j:2,fecha:'Mar 23 Jun',hora:'19:00', local:'Portugal',    visitante:'Uzbekistán', sede:'NRG Stadium, Houston'},
+    {j:2,fecha:'Mar 23 Jun',hora:'04:00🌙',local:'Colombia',   visitante:'R.D. Congo', sede:'Estadio Akron, Guadalajara'},
+    {j:3,fecha:'Sáb 27 Jun',hora:'01:30🌙',local:'Colombia',   visitante:'Portugal',   sede:'Hard Rock Stadium, Miami'},
+    {j:3,fecha:'Sáb 27 Jun',hora:'01:30🌙',local:'R.D. Congo', visitante:'Uzbekistán', sede:'Mercedes-Benz Stadium, Atlanta'},
+  ]},
+  { grupo:'L', equipos:['Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croacia 🇭🇷','Ghana 🇬🇭','Panamá 🇵🇦'], partidos:[
+    {j:1,fecha:'Mié 17 Jun',hora:'22:00', local:'Inglaterra',visitante:'Croacia',sede:'AT&T Stadium, Arlington'},
+    {j:1,fecha:'Jue 18 Jun',hora:'01:00🌙',local:'Ghana',     visitante:'Panamá', sede:'BMO Field, Toronto'},
+    {j:2,fecha:'Mar 23 Jun',hora:'22:00', local:'Inglaterra',visitante:'Ghana',  sede:'Gillette Stadium, Boston'},
+    {j:2,fecha:'Mié 24 Jun',hora:'01:00🌙',local:'Panamá',    visitante:'Croacia',sede:'BMO Field, Toronto'},
+    {j:3,fecha:'Sáb 27 Jun',hora:'23:00', local:'Panamá',    visitante:'Inglaterra',sede:'MetLife Stadium, New Jersey'},
+    {j:3,fecha:'Sáb 27 Jun',hora:'23:00', local:'Croacia',   visitante:'Ghana',  sede:'Lincoln Financial Field, Philadelphia'},
+  ]},
 ];
 
-// =================== CALENDARIO DATA ===================
-const GRUPOS_MUNDIAL = [
-  {
-    grupo: 'A',
-    equipos: ['México 🇲🇽', 'Sudáfrica 🇿🇦', 'Corea del Sur 🇰🇷', 'Rep. Checa 🇨🇿'],
-    partidos: [
-      { j:1, fecha:'Jue 11 Jun', hora:'21:00', local:'México', visitante:'Sudáfrica', sede:'Estadio Azteca, CDMX' },
-      { j:1, fecha:'Jue 11 Jun', hora:'04:00*', local:'Corea del Sur', visitante:'Rep. Checa', sede:'Estadio Akron, Guadalajara' },
-      { j:2, fecha:'Jue 18 Jun', hora:'18:00', local:'Rep. Checa', visitante:'Sudáfrica', sede:'Mercedes-Benz Stadium, Atlanta' },
-      { j:2, fecha:'Jue 18 Jun', hora:'03:00*', local:'México', visitante:'Corea del Sur', sede:'Estadio Akron, Guadalajara' },
-      { j:3, fecha:'Mié 24 Jun', hora:'03:00*', local:'México', visitante:'Rep. Checa', sede:'Estadio Azteca, CDMX' },
-      { j:3, fecha:'Mié 24 Jun', hora:'03:00*', local:'Sudáfrica', visitante:'Corea del Sur', sede:'Estadio BBVA, Monterrey' },
-    ]
-  },
-  {
-    grupo: 'B',
-    equipos: ['Canadá 🇨🇦', 'Bosnia 🇧🇦', 'Qatar 🇶🇦', 'Suiza 🇨🇭'],
-    partidos: [
-      { j:1, fecha:'Vie 12 Jun', hora:'21:00', local:'Canadá', visitante:'Bosnia', sede:'BMO Field, Toronto' },
-      { j:1, fecha:'Sáb 13 Jun', hora:'21:00', local:'Qatar', visitante:'Suiza', sede:'Levi\'s Stadium, Santa Clara' },
-      { j:2, fecha:'Jue 18 Jun', hora:'21:00', local:'Suiza', visitante:'Bosnia', sede:'SoFi Stadium, Los Angeles' },
-      { j:2, fecha:'Jue 18 Jun', hora:'00:00*', local:'Canadá', visitante:'Qatar', sede:'BC Place, Vancouver' },
-      { j:3, fecha:'Mié 24 Jun', hora:'21:00', local:'Canadá', visitante:'Suiza', sede:'BC Place, Vancouver' },
-      { j:3, fecha:'Mié 24 Jun', hora:'21:00', local:'Bosnia', visitante:'Qatar', sede:'Lumen Field, Seattle' },
-    ]
-  },
-  {
-    grupo: 'C',
-    equipos: ['Brasil 🇧🇷', 'Marruecos 🇲🇦', 'Haití 🇭🇹', 'Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿'],
-    partidos: [
-      { j:1, fecha:'Sáb 13 Jun', hora:'00:00*', local:'Brasil', visitante:'Marruecos', sede:'MetLife Stadium, New Jersey' },
-      { j:1, fecha:'Sáb 13 Jun', hora:'03:00*', local:'Haití', visitante:'Escocia', sede:'Gillette Stadium, Boston' },
-      { j:2, fecha:'Vie 19 Jun', hora:'03:00*', local:'Brasil', visitante:'Haití', sede:'Lincoln Financial Field, Philadelphia' },
-      { j:2, fecha:'Vie 19 Jun', hora:'00:00*', local:'Escocia', visitante:'Marruecos', sede:'Gillette Stadium, Boston' },
-      { j:3, fecha:'Mié 24 Jun', hora:'00:00*', local:'Escocia', visitante:'Brasil', sede:'Hard Rock Stadium, Miami' },
-      { j:3, fecha:'Mié 24 Jun', hora:'00:00*', local:'Marruecos', visitante:'Haití', sede:'Mercedes-Benz Stadium, Atlanta' },
-    ]
-  },
-  {
-    grupo: 'D',
-    equipos: ['EE.UU. 🇺🇸', 'Paraguay 🇵🇾', 'Australia 🇦🇺', 'Turquía 🇹🇷'],
-    partidos: [
-      { j:1, fecha:'Vie 12 Jun', hora:'03:00*', local:'EE.UU.', visitante:'Paraguay', sede:'SoFi Stadium, Los Angeles' },
-      { j:1, fecha:'Sáb 13 Jun', hora:'06:00*', local:'Australia', visitante:'Turquía', sede:'BC Place, Vancouver' },
-      { j:2, fecha:'Vie 19 Jun', hora:'06:00*', local:'Turquía', visitante:'Paraguay', sede:'Levi\'s Stadium, Santa Clara' },
-      { j:2, fecha:'Vie 19 Jun', hora:'21:00', local:'EE.UU.', visitante:'Australia', sede:'Lumen Field, Seattle' },
-      { j:3, fecha:'Jue 25 Jun', hora:'04:00*', local:'EE.UU.', visitante:'Turquía', sede:'SoFi Stadium, Los Angeles' },
-      { j:3, fecha:'Jue 25 Jun', hora:'04:00*', local:'Paraguay', visitante:'Australia', sede:'Levi\'s Stadium, Santa Clara' },
-    ]
-  },
-  {
-    grupo: 'E',
-    equipos: ['Alemania 🇩🇪', 'Curazao 🇨🇼', 'Costa de Marfil 🇨🇮', 'Ecuador 🇪🇨'],
-    partidos: [
-      { j:1, fecha:'Dom 14 Jun', hora:'19:00', local:'Alemania', visitante:'Curazao', sede:'NRG Stadium, Houston' },
-      { j:1, fecha:'Dom 14 Jun', hora:'01:00*', local:'Costa de Marfil', visitante:'Ecuador', sede:'Lincoln Financial Field, Philadelphia' },
-      { j:2, fecha:'Sáb 20 Jun', hora:'22:00', local:'Alemania', visitante:'Costa de Marfil', sede:'BMO Field, Toronto' },
-      { j:2, fecha:'Dom 21 Jun', hora:'02:00*', local:'Ecuador', visitante:'Curazao', sede:'Arrowhead Stadium, Kansas City' },
-      { j:3, fecha:'Jue 25 Jun', hora:'22:00', local:'Ecuador', visitante:'Alemania', sede:'MetLife Stadium, New Jersey' },
-      { j:3, fecha:'Jue 25 Jun', hora:'22:00', local:'Curazao', visitante:'Costa de Marfil', sede:'Lincoln Financial Field, Philadelphia' },
-    ]
-  },
-  {
-    grupo: 'F',
-    equipos: ['Países Bajos 🇳🇱', 'Japón 🇯🇵', 'Suecia 🇸🇪', 'Túnez 🇹🇳'],
-    partidos: [
-      { j:1, fecha:'Dom 14 Jun', hora:'22:00', local:'Países Bajos', visitante:'Japón', sede:'AT&T Stadium, Arlington' },
-      { j:1, fecha:'Dom 14 Jun', hora:'04:00*', local:'Suecia', visitante:'Túnez', sede:'Estadio BBVA, Monterrey' },
-      { j:2, fecha:'Sáb 20 Jun', hora:'19:00', local:'Países Bajos', visitante:'Suecia', sede:'NRG Stadium, Houston' },
-      { j:2, fecha:'Sáb 20 Jun', hora:'06:00*', local:'Túnez', visitante:'Japón', sede:'Estadio BBVA, Monterrey' },
-      { j:3, fecha:'Jue 25 Jun', hora:'01:00*', local:'Túnez', visitante:'Países Bajos', sede:'Arrowhead Stadium, Kansas City' },
-      { j:3, fecha:'Jue 25 Jun', hora:'01:00*', local:'Japón', visitante:'Suecia', sede:'AT&T Stadium, Arlington' },
-    ]
-  },
-  {
-    grupo: 'G',
-    equipos: ['Bélgica 🇧🇪', 'Egipto 🇪🇬', 'Irán 🇮🇷', 'Nueva Zelanda 🇳🇿'],
-    partidos: [
-      { j:1, fecha:'Lun 15 Jun', hora:'21:00', local:'Bélgica', visitante:'Egipto', sede:'Lumen Field, Seattle' },
-      { j:1, fecha:'Lun 15 Jun', hora:'03:00*', local:'Irán', visitante:'Nueva Zelanda', sede:'SoFi Stadium, Los Angeles' },
-      { j:2, fecha:'Dom 21 Jun', hora:'21:00', local:'Bélgica', visitante:'Irán', sede:'SoFi Stadium, Los Angeles' },
-      { j:2, fecha:'Lun 22 Jun', hora:'03:00*', local:'Nueva Zelanda', visitante:'Egipto', sede:'BC Place, Vancouver' },
-      { j:3, fecha:'Vie 26 Jun', hora:'05:00*', local:'Nueva Zelanda', visitante:'Bélgica', sede:'BC Place, Vancouver' },
-      { j:3, fecha:'Vie 26 Jun', hora:'05:00*', local:'Egipto', visitante:'Irán', sede:'Lumen Field, Seattle' },
-    ]
-  },
-  {
-    grupo: 'H',
-    equipos: ['España 🇪🇸', 'Cabo Verde 🇨🇻', 'Arabia Saudí 🇸🇦', 'Uruguay 🇺🇾'],
-    partidos: [
-      { j:1, fecha:'Lun 15 Jun', hora:'18:00', local:'España', visitante:'Cabo Verde', sede:'Mercedes-Benz Stadium, Atlanta' },
-      { j:1, fecha:'Lun 15 Jun', hora:'00:00*', local:'Arabia Saudí', visitante:'Uruguay', sede:'Hard Rock Stadium, Miami' },
-      { j:2, fecha:'Dom 21 Jun', hora:'18:00', local:'España', visitante:'Arabia Saudí', sede:'Mercedes-Benz Stadium, Atlanta' },
-      { j:2, fecha:'Dom 21 Jun', hora:'00:00*', local:'Uruguay', visitante:'Cabo Verde', sede:'Hard Rock Stadium, Miami' },
-      { j:3, fecha:'Vie 26 Jun', hora:'02:00*', local:'Uruguay', visitante:'España', sede:'Estadio Akron, Guadalajara' },
-      { j:3, fecha:'Vie 26 Jun', hora:'02:00*', local:'Cabo Verde', visitante:'Arabia Saudí', sede:'NRG Stadium, Houston' },
-    ]
-  },
-  {
-    grupo: 'I',
-    equipos: ['Francia 🇫🇷', 'Senegal 🇸🇳', 'Irak 🇮🇶', 'Noruega 🇳🇴'],
-    partidos: [
-      { j:1, fecha:'Mar 16 Jun', hora:'21:00', local:'Francia', visitante:'Senegal', sede:'MetLife Stadium, New Jersey' },
-      { j:1, fecha:'Mar 16 Jun', hora:'00:00*', local:'Irak', visitante:'Noruega', sede:'Gillette Stadium, Boston' },
-      { j:2, fecha:'Lun 22 Jun', hora:'23:00', local:'Francia', visitante:'Irak', sede:'Lincoln Financial Field, Philadelphia' },
-      { j:2, fecha:'Mar 23 Jun', hora:'02:00*', local:'Noruega', visitante:'Senegal', sede:'MetLife Stadium, New Jersey' },
-      { j:3, fecha:'Vie 26 Jun', hora:'21:00', local:'Noruega', visitante:'Francia', sede:'Gillette Stadium, Boston' },
-      { j:3, fecha:'Vie 26 Jun', hora:'21:00', local:'Senegal', visitante:'Irak', sede:'BMO Field, Toronto' },
-    ]
-  },
-  {
-    grupo: 'J',
-    equipos: ['Argentina 🇦🇷', 'Argelia 🇩🇿', 'Austria 🇦🇹', 'Jordania 🇯🇴'],
-    partidos: [
-      { j:1, fecha:'Mar 16 Jun', hora:'03:00*', local:'Argentina', visitante:'Argelia', sede:'Arrowhead Stadium, Kansas City' },
-      { j:1, fecha:'Mar 16 Jun', hora:'06:00*', local:'Austria', visitante:'Jordania', sede:'Levi\'s Stadium, Santa Clara' },
-      { j:2, fecha:'Lun 22 Jun', hora:'19:00', local:'Argentina', visitante:'Austria', sede:'AT&T Stadium, Arlington' },
-      { j:2, fecha:'Lun 22 Jun', hora:'05:00*', local:'Jordania', visitante:'Argelia', sede:'Levi\'s Stadium, Santa Clara' },
-      { j:3, fecha:'Sáb 27 Jun', hora:'04:00*', local:'Jordania', visitante:'Argentina', sede:'AT&T Stadium, Arlington' },
-      { j:3, fecha:'Sáb 27 Jun', hora:'04:00*', local:'Argelia', visitante:'Austria', sede:'Arrowhead Stadium, Kansas City' },
-    ]
-  },
-  {
-    grupo: 'K',
-    equipos: ['Portugal 🇵🇹', 'R.D. Congo 🇨🇩', 'Uzbekistán 🇺🇿', 'Colombia 🇨🇴'],
-    partidos: [
-      { j:1, fecha:'Mié 17 Jun', hora:'19:00', local:'Portugal', visitante:'R.D. Congo', sede:'NRG Stadium, Houston' },
-      { j:1, fecha:'Mié 17 Jun', hora:'04:00*', local:'Uzbekistán', visitante:'Colombia', sede:'Estadio Azteca, CDMX' },
-      { j:2, fecha:'Mar 23 Jun', hora:'19:00', local:'Portugal', visitante:'Uzbekistán', sede:'NRG Stadium, Houston' },
-      { j:2, fecha:'Mar 23 Jun', hora:'04:00*', local:'Colombia', visitante:'R.D. Congo', sede:'Estadio Akron, Guadalajara' },
-      { j:3, fecha:'Sáb 27 Jun', hora:'01:30*', local:'Colombia', visitante:'Portugal', sede:'Hard Rock Stadium, Miami' },
-      { j:3, fecha:'Sáb 27 Jun', hora:'01:30*', local:'R.D. Congo', visitante:'Uzbekistán', sede:'Mercedes-Benz Stadium, Atlanta' },
-    ]
-  },
-  {
-    grupo: 'L',
-    equipos: ['Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Croacia 🇭🇷', 'Ghana 🇬🇭', 'Panamá 🇵🇦'],
-    partidos: [
-      { j:1, fecha:'Mié 17 Jun', hora:'22:00', local:'Inglaterra', visitante:'Croacia', sede:'AT&T Stadium, Arlington' },
-      { j:1, fecha:'Jue 18 Jun', hora:'01:00*', local:'Ghana', visitante:'Panamá', sede:'BMO Field, Toronto' },
-      { j:2, fecha:'Mar 23 Jun', hora:'22:00', local:'Inglaterra', visitante:'Ghana', sede:'Gillette Stadium, Boston' },
-      { j:2, fecha:'Mié 24 Jun', hora:'01:00*', local:'Panamá', visitante:'Croacia', sede:'BMO Field, Toronto' },
-      { j:3, fecha:'Sáb 27 Jun', hora:'23:00', local:'Panamá', visitante:'Inglaterra', sede:'MetLife Stadium, New Jersey' },
-      { j:3, fecha:'Sáb 27 Jun', hora:'23:00', local:'Croacia', visitante:'Ghana', sede:'Lincoln Financial Field, Philadelphia' },
-    ]
-  },
-];
+const ORDEN_FECHAS = ['Jue 11 Jun','Vie 12 Jun','Sáb 13 Jun','Dom 14 Jun','Lun 15 Jun','Mar 16 Jun','Mié 17 Jun','Jue 18 Jun','Vie 19 Jun','Sáb 20 Jun','Dom 21 Jun','Lun 22 Jun','Mar 23 Jun','Mié 24 Jun','Jue 25 Jun','Vie 26 Jun','Sáb 27 Jun'];
+const GRUPO_COLORS = {A:'#e74c3c',B:'#e67e22',C:'#f1c40f',D:'#2ecc71',E:'#1abc9c',F:'#3498db',G:'#9b59b6',H:'#e91e8c',I:'#ff5722',J:'#00bcd4',K:'#8bc34a',L:'#ff9800'};
 
 let calFiltro = 'all';
-
 function filtrarGrupo(g, btn) {
   calFiltro = g;
-  document.querySelectorAll('.cal-gbtn').forEach(b => {
-    b.style.background = 'rgba(255,255,255,0.08)';
-    b.style.color = '#ccc';
-    b.classList.remove('active-g');
-  });
-  if (btn) { btn.style.background = 'var(--amarillo)'; btn.style.color = '#333'; btn.classList.add('active-g'); }
+  document.querySelectorAll('.cal-gbtn').forEach(b => { b.style.background='rgba(255,255,255,.08)'; b.style.color='#aaa'; b.classList.remove('active-g'); });
+  if (btn) { btn.style.background='var(--amarillo)'; btn.style.color='#333'; btn.classList.add('active-g'); }
   renderCalendario();
 }
 
 function renderCalendario() {
-  const container = document.getElementById('cal-grupos-container');
-  if (!container) return;
-
-  const GRUPO_COLORS = {
-    A:'#e74c3c',B:'#e67e22',C:'#f1c40f',D:'#2ecc71',
-    E:'#1abc9c',F:'#3498db',G:'#9b59b6',H:'#e91e8c',
-    I:'#ff5722',J:'#00bcd4',K:'#8bc34a',L:'#ff9800'
-  };
-
-  // Aplanar todos los partidos con info de grupo
-  let todosPartidos = [];
+  const el = document.getElementById('cal-container');
+  if (!el) return;
+  let todos = [];
   GRUPOS_MUNDIAL.forEach(g => {
     if (calFiltro !== 'all' && g.grupo !== calFiltro) return;
-    g.partidos.forEach(p => {
-      todosPartidos.push({ ...p, grupo: g.grupo, equiposGrupo: g.equipos });
-    });
+    g.partidos.forEach(p => todos.push({...p, grupo: g.grupo}));
   });
-
-  // Ordenar por fecha. Usamos un mapa de orden para las fechas
-  const ORDEN_FECHA = [
-    'Jue 11 Jun','Vie 12 Jun','S\u00e1b 13 Jun','Dom 14 Jun',
-    'Lun 15 Jun','Mar 16 Jun','Mi\u00e9 17 Jun','Jue 18 Jun',
-    'Vie 19 Jun','S\u00e1b 20 Jun','Dom 21 Jun','Lun 22 Jun',
-    'Mar 23 Jun','Mi\u00e9 24 Jun','Jue 25 Jun','Vie 26 Jun',
-    'S\u00e1b 27 Jun'
-  ];
-
-  // Agrupar por fecha
   const porFecha = {};
-  todosPartidos.forEach(p => {
-    const key = p.fecha;
-    if (!porFecha[key]) porFecha[key] = [];
-    porFecha[key].push(p);
-  });
-
-  // Ordenar fechas
-  const fechasOrdenadas = ORDEN_FECHA.filter(f => porFecha[f]);
-
-  if (fechasOrdenadas.length === 0) {
-    container.innerHTML = '<div class="section-empty"><p class="text-muted">Sin partidos</p></div>';
-    return;
-  }
-
-  container.innerHTML = fechasOrdenadas.map(fecha => {
-    const partidos = porFecha[fecha];
-    // Ordenar por hora dentro del dia (primero los que no son madrugada, luego madrugada)
-    partidos.sort((a, b) => {
-      const horaA = parseFloat(a.hora.replace('*','').replace(':',''));
-      const horaB = parseFloat(b.hora.replace('*','').replace(':',''));
-      const madA = a.hora.includes('*') ? 1 : 0;
-      const madB = b.hora.includes('*') ? 1 : 0;
-      if (madA !== madB) return madA - madB;
-      return horaA - horaB;
+  todos.forEach(p => { if (!porFecha[p.fecha]) porFecha[p.fecha]=[]; porFecha[p.fecha].push(p); });
+  const fechas = ORDEN_FECHAS.filter(f => porFecha[f]);
+  if (!fechas.length) { el.innerHTML='<p class="text-muted" style="padding:20px;text-align:center">Sin partidos</p>'; return; }
+  el.innerHTML = fechas.map(fecha => {
+    const ps = porFecha[fecha].sort((a,b) => {
+      const mad = h => h.includes('🌙') ? 1 : 0;
+      if (mad(a.hora) !== mad(b.hora)) return mad(a.hora) - mad(b.hora);
+      return parseFloat(a.hora) - parseFloat(b.hora);
     });
-
-    return `
-    <div class="card" style="margin-bottom:14px">
-      <div style="font-weight:800;font-size:1rem;color:var(--amarillo);margin-bottom:10px;display:flex;align-items:center;gap:8px">
-        📅 ${fecha}
-        <span style="font-size:0.75rem;color:#888;font-weight:400">${partidos.length} partido${partidos.length>1?'s':''}</span>
-      </div>
-      ${partidos.map(p => {
-        const color = GRUPO_COLORS[p.grupo] || 'var(--amarillo)';
-        const esMadrugada = p.hora.includes('*');
-        const horaLimpia = p.hora.replace('*','');
-        return `
-        <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.2);border-radius:8px;padding:9px 10px;margin-bottom:6px;border-left:3px solid ${color}">
-          <div style="display:flex;flex-direction:column;align-items:center;min-width:52px;flex-shrink:0">
-            <span style="background:rgba(255,255,255,0.1);border-radius:6px;padding:2px 7px;font-size:0.82rem;font-weight:800;color:${esMadrugada?'#f39c12':'#fff'}">${horaLimpia}</span>
-            ${esMadrugada?'<span style="font-size:0.6rem;color:#f39c12;margin-top:1px">🌙 madrugada</span>':''}
+    return `<div class="card" style="margin-bottom:12px">
+      <div style="font-weight:800;font-size:.95rem;color:var(--amarillo);margin-bottom:8px">📅 ${fecha} <span style="font-size:.72rem;color:#666;font-weight:400">${ps.length} partido${ps.length>1?'s':''}</span></div>
+      ${ps.map(p => {
+        const color = GRUPO_COLORS[p.grupo]||'#fff';
+        const mad = p.hora.includes('🌙');
+        return `<div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.2);border-radius:8px;padding:8px 10px;margin-bottom:5px;border-left:3px solid ${color}">
+          <div style="min-width:55px;flex-shrink:0;text-align:center">
+            <div style="font-size:.82rem;font-weight:800;color:${mad?'#f39c12':'#fff'}">${p.hora.replace('🌙','')}</div>
+            ${mad?'<div style="font-size:.6rem;color:#f39c12">🌙</div>':''}
           </div>
           <div style="flex:1;min-width:0">
-            <div style="font-weight:700;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">⚽ ${p.local} <span style="color:#888">vs</span> ${p.visitante}</div>
-            <div style="font-size:0.7rem;color:#777;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.sede}</div>
+            <div style="font-weight:700;font-size:.86rem">⚽ ${p.local} <span style="color:#888">vs</span> ${p.visitante}</div>
+            <div style="font-size:.68rem;color:#666;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.sede}</div>
           </div>
-          <div style="flex-shrink:0">
-            <span style="background:${color}22;border:1px solid ${color}55;color:${color};border-radius:12px;padding:2px 8px;font-size:0.72rem;font-weight:700">G.${p.grupo}</span>
-          </div>
+          <span style="flex-shrink:0;background:${color}22;border:1px solid ${color}55;color:${color};border-radius:10px;padding:2px 7px;font-size:.7rem;font-weight:700">G.${p.grupo}</span>
         </div>`;
       }).join('')}
     </div>`;
   }).join('');
 }
 
-// =================== INIT ===================
-cargarState(); // render() y renderCalendario() se llaman dentro del callback async
-// Si no hay participantes, se cargan los default dentro de cargarState()
+// ============================================================
+// UTILS
+// ============================================================
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (name === 'calendario') renderCalendario();
+  if (name === 'apuestas') renderSelectParticipante();
+}
+
+function pedirClaveYApostar(participante, porraId) {
+  if (sessionStorage.getItem('porra-admin') === '1') {
+    abrirModal(participante, porraId);
+    return;
+  }
+  const pwd = prompt('🔐 Introduce la clave para editar apuestas:');
+  if (!pwd) return;
+  if (btoa(pwd) === 'UXVhbGlzMjAyNiE=') {
+    sessionStorage.setItem('porra-admin','1');
+    toast('✅ Autenticado 👑');
+    abrirModal(participante, porraId);
+  } else {
+    toast('❌ Clave incorrecta','error');
+  }
+}
+
+function checkAdmin(btn) {
+  if (sessionStorage.getItem('porra-admin') === '1') { showTab('admin', btn); return; }
+  const pwd = prompt('🔐 Contraseña:');
+  if (!pwd) return;
+  if (btoa(pwd) === 'UXVhbGlzMjAyNiE=') {
+    sessionStorage.setItem('porra-admin','1');
+    showTab('admin', btn);
+    toast('✅ Bienvenido, Presidente Vitalicio 👑');
+  } else { toast('❌ Contraseña incorrecta','error'); }
+}
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = type==='error' ? '#c0392b' : '#1a7f3c';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+cargarState();
 </script>
 </body>
 </html>
