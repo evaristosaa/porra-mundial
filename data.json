@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "participantes": [
+    "Evaristo casa 4",
+    "Abraham casa 51",
+    "Benjamín casa 78",
+    "Carlos casa 10",
+    "Carlos casa 38",
+    "Israel casa 41",
+    "Iván casa 7",
+    "Jesús casa 19",
+    "Jorge casa 9",
+    "José casa 49",
+    "José Manuel casa ?",
+    "Juan Antonio casa ?",
+    "Juanma casa 30",
+    "Miguel casa 3",
+    "Pedro casa 1",
+    "Rafa casa ?",
+    "Rogelio casa 63",
+    "Santi casa 15",
+    "Pablo casa ?",
+    "Siempre en lo más alto ?",
+    "YO ?",
+    "+34 642 69 03 94 ?",
+    "Giancarlo casa 44",
+    "Miguel casa 40",
+    "Pedro casa 72",
+    "Alejandro casa ?"
+  ],
+  "apuestas": {},
+  "porras": [
+    {
+      "id": 1,
+      "nombre": "Porra 1 - Liguilla",
+      "p1": {
+        "local": "Brasil",
+        "visitante": "Marruecos",
+        "fecha": "Sáb 13 Jun",
+        "hora": "00:00",
+        "resultadoReal": null
+      },
+      "p2": {
+        "local": "España",
+        "visitante": "Cabo Verde",
+        "fecha": "Lun 15 Jun",
+        "hora": "18:00",
+        "resultadoReal": null
+      },
+      "estado": "activa",
+      "ganador": null
+    },
+    {
+      "id": 2,
+      "nombre": "Porra 2 - Liguilla",
+      "p1": {
+        "local": "Argentina",
+        "visitante": "Argelia",
+        "fecha": "Mar 16 Jun",
+        "hora": "03:00",
+        "resultadoReal": null
+      },
+      "p2": {
+        "local": "España",
+        "visitante": "Arabia Saudí",
+        "fecha": "Dom 21 Jun",
+        "hora": "18:00",
+        "resultadoReal": null
+      },
+      "estado": "pendiente",
+      "ganador": null
+    },
+    {
+      "id": 3,
+      "nombre": "Porra 3 - Liguilla",
+      "p1": {
+        "local": "TBD",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "p2": {
+        "local": "Uruguay",
+        "visitante": "España",
+        "fecha": "Vie 26 Jun",
+        "hora": "02:00",
+        "resultadoReal": null
+      },
+      "estado": "pendiente",
+      "ganador": null
+    },
+    {
+      "id": 4,
+      "nombre": "Porra 4 - 16avos",
+      "p1": {
+        "local": "TBD",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "p2": {
+        "local": "España",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "estado": "pendiente",
+      "ganador": null
+    },
+    {
+      "id": 5,
+      "nombre": "Porra 5 - Octavos",
+      "p1": {
+        "local": "TBD",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "p2": {
+        "local": "España",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "estado": "pendiente",
+      "ganador": null
+    },
+    {
+      "id": 6,
+      "nombre": "Porra 6 - Cuartos",
+      "p1": {
+        "local": "TBD",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "p2": {
+        "local": "España",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "estado": "pendiente",
+      "ganador": null
+    },
+    {
+      "id": 7,
+      "nombre": "Porra 7 - Semis",
+      "p1": {
+        "local": "TBD",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "p2": {
+        "local": "España",
+        "visitante": "TBD",
+        "fecha": "Por definir",
+        "hora": "",
+        "resultadoReal": null
+      },
+      "estado": "pendiente",
+      "ganador": null
+    },
+    {
+      "id": 8,
+      "nombre": "Porra 8 - Final 🏆",
+      "p1": {
+        "local": "TBD",
+        "visitante": "TBD",
+        "fecha": "Dom 19 Jul",
+        "hora": "21:00",
+        "resultadoReal": null
+      },
+      "p2": {
+        "local": "España",
+        "visitante": "TBD",
+        "fecha": "Dom 19 Jul",
+        "hora": "21:00",
+        "resultadoReal": null
+      },
+      "estado": "pendiente",
+      "ganador": null
+    }
+  ],
+  "pagos": [],
+  "boteAcumulado": 0
+}

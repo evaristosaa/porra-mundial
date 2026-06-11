@@ -274,8 +274,32 @@
 // DATOS POR DEFECTO
 // ============================================================
 const PARTICIPANTES_DEFAULT = [
-  "Evaristo","Juanma","Jorge","Giancarlo","Jesús","José","Juan Antonio",
-  "Rafa","Miguel","Abraham","Santi","Benjamín","Rogelio","Carlos","Israel","Iván","Pablo"
+  "Evaristo casa 4",
+  "Abraham casa 51",
+  "Benjamín casa 78",
+  "Carlos casa 10",
+  "Carlos casa 38",
+  "Israel casa 41",
+  "Iván casa 7",
+  "Jesús casa 19",
+  "Jorge casa 9",
+  "José casa 49",
+  "José Manuel casa ?",
+  "Juan Antonio casa ?",
+  "Juanma casa 30",
+  "Miguel casa 3",
+  "Pedro casa 1",
+  "Rafa casa ?",
+  "Rogelio casa 63",
+  "Santi casa 15",
+  "Pablo casa ?",
+  "Siempre en lo más alto ?",
+  "YO ?",
+  "+34 642 69 03 94 ?",
+  "Giancarlo casa 44",
+  "Miguel casa 40",
+  "Pedro casa 72",
+  "Alejandro casa ?"
 ];
 
 // 8 porras: cada una tiene 2 partidos (España + otro)
@@ -332,65 +356,126 @@ let state = {
 };
 
 // ============================================================
-// PERSISTENCIA (JSONBin.io + fallback servidor local)
+// PERSISTENCIA (JSONBin.io)
 // ============================================================
 const JSONBIN_KEY = '$2a$10$SX/Tga6OZNj39lOOCx8Wt.Z67olnfg5wpbqXSg6lP16mHWe5G0p0m';
 const JSONBIN_BIN = '6a2a8819da38895dfeac7329';
 const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`;
+const JSONBIN_HEADERS = {
+  'Content-Type': 'application/json',
+  'X-Access-Key': JSONBIN_KEY
+};
+
+function aplicarStateRemoto(data) {
+  if (!data || !data.version) return false;
+  if (data.participantes && data.participantes.length > 0) state.participantes = data.participantes;
+  if (data.apuestas)    state.apuestas = data.apuestas;
+  if (data.porras && data.porras.length > 0) state.porras = data.porras;
+  if (data.pagos)       state.pagos = data.pagos;
+  if (typeof data.boteAcumulado === 'number') state.boteAcumulado = data.boteAcumulado;
+  return true;
+}
+
+function normalizarNombreParticipante(nombre) {
+  if (PARTICIPANTES_DEFAULT.includes(nombre)) return nombre;
+  const limpio = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\uFFFD/g, '');
+  return {
+    Jess: 'Jesus',
+    Jos: 'Jose',
+    Benjamn: 'Benjamin',
+    Ivn: 'Ivan'
+  }[limpio] || limpio;
+}
+
+function normalizarParticipantes() {
+  const participantes = [];
+  const apuestas = {};
+  let cambiado = false;
+
+  state.participantes.forEach(nombre => {
+    const normalizado = normalizarNombreParticipante(nombre);
+    if (normalizado !== nombre) cambiado = true;
+    if (!participantes.includes(normalizado)) participantes.push(normalizado);
+  });
+
+  Object.entries(state.apuestas || {}).forEach(([nombre, porras]) => {
+    const normalizado = normalizarNombreParticipante(nombre);
+    if (normalizado !== nombre) cambiado = true;
+    apuestas[normalizado] = { ...(apuestas[normalizado] || {}), ...porras };
+  });
+
+  state.pagos = (state.pagos || []).reduce((pagos, nombre) => {
+    const normalizado = normalizarNombreParticipante(nombre);
+    if (normalizado !== nombre) cambiado = true;
+    if (!pagos.includes(normalizado)) pagos.push(normalizado);
+    return pagos;
+  }, []);
+
+  state.porras.forEach(porra => {
+    if (porra.ganador) {
+      const normalizado = normalizarNombreParticipante(porra.ganador);
+      if (normalizado !== porra.ganador) cambiado = true;
+      porra.ganador = normalizado;
+    }
+  });
+
+  state.participantes = participantes;
+  state.apuestas = apuestas;
+  return cambiado;
+}
+
+function asegurarParticipantesDefault() {
+  const mismosParticipantes =
+    state.participantes.length === PARTICIPANTES_DEFAULT.length &&
+    state.participantes.every((nombre, i) => nombre === PARTICIPANTES_DEFAULT[i]);
+
+  if (mismosParticipantes) return false;
+
+  state.participantes = [...PARTICIPANTES_DEFAULT];
+  state.pagos = (state.pagos || []).filter(nombre => PARTICIPANTES_DEFAULT.includes(nombre));
+  state.apuestas = Object.fromEntries(
+    Object.entries(state.apuestas || {}).filter(([nombre]) => PARTICIPANTES_DEFAULT.includes(nombre))
+  );
+  return true;
+}
 
 function cargarState() {
-  // Intentar JSONBin primero (funciona desde cualquier navegador)
   fetch(JSONBIN_URL + '/latest', {
-    headers: { 'X-Master-Key': JSONBIN_KEY }
+    headers: JSONBIN_HEADERS
   })
-  .then(r => r.json())
+  .then(r => {
+    if (!r.ok) throw new Error(`JSONBin ${r.status}`);
+    return r.json();
+  })
   .then(resp => {
     const data = resp.record;
-    if (data && data.version) {
-      if (data.participantes && data.participantes.length > 0) state.participantes = data.participantes;
-      if (data.apuestas)    state.apuestas = data.apuestas;
-      if (data.porras && data.porras.length > 0) state.porras = data.porras;
-      if (data.pagos)       state.pagos = data.pagos;
-      if (typeof data.boteAcumulado === 'number') state.boteAcumulado = data.boteAcumulado;
-    }
+    if (!aplicarStateRemoto(data)) throw new Error('JSONBin sin datos validos');
+    const normalizado = normalizarParticipantes();
+    const defaultsActualizados = asegurarParticipantesDefault();
+    const actualizado = normalizado || defaultsActualizados;
     renderAll();
+    if (actualizado) guardarState();
   })
   .catch(() => {
-    // Fallback: servidor local
-    fetch('/api/state')
-      .then(r => r.json())
-      .then(data => {
-        if (data && data.version) {
-          if (data.participantes && data.participantes.length > 0) state.participantes = data.participantes;
-          if (data.apuestas)    state.apuestas = data.apuestas;
-          if (data.porras && data.porras.length > 0) state.porras = data.porras;
-          if (data.pagos)       state.pagos = data.pagos;
-          if (typeof data.boteAcumulado === 'number') state.boteAcumulado = data.boteAcumulado;
-        }
-        renderAll();
-      })
-      .catch(() => renderAll());
+    renderAll();
+    toast('No se pudo conectar con JSONBin.');
   });
 }
 
 function guardarState() {
   const data = { version: 1, ...state };
-  // Guardar en JSONBin
+
   fetch(JSONBIN_URL, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Master-Key': JSONBIN_KEY
-    },
+    headers: JSONBIN_HEADERS,
     body: JSON.stringify(data)
-  }).catch(() => {});
-  // Fallback: servidor local
-  fetch('/api/state', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).catch(() => {});
-  localStorage.setItem('porra-2026', JSON.stringify(data));
+  })
+  .then(r => {
+    if (!r.ok) throw new Error(`JSONBin ${r.status}`);
+  })
+  .catch(() => {
+    toast('No se pudo guardar en JSONBin.');
+  });
 }
 
 // ============================================================
