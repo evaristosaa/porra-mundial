@@ -276,7 +276,8 @@
   <button class="tab-btn" onclick="showTab('apuestas')">🎯 Mis Apuestas</button>
   <button class="tab-btn" onclick="showTab('ranking')">🏆 Ranking</button>
   <button class="tab-btn" onclick="showTab('estado')">📊 Estado</button>
-  <button class="tab-btn" onclick="showTab('admin')">⚙️ Admin</button>
+  <button class="tab-btn" onclick="showTab('calendario')">📅 Calendario</button>
+  <button class="tab-btn" onclick="checkAdmin()">⚙️ Admin</button>
 </div>
 
 <!-- ======= INICIO ======= -->
@@ -337,7 +338,37 @@
 
 <!-- ======= ESTADO ======= -->
 <div id="tab-estado" class="panel">
-  <div id="estado-jornadas"></div>
+  <div class="card">
+    <h3>📋 Apuestas por jornada</h3>
+    <div id="estado-apuestas-detalle"></div>
+  </div>
+</div>
+
+<!-- ======= CALENDARIO ======= -->
+<div id="tab-calendario" class="panel">
+
+  <div class="card" style="padding:10px 14px;margin-bottom:12px">
+    <div style="font-size:0.72rem;color:#aaa;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px">Filtrar por grupo</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap" id="cal-filter-btns">
+      <button class="btn btn-sm cal-gbtn active-g" data-g="all" onclick="filtrarGrupo('all',this)">Todos</button>
+      <button class="btn btn-sm cal-gbtn" data-g="A" onclick="filtrarGrupo('A',this)">Grupo A</button>
+      <button class="btn btn-sm cal-gbtn" data-g="B" onclick="filtrarGrupo('B',this)">Grupo B</button>
+      <button class="btn btn-sm cal-gbtn" data-g="C" onclick="filtrarGrupo('C',this)">Grupo C</button>
+      <button class="btn btn-sm cal-gbtn" data-g="D" onclick="filtrarGrupo('D',this)">Grupo D</button>
+      <button class="btn btn-sm cal-gbtn" data-g="E" onclick="filtrarGrupo('E',this)">Grupo E</button>
+      <button class="btn btn-sm cal-gbtn" data-g="F" onclick="filtrarGrupo('F',this)">Grupo F</button>
+      <button class="btn btn-sm cal-gbtn" data-g="G" onclick="filtrarGrupo('G',this)">Grupo G</button>
+      <button class="btn btn-sm cal-gbtn" data-g="H" onclick="filtrarGrupo('H',this)">Grupo H 🇪🇸</button>
+      <button class="btn btn-sm cal-gbtn" data-g="I" onclick="filtrarGrupo('I',this)">Grupo I</button>
+      <button class="btn btn-sm cal-gbtn" data-g="J" onclick="filtrarGrupo('J',this)">Grupo J</button>
+      <button class="btn btn-sm cal-gbtn" data-g="K" onclick="filtrarGrupo('K',this)">Grupo K</button>
+      <button class="btn btn-sm cal-gbtn" data-g="L" onclick="filtrarGrupo('L',this)">Grupo L</button>
+    </div>
+  </div>
+
+  <div id="cal-grupos-container"></div>
+  <div style="text-align:center;color:#555;font-size:0.72rem;padding:12px 0">⏰ Horario peninsular español (CEST) · 🌙 = madrugada</div>
+
 </div>
 
 <!-- ======= ADMIN ======= -->
@@ -443,19 +474,50 @@ let state = {
 
 // =================== PERSISTENCIA ===================
 function cargarState() {
-  try {
-    const saved = localStorage.getItem('porra-mundial-2026');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      state = { ...state, ...parsed };
-      // Asegurar estructura de jornadas
-      if (!state.jornadas || state.jornadas.length === 0) state.jornadas = JSON.parse(JSON.stringify(JORNADAS_DEFAULT));
-      if (!state.pagos) state.pagos = {};
-    }
-  } catch(e) { console.log('No hay datos guardados'); }
+  fetch('/api/state')
+    .then(r => r.json())
+    .then(parsed => {
+      if (parsed && Object.keys(parsed).length > 0) {
+        state = { ...state, ...parsed };
+        if (!state.jornadas || state.jornadas.length === 0) state.jornadas = JSON.parse(JSON.stringify(JORNADAS_DEFAULT));
+        if (!state.pagos) state.pagos = {};
+        if (!state.participantes || state.participantes.length === 0) {
+          state.participantes = [...PARTICIPANTES_DEFAULT];
+        }
+      } else {
+        state.participantes = [...PARTICIPANTES_DEFAULT];
+      }
+      render();
+      renderCalendario();
+    })
+    .catch(() => {
+      // fallback a localStorage si el servidor no responde
+      try {
+        const saved = localStorage.getItem('porra-mundial-2026');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+          if (!state.jornadas || state.jornadas.length === 0) state.jornadas = JSON.parse(JSON.stringify(JORNADAS_DEFAULT));
+          if (!state.pagos) state.pagos = {};
+        }
+        if (!state.participantes || state.participantes.length === 0) state.participantes = [...PARTICIPANTES_DEFAULT];
+      } catch(e) {}
+      render();
+      renderCalendario();
+    });
 }
 
 function guardarState() {
+  // Guardar en servidor (compartido entre todos)
+  fetch('/api/state', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(state)
+  }).catch(() => {
+    // fallback a localStorage
+    localStorage.setItem('porra-mundial-2026', JSON.stringify(state));
+  });
+  // Guardar también en localStorage como backup
   localStorage.setItem('porra-mundial-2026', JSON.stringify(state));
 }
 
@@ -611,7 +673,10 @@ function renderApuestasJornadas() {
 
 function renderRanking() {
   const puntos = calcularPuntos();
-  const sorted = Object.entries(puntos).sort((a,b) => b[1].total - a[1].total);
+  const sorted = Object.entries(puntos).sort((a,b) => {
+    if (b[1].euros !== a[1].euros) return b[1].euros - a[1].euros;
+    return b[1].aciertos - a[1].aciertos;
+  });
   const el = document.getElementById('ranking-list');
 
   if (sorted.length === 0) {
@@ -626,8 +691,8 @@ function renderRanking() {
       <div class="ranking-pos ${posClass}">${i+1}</div>
       <div class="ranking-nombre">${emoji} ${nombre}</div>
       <div style="text-align:right">
-        <div class="ranking-puntos">${pts.total} pts</div>
-        <div class="ranking-pendiente">${pts.aciertos} aciertos</div>
+        <div class="ranking-puntos">${pts.euros > 0 ? pts.euros + ' €' : '0 €'}</div>
+        <div class="ranking-pendiente">${pts.aciertos} acierto${pts.aciertos !== 1 ? 's' : ''}</div>
       </div>
     </div>`;
   }).join('');
@@ -635,24 +700,29 @@ function renderRanking() {
 
 function calcularPuntos() {
   const puntos = {};
-  state.participantes.forEach(p => puntos[p] = { total: 0, aciertos: 0 });
+  state.participantes.forEach(p => puntos[p] = { total: 0, aciertos: 0, euros: 0 });
 
   state.jornadas.forEach(j => {
+    // Euros ganados por ganar jornada
+    if (j.estado === 'ganada' && j.ganador && puntos[j.ganador] !== undefined) {
+      const pagados = (state.pagos[j.id] || []).length;
+      const boteJornada = pagados * j.precioParticipacion;
+      puntos[j.ganador].euros += boteJornada;
+    }
+    // Aciertos por partido
     j.partidos.forEach(part => {
       if (!part.resultadoReal) return;
       state.participantes.forEach(p => {
         const apuesta = state.apuestas[p]?.[part.id];
         if (apuesta === part.resultadoReal) {
-          puntos[p].total += 10;
           puntos[p].aciertos += 1;
         }
       });
     });
-    // Bonus si gana jornada
-    if (j.ganador && puntos[j.ganador]) {
-      puntos[j.ganador].total += 5; // bonus
-    }
   });
+  // Añadir bote acumulado pendiente de asignar (no contabilizado aún)
+  // total = euros para ordenación
+  state.participantes.forEach(p => { puntos[p].total = puntos[p].euros; });
   return puntos;
 }
 
@@ -669,41 +739,78 @@ function renderDetalleApuestas() {
 
   header.innerHTML = '<th class="nombre-col">Nombre</th>' +
     partidos.map(p => `<th>${p.equipoA.substring(0,3).toUpperCase()}-${p.equipoB.substring(0,3).toUpperCase()}</th>`).join('') +
-    '<th>Pts</th>';
+    '<th>€ Ganados</th><th>Aciertos</th>';
 
   const puntos = calcularPuntos();
-  body.innerHTML = state.participantes.map(participante => {
+  const sortedParticipantes = [...state.participantes].sort((a,b) => {
+    const pa = puntos[a], pb = puntos[b];
+    if (pb.euros !== pa.euros) return pb.euros - pa.euros;
+    return pb.aciertos - pa.aciertos;
+  });
+  body.innerHTML = sortedParticipantes.map(participante => {
     const celdas = partidos.map(p => {
       const apuesta = state.apuestas[participante]?.[p.id] || '-';
       const ok = p.resultadoReal && apuesta === p.resultadoReal;
       const fail = p.resultadoReal && apuesta !== '-' && apuesta !== p.resultadoReal;
       return `<td class="${ok?'apuesta-ok':fail?'apuesta-fail':'apuesta-pending'}">${apuesta}${ok?' ✅':fail?' ❌':''}</td>`;
     }).join('');
-    return `<tr><td class="nombre-col">${participante}</td>${celdas}<td style="color:var(--amarillo);font-weight:700">${puntos[participante]?.total||0}</td></tr>`;
+    return `<tr><td class="nombre-col">${participante}</td>${celdas}<td style="color:var(--amarillo);font-weight:700">${puntos[participante]?.euros||0} €</td><td style="color:#aaa">${puntos[participante]?.aciertos||0}</td></tr>`;
   }).join('');
 }
 
 function renderEstadoJornadas() {
-  const el = document.getElementById('estado-jornadas');
-  el.innerHTML = state.jornadas.map(j => `
-    <div class="jornada-card ${j.estado}">
-      <div class="jornada-header">
-        <div class="jornada-title">${j.nombre} · ${j.precioParticipacion}€/participante</div>
-        <span class="badge badge-${j.estado}">${j.estado}</span>
-      </div>
-      ${j.partidos.map(p => `
-        <div class="partido">
-          <div>
-            <div class="partido-equipos">${p.equipoA} vs ${p.equipoB}</div>
-            <div class="partido-fecha">📅 ${p.fecha}</div>
-          </div>
-          ${p.resultadoReal
-            ? `<div class="resultado-real">${p.resultadoReal}</div>`
-            : `<div class="resultado-pendiente">Pendiente</div>`}
-        </div>`).join('')}
-      ${j.ganador ? `<p style="margin-top:8px;color:#4caf50;font-weight:600">🏆 Ganador: ${j.ganador}</p>` : ''}
-      ${j.estado==='acumulada' ? `<p style="margin-top:8px;color:#e74c3c;font-size:0.82rem">💸 Bote acumulado a la siguiente jornada</p>` : ''}
-    </div>`).join('');
+  // Tabla de apuestas por jornada
+  const el2 = document.getElementById('estado-apuestas-detalle');
+  if (!el2) return;
+  if (state.participantes.length === 0) { el2.innerHTML = '<p class="text-muted">Sin participantes</p>'; return; }
+
+  el2.innerHTML = state.jornadas.map(j => {
+    const partidos = j.partidos;
+    return `
+      <div style="margin-bottom:24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-weight:700;color:var(--amarillo);font-size:0.9rem;text-transform:uppercase;letter-spacing:0.5px">${j.nombre}</div>
+          <span class="badge badge-${j.estado}">${j.estado}</span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="apuestas-table">
+            <thead>
+              <tr>
+                <th style="text-align:left">Jugador</th>
+                ${partidos.map(p => `<th>${p.equipoA.substring(0,3).toUpperCase()}<br><span style="font-size:0.6rem;opacity:0.5">vs</span><br>${p.equipoB.substring(0,3).toUpperCase()}<br><span style="font-size:0.6rem;color:#888;font-weight:400">${p.fecha}</span></th>`).join('')}
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${state.participantes.map(nombre => {
+                const apuestas = state.apuestas[nombre] || {};
+                const tieneTodasApuestas = partidos.every(p => apuestas[p.id]);
+                const aciertos = partidos.filter(p => p.resultadoReal && apuestas[p.id] === p.resultadoReal).length;
+                const celdas = partidos.map(p => {
+                  const apuesta = apuestas[p.id];
+                  const ok = p.resultadoReal && apuesta === p.resultadoReal;
+                  const fail = p.resultadoReal && apuesta && apuesta !== p.resultadoReal;
+                  if (!apuesta) return `<td class="apuesta-pending">—</td>`;
+                  return `<td class="${ok?'apuesta-ok':fail?'apuesta-fail':''}">${apuesta}${ok?' ✅':fail?' ❌':''}</td>`;
+                }).join('');
+                const estadoChip = !tieneTodasApuestas
+                  ? `<span style="color:#e74c3c;font-size:0.75rem">⏳ Pendiente</span>`
+                  : j.estado === 'ganada' && j.ganador === nombre
+                    ? `<span style="color:#f1c40f;font-size:0.75rem">🏆 Ganador</span>`
+                    : aciertos === partidos.length && j.estado !== 'abierta'
+                      ? `<span style="color:#4caf50;font-size:0.75rem">✅ ${aciertos}/${partidos.length}</span>`
+                      : `<span style="color:#888;font-size:0.75rem">${aciertos}/${partidos.length}</span>`;
+                return `<tr>
+                  <td style="text-align:left;font-weight:600">${nombre}</td>
+                  ${celdas}
+                  <td>${estadoChip}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 function renderAdminParticipantes() {
@@ -918,11 +1025,35 @@ function guardarApuesta() {
 }
 
 // =================== UTILS ===================
+function checkAdmin() {
+  if (sessionStorage.getItem('porra-admin') === '1') {
+    showTab('admin');
+    // fix active tab button
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn')[4].classList.add('active');
+    return;
+  }
+  const pwd = prompt('🔐 Contraseña de administrador:');
+  if (pwd === null) return;
+  // Hash simple
+  if (btoa(pwd) === 'UXVhbGlzMjAyNiE=') {
+    sessionStorage.setItem('porra-admin', '1');
+    showTab('admin');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn')[4].classList.add('active');
+    showToast('✅ Bienvenido, Presidente Vitalicio 👑');
+  } else {
+    showToast('❌ Contraseña incorrecta', 'error');
+  }
+}
+
+
 function showTab(tabName) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + tabName).classList.add('active');
   event.target.classList.add('active');
+  if (tabName === 'calendario') renderCalendario();
 }
 
 function showToast(msg, type) {
@@ -948,9 +1079,276 @@ function resetTodo() {
   showToast('🗑️ Todo reseteado');
 }
 
+// =================== PARTICIPANTES DEFAULT ===================
+const PARTICIPANTES_DEFAULT = [
+  "Evaristo",
+  "Juanma",
+  "Jorge",
+  "Giancarlo",
+  "Jesús",
+  "José",
+  "Juan Antonio",
+  "Rafa",
+  "Miguel",
+  "Abraham",
+  "Santi",
+  "Benjamín",
+  "Rogelio",
+  "Carlos",
+  "Israel",
+  "Iván",
+  "Pablo"
+];
+
+// =================== CALENDARIO DATA ===================
+const GRUPOS_MUNDIAL = [
+  {
+    grupo: 'A',
+    equipos: ['México 🇲🇽', 'Sudáfrica 🇿🇦', 'Corea del Sur 🇰🇷', 'Rep. Checa 🇨🇿'],
+    partidos: [
+      { j:1, fecha:'Jue 11 Jun', hora:'21:00', local:'México', visitante:'Sudáfrica', sede:'Estadio Azteca, CDMX' },
+      { j:1, fecha:'Jue 11 Jun', hora:'04:00*', local:'Corea del Sur', visitante:'Rep. Checa', sede:'Estadio Akron, Guadalajara' },
+      { j:2, fecha:'Jue 18 Jun', hora:'18:00', local:'Rep. Checa', visitante:'Sudáfrica', sede:'Mercedes-Benz Stadium, Atlanta' },
+      { j:2, fecha:'Jue 18 Jun', hora:'03:00*', local:'México', visitante:'Corea del Sur', sede:'Estadio Akron, Guadalajara' },
+      { j:3, fecha:'Mié 24 Jun', hora:'03:00*', local:'México', visitante:'Rep. Checa', sede:'Estadio Azteca, CDMX' },
+      { j:3, fecha:'Mié 24 Jun', hora:'03:00*', local:'Sudáfrica', visitante:'Corea del Sur', sede:'Estadio BBVA, Monterrey' },
+    ]
+  },
+  {
+    grupo: 'B',
+    equipos: ['Canadá 🇨🇦', 'Bosnia 🇧🇦', 'Qatar 🇶🇦', 'Suiza 🇨🇭'],
+    partidos: [
+      { j:1, fecha:'Vie 12 Jun', hora:'21:00', local:'Canadá', visitante:'Bosnia', sede:'BMO Field, Toronto' },
+      { j:1, fecha:'Sáb 13 Jun', hora:'21:00', local:'Qatar', visitante:'Suiza', sede:'Levi\'s Stadium, Santa Clara' },
+      { j:2, fecha:'Jue 18 Jun', hora:'21:00', local:'Suiza', visitante:'Bosnia', sede:'SoFi Stadium, Los Angeles' },
+      { j:2, fecha:'Jue 18 Jun', hora:'00:00*', local:'Canadá', visitante:'Qatar', sede:'BC Place, Vancouver' },
+      { j:3, fecha:'Mié 24 Jun', hora:'21:00', local:'Canadá', visitante:'Suiza', sede:'BC Place, Vancouver' },
+      { j:3, fecha:'Mié 24 Jun', hora:'21:00', local:'Bosnia', visitante:'Qatar', sede:'Lumen Field, Seattle' },
+    ]
+  },
+  {
+    grupo: 'C',
+    equipos: ['Brasil 🇧🇷', 'Marruecos 🇲🇦', 'Haití 🇭🇹', 'Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿'],
+    partidos: [
+      { j:1, fecha:'Sáb 13 Jun', hora:'00:00*', local:'Brasil', visitante:'Marruecos', sede:'MetLife Stadium, New Jersey' },
+      { j:1, fecha:'Sáb 13 Jun', hora:'03:00*', local:'Haití', visitante:'Escocia', sede:'Gillette Stadium, Boston' },
+      { j:2, fecha:'Vie 19 Jun', hora:'03:00*', local:'Brasil', visitante:'Haití', sede:'Lincoln Financial Field, Philadelphia' },
+      { j:2, fecha:'Vie 19 Jun', hora:'00:00*', local:'Escocia', visitante:'Marruecos', sede:'Gillette Stadium, Boston' },
+      { j:3, fecha:'Mié 24 Jun', hora:'00:00*', local:'Escocia', visitante:'Brasil', sede:'Hard Rock Stadium, Miami' },
+      { j:3, fecha:'Mié 24 Jun', hora:'00:00*', local:'Marruecos', visitante:'Haití', sede:'Mercedes-Benz Stadium, Atlanta' },
+    ]
+  },
+  {
+    grupo: 'D',
+    equipos: ['EE.UU. 🇺🇸', 'Paraguay 🇵🇾', 'Australia 🇦🇺', 'Turquía 🇹🇷'],
+    partidos: [
+      { j:1, fecha:'Vie 12 Jun', hora:'03:00*', local:'EE.UU.', visitante:'Paraguay', sede:'SoFi Stadium, Los Angeles' },
+      { j:1, fecha:'Sáb 13 Jun', hora:'06:00*', local:'Australia', visitante:'Turquía', sede:'BC Place, Vancouver' },
+      { j:2, fecha:'Vie 19 Jun', hora:'06:00*', local:'Turquía', visitante:'Paraguay', sede:'Levi\'s Stadium, Santa Clara' },
+      { j:2, fecha:'Vie 19 Jun', hora:'21:00', local:'EE.UU.', visitante:'Australia', sede:'Lumen Field, Seattle' },
+      { j:3, fecha:'Jue 25 Jun', hora:'04:00*', local:'EE.UU.', visitante:'Turquía', sede:'SoFi Stadium, Los Angeles' },
+      { j:3, fecha:'Jue 25 Jun', hora:'04:00*', local:'Paraguay', visitante:'Australia', sede:'Levi\'s Stadium, Santa Clara' },
+    ]
+  },
+  {
+    grupo: 'E',
+    equipos: ['Alemania 🇩🇪', 'Curazao 🇨🇼', 'Costa de Marfil 🇨🇮', 'Ecuador 🇪🇨'],
+    partidos: [
+      { j:1, fecha:'Dom 14 Jun', hora:'19:00', local:'Alemania', visitante:'Curazao', sede:'NRG Stadium, Houston' },
+      { j:1, fecha:'Dom 14 Jun', hora:'01:00*', local:'Costa de Marfil', visitante:'Ecuador', sede:'Lincoln Financial Field, Philadelphia' },
+      { j:2, fecha:'Sáb 20 Jun', hora:'22:00', local:'Alemania', visitante:'Costa de Marfil', sede:'BMO Field, Toronto' },
+      { j:2, fecha:'Dom 21 Jun', hora:'02:00*', local:'Ecuador', visitante:'Curazao', sede:'Arrowhead Stadium, Kansas City' },
+      { j:3, fecha:'Jue 25 Jun', hora:'22:00', local:'Ecuador', visitante:'Alemania', sede:'MetLife Stadium, New Jersey' },
+      { j:3, fecha:'Jue 25 Jun', hora:'22:00', local:'Curazao', visitante:'Costa de Marfil', sede:'Lincoln Financial Field, Philadelphia' },
+    ]
+  },
+  {
+    grupo: 'F',
+    equipos: ['Países Bajos 🇳🇱', 'Japón 🇯🇵', 'Suecia 🇸🇪', 'Túnez 🇹🇳'],
+    partidos: [
+      { j:1, fecha:'Dom 14 Jun', hora:'22:00', local:'Países Bajos', visitante:'Japón', sede:'AT&T Stadium, Arlington' },
+      { j:1, fecha:'Dom 14 Jun', hora:'04:00*', local:'Suecia', visitante:'Túnez', sede:'Estadio BBVA, Monterrey' },
+      { j:2, fecha:'Sáb 20 Jun', hora:'19:00', local:'Países Bajos', visitante:'Suecia', sede:'NRG Stadium, Houston' },
+      { j:2, fecha:'Sáb 20 Jun', hora:'06:00*', local:'Túnez', visitante:'Japón', sede:'Estadio BBVA, Monterrey' },
+      { j:3, fecha:'Jue 25 Jun', hora:'01:00*', local:'Túnez', visitante:'Países Bajos', sede:'Arrowhead Stadium, Kansas City' },
+      { j:3, fecha:'Jue 25 Jun', hora:'01:00*', local:'Japón', visitante:'Suecia', sede:'AT&T Stadium, Arlington' },
+    ]
+  },
+  {
+    grupo: 'G',
+    equipos: ['Bélgica 🇧🇪', 'Egipto 🇪🇬', 'Irán 🇮🇷', 'Nueva Zelanda 🇳🇿'],
+    partidos: [
+      { j:1, fecha:'Lun 15 Jun', hora:'21:00', local:'Bélgica', visitante:'Egipto', sede:'Lumen Field, Seattle' },
+      { j:1, fecha:'Lun 15 Jun', hora:'03:00*', local:'Irán', visitante:'Nueva Zelanda', sede:'SoFi Stadium, Los Angeles' },
+      { j:2, fecha:'Dom 21 Jun', hora:'21:00', local:'Bélgica', visitante:'Irán', sede:'SoFi Stadium, Los Angeles' },
+      { j:2, fecha:'Lun 22 Jun', hora:'03:00*', local:'Nueva Zelanda', visitante:'Egipto', sede:'BC Place, Vancouver' },
+      { j:3, fecha:'Vie 26 Jun', hora:'05:00*', local:'Nueva Zelanda', visitante:'Bélgica', sede:'BC Place, Vancouver' },
+      { j:3, fecha:'Vie 26 Jun', hora:'05:00*', local:'Egipto', visitante:'Irán', sede:'Lumen Field, Seattle' },
+    ]
+  },
+  {
+    grupo: 'H',
+    equipos: ['España 🇪🇸', 'Cabo Verde 🇨🇻', 'Arabia Saudí 🇸🇦', 'Uruguay 🇺🇾'],
+    partidos: [
+      { j:1, fecha:'Lun 15 Jun', hora:'18:00', local:'España', visitante:'Cabo Verde', sede:'Mercedes-Benz Stadium, Atlanta' },
+      { j:1, fecha:'Lun 15 Jun', hora:'00:00*', local:'Arabia Saudí', visitante:'Uruguay', sede:'Hard Rock Stadium, Miami' },
+      { j:2, fecha:'Dom 21 Jun', hora:'18:00', local:'España', visitante:'Arabia Saudí', sede:'Mercedes-Benz Stadium, Atlanta' },
+      { j:2, fecha:'Dom 21 Jun', hora:'00:00*', local:'Uruguay', visitante:'Cabo Verde', sede:'Hard Rock Stadium, Miami' },
+      { j:3, fecha:'Vie 26 Jun', hora:'02:00*', local:'Uruguay', visitante:'España', sede:'Estadio Akron, Guadalajara' },
+      { j:3, fecha:'Vie 26 Jun', hora:'02:00*', local:'Cabo Verde', visitante:'Arabia Saudí', sede:'NRG Stadium, Houston' },
+    ]
+  },
+  {
+    grupo: 'I',
+    equipos: ['Francia 🇫🇷', 'Senegal 🇸🇳', 'Irak 🇮🇶', 'Noruega 🇳🇴'],
+    partidos: [
+      { j:1, fecha:'Mar 16 Jun', hora:'21:00', local:'Francia', visitante:'Senegal', sede:'MetLife Stadium, New Jersey' },
+      { j:1, fecha:'Mar 16 Jun', hora:'00:00*', local:'Irak', visitante:'Noruega', sede:'Gillette Stadium, Boston' },
+      { j:2, fecha:'Lun 22 Jun', hora:'23:00', local:'Francia', visitante:'Irak', sede:'Lincoln Financial Field, Philadelphia' },
+      { j:2, fecha:'Mar 23 Jun', hora:'02:00*', local:'Noruega', visitante:'Senegal', sede:'MetLife Stadium, New Jersey' },
+      { j:3, fecha:'Vie 26 Jun', hora:'21:00', local:'Noruega', visitante:'Francia', sede:'Gillette Stadium, Boston' },
+      { j:3, fecha:'Vie 26 Jun', hora:'21:00', local:'Senegal', visitante:'Irak', sede:'BMO Field, Toronto' },
+    ]
+  },
+  {
+    grupo: 'J',
+    equipos: ['Argentina 🇦🇷', 'Argelia 🇩🇿', 'Austria 🇦🇹', 'Jordania 🇯🇴'],
+    partidos: [
+      { j:1, fecha:'Mar 16 Jun', hora:'03:00*', local:'Argentina', visitante:'Argelia', sede:'Arrowhead Stadium, Kansas City' },
+      { j:1, fecha:'Mar 16 Jun', hora:'06:00*', local:'Austria', visitante:'Jordania', sede:'Levi\'s Stadium, Santa Clara' },
+      { j:2, fecha:'Lun 22 Jun', hora:'19:00', local:'Argentina', visitante:'Austria', sede:'AT&T Stadium, Arlington' },
+      { j:2, fecha:'Lun 22 Jun', hora:'05:00*', local:'Jordania', visitante:'Argelia', sede:'Levi\'s Stadium, Santa Clara' },
+      { j:3, fecha:'Sáb 27 Jun', hora:'04:00*', local:'Jordania', visitante:'Argentina', sede:'AT&T Stadium, Arlington' },
+      { j:3, fecha:'Sáb 27 Jun', hora:'04:00*', local:'Argelia', visitante:'Austria', sede:'Arrowhead Stadium, Kansas City' },
+    ]
+  },
+  {
+    grupo: 'K',
+    equipos: ['Portugal 🇵🇹', 'R.D. Congo 🇨🇩', 'Uzbekistán 🇺🇿', 'Colombia 🇨🇴'],
+    partidos: [
+      { j:1, fecha:'Mié 17 Jun', hora:'19:00', local:'Portugal', visitante:'R.D. Congo', sede:'NRG Stadium, Houston' },
+      { j:1, fecha:'Mié 17 Jun', hora:'04:00*', local:'Uzbekistán', visitante:'Colombia', sede:'Estadio Azteca, CDMX' },
+      { j:2, fecha:'Mar 23 Jun', hora:'19:00', local:'Portugal', visitante:'Uzbekistán', sede:'NRG Stadium, Houston' },
+      { j:2, fecha:'Mar 23 Jun', hora:'04:00*', local:'Colombia', visitante:'R.D. Congo', sede:'Estadio Akron, Guadalajara' },
+      { j:3, fecha:'Sáb 27 Jun', hora:'01:30*', local:'Colombia', visitante:'Portugal', sede:'Hard Rock Stadium, Miami' },
+      { j:3, fecha:'Sáb 27 Jun', hora:'01:30*', local:'R.D. Congo', visitante:'Uzbekistán', sede:'Mercedes-Benz Stadium, Atlanta' },
+    ]
+  },
+  {
+    grupo: 'L',
+    equipos: ['Inglaterra 🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Croacia 🇭🇷', 'Ghana 🇬🇭', 'Panamá 🇵🇦'],
+    partidos: [
+      { j:1, fecha:'Mié 17 Jun', hora:'22:00', local:'Inglaterra', visitante:'Croacia', sede:'AT&T Stadium, Arlington' },
+      { j:1, fecha:'Jue 18 Jun', hora:'01:00*', local:'Ghana', visitante:'Panamá', sede:'BMO Field, Toronto' },
+      { j:2, fecha:'Mar 23 Jun', hora:'22:00', local:'Inglaterra', visitante:'Ghana', sede:'Gillette Stadium, Boston' },
+      { j:2, fecha:'Mié 24 Jun', hora:'01:00*', local:'Panamá', visitante:'Croacia', sede:'BMO Field, Toronto' },
+      { j:3, fecha:'Sáb 27 Jun', hora:'23:00', local:'Panamá', visitante:'Inglaterra', sede:'MetLife Stadium, New Jersey' },
+      { j:3, fecha:'Sáb 27 Jun', hora:'23:00', local:'Croacia', visitante:'Ghana', sede:'Lincoln Financial Field, Philadelphia' },
+    ]
+  },
+];
+
+let calFiltro = 'all';
+
+function filtrarGrupo(g, btn) {
+  calFiltro = g;
+  document.querySelectorAll('.cal-gbtn').forEach(b => {
+    b.style.background = 'rgba(255,255,255,0.08)';
+    b.style.color = '#ccc';
+    b.classList.remove('active-g');
+  });
+  if (btn) { btn.style.background = 'var(--amarillo)'; btn.style.color = '#333'; btn.classList.add('active-g'); }
+  renderCalendario();
+}
+
+function renderCalendario() {
+  const container = document.getElementById('cal-grupos-container');
+  if (!container) return;
+
+  const GRUPO_COLORS = {
+    A:'#e74c3c',B:'#e67e22',C:'#f1c40f',D:'#2ecc71',
+    E:'#1abc9c',F:'#3498db',G:'#9b59b6',H:'#e91e8c',
+    I:'#ff5722',J:'#00bcd4',K:'#8bc34a',L:'#ff9800'
+  };
+
+  // Aplanar todos los partidos con info de grupo
+  let todosPartidos = [];
+  GRUPOS_MUNDIAL.forEach(g => {
+    if (calFiltro !== 'all' && g.grupo !== calFiltro) return;
+    g.partidos.forEach(p => {
+      todosPartidos.push({ ...p, grupo: g.grupo, equiposGrupo: g.equipos });
+    });
+  });
+
+  // Ordenar por fecha. Usamos un mapa de orden para las fechas
+  const ORDEN_FECHA = [
+    'Jue 11 Jun','Vie 12 Jun','S\u00e1b 13 Jun','Dom 14 Jun',
+    'Lun 15 Jun','Mar 16 Jun','Mi\u00e9 17 Jun','Jue 18 Jun',
+    'Vie 19 Jun','S\u00e1b 20 Jun','Dom 21 Jun','Lun 22 Jun',
+    'Mar 23 Jun','Mi\u00e9 24 Jun','Jue 25 Jun','Vie 26 Jun',
+    'S\u00e1b 27 Jun'
+  ];
+
+  // Agrupar por fecha
+  const porFecha = {};
+  todosPartidos.forEach(p => {
+    const key = p.fecha;
+    if (!porFecha[key]) porFecha[key] = [];
+    porFecha[key].push(p);
+  });
+
+  // Ordenar fechas
+  const fechasOrdenadas = ORDEN_FECHA.filter(f => porFecha[f]);
+
+  if (fechasOrdenadas.length === 0) {
+    container.innerHTML = '<div class="section-empty"><p class="text-muted">Sin partidos</p></div>';
+    return;
+  }
+
+  container.innerHTML = fechasOrdenadas.map(fecha => {
+    const partidos = porFecha[fecha];
+    // Ordenar por hora dentro del dia (primero los que no son madrugada, luego madrugada)
+    partidos.sort((a, b) => {
+      const horaA = parseFloat(a.hora.replace('*','').replace(':',''));
+      const horaB = parseFloat(b.hora.replace('*','').replace(':',''));
+      const madA = a.hora.includes('*') ? 1 : 0;
+      const madB = b.hora.includes('*') ? 1 : 0;
+      if (madA !== madB) return madA - madB;
+      return horaA - horaB;
+    });
+
+    return `
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-weight:800;font-size:1rem;color:var(--amarillo);margin-bottom:10px;display:flex;align-items:center;gap:8px">
+        📅 ${fecha}
+        <span style="font-size:0.75rem;color:#888;font-weight:400">${partidos.length} partido${partidos.length>1?'s':''}</span>
+      </div>
+      ${partidos.map(p => {
+        const color = GRUPO_COLORS[p.grupo] || 'var(--amarillo)';
+        const esMadrugada = p.hora.includes('*');
+        const horaLimpia = p.hora.replace('*','');
+        return `
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.2);border-radius:8px;padding:9px 10px;margin-bottom:6px;border-left:3px solid ${color}">
+          <div style="display:flex;flex-direction:column;align-items:center;min-width:52px;flex-shrink:0">
+            <span style="background:rgba(255,255,255,0.1);border-radius:6px;padding:2px 7px;font-size:0.82rem;font-weight:800;color:${esMadrugada?'#f39c12':'#fff'}">${horaLimpia}</span>
+            ${esMadrugada?'<span style="font-size:0.6rem;color:#f39c12;margin-top:1px">🌙 madrugada</span>':''}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">⚽ ${p.local} <span style="color:#888">vs</span> ${p.visitante}</div>
+            <div style="font-size:0.7rem;color:#777;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.sede}</div>
+          </div>
+          <div style="flex-shrink:0">
+            <span style="background:${color}22;border:1px solid ${color}55;color:${color};border-radius:12px;padding:2px 8px;font-size:0.72rem;font-weight:700">G.${p.grupo}</span>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+}
+
 // =================== INIT ===================
-cargarState();
-render();
+cargarState(); // render() y renderCalendario() se llaman dentro del callback async
+// Si no hay participantes, se cargan los default dentro de cargarState()
 </script>
 </body>
 </html>
