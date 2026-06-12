@@ -761,8 +761,8 @@ function renderEstado() {
               const tieneApuesta = ap.p1 && ap.p2;
               return `<tr>
                 <td class="td-nombre">${nombre}</td>
-                <td class="${ok1?'ap-ok':f1?'ap-fail':'ap-pend'}" style="font-weight:900">${ap.p1||'—'}${ok1?' ✅':f1?' ❌':''}</td>
-                <td class="${ok2?'ap-ok':f2?'ap-fail':'ap-pend'}" style="font-weight:900">${ap.p2||'—'}${ok2?' ✅':f2?' ❌':''}</td>
+                <td style="font-weight:900;color:${ap.p1?'#2ecc71':'#888'}">${ap.p1||'—'}${ok1?' ✅':f1?' ❌':''}</td>
+                <td style="font-weight:900;color:${ap.p2?'#2ecc71':'#888'}">${ap.p2||'—'}${ok2?' ✅':f2?' ❌':''}</td>
                 <td>${tieneApuesta
                   ? '<span style="color:#2ecc71;font-size:.75rem;font-weight:800">Hecho</span>'
                   : '<span style="color:#888;font-size:.75rem;font-weight:800">Pendiente</span>'
