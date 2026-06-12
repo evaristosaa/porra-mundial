@@ -382,7 +382,6 @@ function normalizarNombreParticipante(nombre) {
   if (PARTICIPANTES_DEFAULT.includes(nombre)) return nombre;
   const limpio = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\uFFFD/g, '');
   return {
-    'YO ?': 'Jose casa 17',
     Jess: 'Jesus',
     Jos: 'Jose',
     Benjamn: 'Benjamin',
