@@ -294,12 +294,14 @@ const PARTICIPANTES_DEFAULT = [
   "Santi casa 15",
   "Pablo casa ?",
   "Siempre en lo más alto ?",
-  "YO ?",
+  "Jose casa 17",
   "+34 642 69 03 94 ?",
   "Giancarlo casa 44",
   "Miguel casa 40",
   "Pedro casa 72",
-  "Alejandro casa ?"
+  "Alejandro casa ?",
+  "Toni casa 15",
+  "Antonio casa 65"
 ];
 
 // 8 porras: cada una tiene 2 partidos (España + otro)
@@ -380,6 +382,7 @@ function normalizarNombreParticipante(nombre) {
   if (PARTICIPANTES_DEFAULT.includes(nombre)) return nombre;
   const limpio = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\uFFFD/g, '');
   return {
+    'YO ?': 'Jose casa 17',
     Jess: 'Jesus',
     Jos: 'Jose',
     Benjamn: 'Benjamin',
@@ -756,18 +759,14 @@ function renderEstado() {
               const ok2 = porra.p2.resultadoReal && ap.p2 === porra.p2.resultadoReal;
               const f1 = porra.p1.resultadoReal && ap.p1 && !ok1;
               const f2 = porra.p2.resultadoReal && ap.p2 && !ok2;
-              const gana = ok1 && ok2;
+              const tieneApuesta = ap.p1 && ap.p2;
               return `<tr>
                 <td class="td-nombre">${nombre}</td>
-                <td class="${ok1?'ap-ok':f1?'ap-fail':'ap-pend'}">${ap.p1||'—'}${ok1?' ✅':f1?' ❌':''}</td>
-                <td class="${ok2?'ap-ok':f2?'ap-fail':'ap-pend'}">${ap.p2||'—'}${ok2?' ✅':f2?' ❌':''}</td>
-                <td>${
-                  porra.estado==='ganada' && porra.ganador===nombre
-                    ? '<span style="color:#f1c40f;font-size:.75rem">🏆 Ganador</span>'
-                    : gana ? '<span style="color:#2ecc71;font-size:.75rem">✅ ¡Acierto!</span>'
-                    : (ok1||ok2) ? '<span style="color:#f39c12;font-size:.75rem">½ Parcial</span>'
-                    : (f1||f2) ? '<span style="color:#e74c3c;font-size:.75rem">❌ Fallo</span>'
-                    : '<span style="color:#888;font-size:.75rem">Pendiente</span>'
+                <td class="${ok1?'ap-ok':f1?'ap-fail':'ap-pend'}" style="font-weight:900">${ap.p1||'—'}${ok1?' ✅':f1?' ❌':''}</td>
+                <td class="${ok2?'ap-ok':f2?'ap-fail':'ap-pend'}" style="font-weight:900">${ap.p2||'—'}${ok2?' ✅':f2?' ❌':''}</td>
+                <td>${tieneApuesta
+                  ? '<span style="color:#2ecc71;font-size:.75rem;font-weight:800">Hecho</span>'
+                  : '<span style="color:#888;font-size:.75rem;font-weight:800">Pendiente</span>'
                 }</td>
               </tr>`;
             }).join('')}
