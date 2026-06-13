@@ -453,11 +453,9 @@ function cargarState() {
   .then(resp => {
     const data = resp.record;
     if (!aplicarStateRemoto(data)) throw new Error('JSONBin sin datos validos');
-    const normalizado = normalizarParticipantes();
-    const defaultsActualizados = asegurarParticipantesDefault();
-    const actualizado = normalizado || defaultsActualizados;
+    normalizarParticipantes();
+    asegurarParticipantesDefault();
     renderAll();
-    if (actualizado) guardarState();
   })
   .catch(() => {
     renderAll();
@@ -466,12 +464,23 @@ function cargarState() {
 }
 
 function guardarState() {
-  const data = { version: 1, ...state };
+  const localData = { version: 1, ...state };
 
-  fetch(JSONBIN_URL, {
-    method: 'PUT',
-    headers: JSONBIN_HEADERS,
-    body: JSON.stringify(data)
+  fetch(JSONBIN_URL + '/latest', {
+    headers: JSONBIN_HEADERS
+  })
+  .then(r => {
+    if (!r.ok) throw new Error(`JSONBin ${r.status}`);
+    return r.json();
+  })
+  .then(resp => {
+    const data = fusionarStateParaGuardar(localData, resp.record);
+    state = { ...state, ...data };
+    return fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: JSONBIN_HEADERS,
+      body: JSON.stringify(data)
+    });
   })
   .then(r => {
     if (!r.ok) throw new Error(`JSONBin ${r.status}`);
@@ -479,6 +488,32 @@ function guardarState() {
   .catch(() => {
     toast('No se pudo guardar en JSONBin.');
   });
+}
+
+function fusionarStateParaGuardar(localData, remoteData) {
+  if (!remoteData || !remoteData.version) return localData;
+  const data = { ...localData };
+
+  const participantes = [];
+  [...(localData.participantes || []), ...(remoteData.participantes || [])].forEach(nombre => {
+    const normalizado = normalizarNombreParticipante(nombre);
+    if (!participantes.includes(normalizado)) participantes.push(normalizado);
+  });
+  data.participantes = participantes;
+
+  data.apuestas = { ...(remoteData.apuestas || {}) };
+  Object.entries(localData.apuestas || {}).forEach(([nombre, porras]) => {
+    const normalizado = normalizarNombreParticipante(nombre);
+    data.apuestas[normalizado] = { ...(data.apuestas[normalizado] || {}), ...porras };
+  });
+
+  data.pagos = [];
+  (localData.pagos || []).forEach(nombre => {
+    const normalizado = normalizarNombreParticipante(nombre);
+    if (participantes.includes(normalizado) && !data.pagos.includes(normalizado)) data.pagos.push(normalizado);
+  });
+
+  return data;
 }
 
 // ============================================================
