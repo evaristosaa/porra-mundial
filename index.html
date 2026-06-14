@@ -328,7 +328,7 @@ const PORRAS_DEFAULT = [
     p2:{ local:"España",   visitante:"Cabo Verde",  fecha:"Lun 15 Jun", hora:"18:00",   resultadoReal:null },
     estado:"activa",  ganador:null },
   { id:2, nombre:"Porra 2 - Liguilla",
-    p1:{ local:"Argentina",visitante:"Austria",     fecha:"Mar 16 Jun", hora:"03:00🌙", resultadoReal:null },
+    p1:{ local:"Argentina",visitante:"Austria",     fecha:"Lun 22 Jun", hora:"19:00",   resultadoReal:null },
     p2:{ local:"España",   visitante:"Arabia Saudí",fecha:"Dom 21 Jun", hora:"18:00",   resultadoReal:null },
     estado:"pendiente",ganador:null },
   { id:3, nombre:"Porra 3 - Liguilla",
@@ -567,6 +567,17 @@ function calcularBotePorra(porraId) {
   return state.pagos.length * PRECIO_PORRA;
 }
 
+function valorOrdenPartido(partido) {
+  const fechaIdx = ORDEN_FECHAS.indexOf(partido.fecha);
+  const fechaOrden = fechaIdx >= 0 ? fechaIdx : 999;
+  const [hh = 99, mm = 0] = (partido.hora || '').replace('🌙', '').split(':').map(n => parseInt(n, 10));
+  return fechaOrden * 1440 + (Number.isNaN(hh) ? 0 : hh * 60) + (Number.isNaN(mm) ? 0 : mm);
+}
+
+function clavesPartidosOrdenadas(porra) {
+  return ['p1', 'p2'].sort((a, b) => valorOrdenPartido(porra[a]) - valorOrdenPartido(porra[b]));
+}
+
 function renderInicio() {
   // Bote
   document.getElementById('bote-total').textContent = state.boteAcumulado + ' €';
@@ -602,7 +613,7 @@ function renderInicio() {
         <span style="font-weight:700;color:#2ecc71">${activa.nombre}</span>
         <span style="color:var(--amarillo);font-weight:800">${state.boteAcumulado} €</span>
       </div>
-      ${['p1','p2'].map(k => {
+      ${clavesPartidosOrdenadas(activa).map(k => {
         const pt = activa[k];
         const resHtml = pt.resultadoReal
           ? '<div class="resultado-badge">' + pt.resultadoReal + '</div>'
@@ -680,7 +691,12 @@ function renderApuestasParticipante() {
         <span style="font-weight:700;font-size:0.9rem">${p.nombre}</span>
         <span class="badge badge-${p.estado}">${p.estado}</span>
       </div>
-      ${[['p1',p.p1,ap.p1,ok1,fail1],['p2',p.p2,ap.p2,ok2,fail2]].map(([k,pt,apk,okk,failk]) => `
+      ${clavesPartidosOrdenadas(p).map(k => {
+        const pt = p[k];
+        const apk = ap[k];
+        const okk = k === 'p1' ? ok1 : ok2;
+        const failk = k === 'p1' ? fail1 : fail2;
+        return `
         <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.15);border-radius:8px;padding:7px 10px;margin-bottom:4px">
           <div>
             <div style="font-size:.83rem;font-weight:600">${k==='p2'?'🇪🇸':''} ${pt.local} vs ${pt.visitante}</div>
@@ -689,7 +705,8 @@ function renderApuestasParticipante() {
           <div style="font-weight:800;font-size:1rem;color:${okk?'#2ecc71':failk?'#e74c3c':'#aaa'}">
             ${apk || '—'} ${okk?'✅':failk?'❌':''}
           </div>
-        </div>`).join('')}
+        </div>`;
+      }).join('')}
       <div style="display:flex;justify-content:flex-end;margin-top:8px">
         ${esActiva ? (
           tieneApuesta
@@ -791,8 +808,10 @@ function renderEstado() {
         <span class="badge badge-${porra.estado}">${porra.estado}</span>
       </div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:8px">
-        ⚽ ${porra.p1.local} vs ${porra.p1.visitante} · 📅 ${porra.p1.fecha} ${porra.p1.hora} ${porra.p1.resultadoReal?`· <b style="color:#2ecc71">${porra.p1.resultadoReal}</b>`:''}
-        <br>🇪🇸 ${porra.p2.local} vs ${porra.p2.visitante} · 📅 ${porra.p2.fecha} ${porra.p2.hora} ${porra.p2.resultadoReal?`· <b style="color:#2ecc71">${porra.p2.resultadoReal}</b>`:''}
+        ${clavesPartidosOrdenadas(porra).map(k => {
+          const pt = porra[k];
+          return `${k === 'p2' ? '🇪🇸' : '⚽'} ${pt.local} vs ${pt.visitante} · 📅 ${pt.fecha} ${pt.hora} ${pt.resultadoReal?`· <b style="color:#2ecc71">${pt.resultadoReal}</b>`:''}`;
+        }).join('<br>')}
       </div>
       <div style="overflow-x:auto">
         <table class="ap-table">
@@ -840,7 +859,8 @@ function abrirModal(participante, porraId) {
   const apActual = state.apuestas[participante]?.[porraId] || {};
   document.getElementById('modal-title').textContent = `🎯 ${participante} · ${porra.nombre}`;
   document.getElementById('modal-content').innerHTML =
-    [['p1','⚽'],['p2','🇪🇸']].map(([k,ico]) => {
+    clavesPartidosOrdenadas(porra).map(k => {
+      const ico = k === 'p2' ? '🇪🇸' : '⚽';
       const pt = porra[k];
       const apK = apActual[k] || '';
       const [gAk, gBk] = apK ? apK.split('-') : ['',''];
@@ -936,7 +956,7 @@ function renderAdminPorra() {
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
       <div>
         <div style="font-weight:600;font-size:.85rem">${p.nombre} <span class="badge badge-${p.estado}">${p.estado}</span></div>
-        <div style="font-size:.72rem;color:#888">⚽ ${p.p1.local} vs ${p.p1.visitante} · ${p.p1.fecha} <span style='color:#e91e8c'>+ 🇪🇸 ${p.p2.local} vs ${p.p2.visitante} · ${p.p2.fecha}</span></div>
+        <div style="font-size:.72rem;color:#888">${clavesPartidosOrdenadas(p).map(k => `${k === 'p2' ? '🇪🇸' : '⚽'} ${p[k].local} vs ${p[k].visitante} · ${p[k].fecha}`).join(' <span style="color:#666">+</span> ')}</div>
       </div>
       <div style="display:flex;gap:5px">
         ${p.estado==='pendiente' ? `<button class="btn btn-success btn-sm" onclick="activarPorra(${p.id})">Activar</button>` : ''}
@@ -976,7 +996,8 @@ function renderAdminResultado() {
   if (!activa) { el.innerHTML = '<p class="text-muted">No hay porra activa</p>'; return; }
   el.innerHTML = `
     <p style="font-size:.82rem;color:#aaa;margin-bottom:10px">${activa.nombre}</p>
-    ${[['p1','⚽'],['p2','🇪🇸']].map(([k,ico]) => {
+    ${clavesPartidosOrdenadas(activa).map(k => {
+      const ico = k === 'p2' ? '🇪🇸' : '⚽';
       const pt = activa[k];
       const [gA,gB] = pt.resultadoReal ? pt.resultadoReal.split('-') : ['',''];
       return `<div style="margin-bottom:10px">
@@ -1017,7 +1038,7 @@ function renderAdminResolver() {
   });
 
   el.innerHTML = `
-    <p style="font-size:.82rem;margin-bottom:12px">${activa.nombre} · ${activa.p1.local} vs ${activa.p1.visitante}: <b style="color:#2ecc71">${activa.p1.resultadoReal||'?'}</b> · 🇪🇸 ${activa.p2.local} vs ${activa.p2.visitante}: <b style="color:#2ecc71">${activa.p2.resultadoReal||'?'}</b></p>
+    <p style="font-size:.82rem;margin-bottom:12px">${activa.nombre} · ${clavesPartidosOrdenadas(activa).map(k => `${k === 'p2' ? '🇪🇸 ' : ''}${activa[k].local} vs ${activa[k].visitante}: <b style="color:#2ecc71">${activa[k].resultadoReal||'?'}</b>`).join(' · ')}</p>
     ${ganadores.length > 0
       ? `<p style="color:#2ecc71;margin-bottom:10px">🏆 Ganador${ganadores.length>1?'es':''}: <b>${ganadores.join(', ')}</b></p>
          <div class="form-row">
