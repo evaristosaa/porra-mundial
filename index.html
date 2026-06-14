@@ -994,7 +994,7 @@ function renderAdminResolver() {
   const el = document.getElementById('admin-resolver');
   if (!el) return;
   const activa = state.porras.find(p => p.estado === 'activa');
-  if (!activa || (!activa.p1.resultadoReal && !activa.p2.resultadoReal)) { el.innerHTML = '<p class="text-muted">Introduce primero los resultados reales</p>'; return; }
+  if (!activa || !activa.p1.resultadoReal || !activa.p2.resultadoReal) { el.innerHTML = '<p class="text-muted">Introduce primero los dos resultados reales</p>'; return; }
 
   const ganadores = state.participantes.filter(p => {
     const ap = state.apuestas[p]?.[activa.id] || {};
@@ -1069,24 +1069,24 @@ const GRUPOS_MUNDIAL = [
     {j:3,fecha:'Mié 24 Jun',hora:'03:00🌙',local:'Sudáfrica',     visitante:'Corea del Sur',sede:'Estadio BBVA, Monterrey'},
   ]},
   { grupo:'B', equipos:['Canadá 🇨🇦','Bosnia 🇧🇦','Qatar 🇶🇦','Suiza 🇨🇭'], partidos:[
-    {j:1,fecha:'Vie 12 Jun',hora:'21:00', local:'Canadá',  visitante:'Bosnia', sede:'BMO Field, Toronto'},
-    {j:1,fecha:'Sáb 13 Jun',hora:'21:00', local:'Qatar',   visitante:'Suiza',  sede:"Levi's Stadium, Santa Clara"},
+    {j:1,fecha:'Vie 12 Jun',hora:'21:00', local:'Canadá',  visitante:'Bosnia', sede:'BMO Field, Toronto', resultado:'1-1'},
+    {j:1,fecha:'Sáb 13 Jun',hora:'21:00', local:'Qatar',   visitante:'Suiza',  sede:"Levi's Stadium, Santa Clara", resultado:'1-1'},
     {j:2,fecha:'Jue 18 Jun',hora:'21:00', local:'Suiza',   visitante:'Bosnia', sede:'SoFi Stadium, Los Angeles'},
     {j:2,fecha:'Jue 18 Jun',hora:'00:00🌙',local:'Canadá',  visitante:'Qatar',  sede:'BC Place, Vancouver'},
     {j:3,fecha:'Mié 24 Jun',hora:'21:00', local:'Canadá',  visitante:'Suiza',  sede:'BC Place, Vancouver'},
     {j:3,fecha:'Mié 24 Jun',hora:'21:00', local:'Bosnia',  visitante:'Qatar',  sede:'Lumen Field, Seattle'},
   ]},
   { grupo:'C', equipos:['Brasil 🇧🇷','Marruecos 🇲🇦','Haití 🇭🇹','Escocia 🏴󠁧󠁢󠁳󠁣󠁴󠁿'], partidos:[
-    {j:1,fecha:'Sáb 13 Jun',hora:'00:00🌙',local:'Brasil',   visitante:'Marruecos',sede:'MetLife Stadium, New Jersey'},
-    {j:1,fecha:'Sáb 13 Jun',hora:'03:00🌙',local:'Haití',    visitante:'Escocia',  sede:'Gillette Stadium, Boston'},
+    {j:1,fecha:'Sáb 13 Jun',hora:'00:00🌙',local:'Brasil',   visitante:'Marruecos',sede:'MetLife Stadium, New Jersey', resultado:'1-1'},
+    {j:1,fecha:'Sáb 13 Jun',hora:'03:00🌙',local:'Haití',    visitante:'Escocia',  sede:'Gillette Stadium, Boston', resultado:'0-1'},
     {j:2,fecha:'Vie 19 Jun',hora:'03:00🌙',local:'Brasil',   visitante:'Haití',    sede:'Lincoln Financial Field, Philadelphia'},
     {j:2,fecha:'Vie 19 Jun',hora:'00:00🌙',local:'Escocia',  visitante:'Marruecos',sede:'Gillette Stadium, Boston'},
     {j:3,fecha:'Mié 24 Jun',hora:'00:00🌙',local:'Escocia',  visitante:'Brasil',   sede:'Hard Rock Stadium, Miami'},
     {j:3,fecha:'Mié 24 Jun',hora:'00:00🌙',local:'Marruecos',visitante:'Haití',    sede:'Mercedes-Benz Stadium, Atlanta'},
   ]},
   { grupo:'D', equipos:['EE.UU. 🇺🇸','Paraguay 🇵🇾','Australia 🇦🇺','Turquía 🇹🇷'], partidos:[
-    {j:1,fecha:'Vie 12 Jun',hora:'03:00🌙',local:'EE.UU.',    visitante:'Paraguay', sede:'SoFi Stadium, Los Angeles'},
-    {j:1,fecha:'Sáb 13 Jun',hora:'06:00🌙',local:'Australia', visitante:'Turquía',  sede:'BC Place, Vancouver'},
+    {j:1,fecha:'Vie 12 Jun',hora:'03:00🌙',local:'EE.UU.',    visitante:'Paraguay', sede:'SoFi Stadium, Los Angeles', resultado:'4-1'},
+    {j:1,fecha:'Sáb 13 Jun',hora:'06:00🌙',local:'Australia', visitante:'Turquía',  sede:'BC Place, Vancouver', resultado:'2-0'},
     {j:2,fecha:'Vie 19 Jun',hora:'06:00🌙',local:'Turquía',   visitante:'Paraguay', sede:"Levi's Stadium, Santa Clara"},
     {j:2,fecha:'Vie 19 Jun',hora:'21:00', local:'EE.UU.',    visitante:'Australia',sede:'Lumen Field, Seattle'},
     {j:3,fecha:'Jue 25 Jun',hora:'04:00🌙',local:'EE.UU.',    visitante:'Turquía',  sede:'SoFi Stadium, Los Angeles'},
