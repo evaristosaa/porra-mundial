@@ -79,6 +79,9 @@
   .ap-fail { color: #e74c3c; }
   .ap-pend { color: #666; }
   .td-nombre { text-align: left !important; font-weight: 600; padding-left: 8px !important; }
+  .clas-table { table-layout: fixed; min-width: 560px; }
+  .clas-table th:first-child, .clas-table td:first-child { width: 42%; }
+  .clas-table th:not(:first-child), .clas-table td:not(:first-child) { width: 7.25%; }
 
   /* FORMS */
   .form-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 8px; }
@@ -209,19 +212,24 @@
   <div class="card" style="padding:10px 12px;margin-bottom:12px">
     <div style="font-size:0.7rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Filtrar por grupo</div>
     <div style="display:flex;gap:5px;flex-wrap:wrap">
-      <button class="cal-gbtn active-g" onclick="filtrarGrupo('all',this)">Todos</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('A',this)">Grupo A</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('B',this)">Grupo B</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('C',this)">Grupo C</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('D',this)">Grupo D</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('E',this)">Grupo E</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('F',this)">Grupo F</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('G',this)">Grupo G</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('H',this)">Grupo H 🇪🇸</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('I',this)">Grupo I</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('J',this)">Grupo J</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('K',this)">Grupo K</button>
-      <button class="cal-gbtn" onclick="filtrarGrupo('L',this)">Grupo L</button>
+      <button class="cal-gbtn active-g" data-cal-group onclick="filtrarGrupo('all',this)">Todos</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('A',this)">Grupo A</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('B',this)">Grupo B</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('C',this)">Grupo C</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('D',this)">Grupo D</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('E',this)">Grupo E</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('F',this)">Grupo F</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('G',this)">Grupo G</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('H',this)">Grupo H 🇪🇸</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('I',this)">Grupo I</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('J',this)">Grupo J</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('K',this)">Grupo K</button>
+      <button class="cal-gbtn" data-cal-group onclick="filtrarGrupo('L',this)">Grupo L</button>
+    </div>
+    <div style="font-size:0.7rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 7px">Filtrar por día</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      <button class="cal-gbtn active-g" data-cal-fecha onclick="filtrarFechaCalendario('all',this)">Todos</button>
+      <button class="cal-gbtn" data-cal-fecha onclick="filtrarFechaCalendario('hoy',this)">Hoy</button>
     </div>
   </div>
   <div id="cal-container"></div>
@@ -1169,20 +1177,44 @@ const ORDEN_FECHAS = ['Jue 11 Jun','Vie 12 Jun','Sáb 13 Jun','Dom 14 Jun','Lun 
 const GRUPO_COLORS = {A:'#e74c3c',B:'#e67e22',C:'#f1c40f',D:'#2ecc71',E:'#1abc9c',F:'#3498db',G:'#9b59b6',H:'#e91e8c',I:'#ff5722',J:'#00bcd4',K:'#8bc34a',L:'#ff9800'};
 
 let calFiltro = 'all';
+let calFechaFiltro = 'all';
 function filtrarGrupo(g, btn) {
   calFiltro = g;
-  document.querySelectorAll('.cal-gbtn').forEach(b => { b.style.background='rgba(255,255,255,.08)'; b.style.color='#aaa'; b.classList.remove('active-g'); });
+  document.querySelectorAll('[data-cal-group]').forEach(b => { b.style.background='rgba(255,255,255,.08)'; b.style.color='#aaa'; b.classList.remove('active-g'); });
   if (btn) { btn.style.background='var(--amarillo)'; btn.style.color='#333'; btn.classList.add('active-g'); }
   renderCalendario();
+}
+
+function filtrarFechaCalendario(filtro, btn) {
+  calFechaFiltro = filtro;
+  document.querySelectorAll('[data-cal-fecha]').forEach(b => { b.style.background='rgba(255,255,255,.08)'; b.style.color='#aaa'; b.classList.remove('active-g'); });
+  if (btn) { btn.style.background='var(--amarillo)'; btn.style.color='#333'; btn.classList.add('active-g'); }
+  renderCalendario();
+}
+
+function obtenerFechaCalendarioHoy() {
+  const partes = new Intl.DateTimeFormat('es-ES', {
+    timeZone: 'Europe/Madrid',
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short'
+  }).formatToParts(new Date());
+  const valor = tipo => partes.find(p => p.type === tipo)?.value || '';
+  const capitalizar = txt => txt.replace('.', '').slice(0, 3).replace(/^./, c => c.toUpperCase());
+  return `${capitalizar(valor('weekday'))} ${valor('day')} ${capitalizar(valor('month'))}`;
 }
 
 function renderCalendario() {
   const el = document.getElementById('cal-container');
   if (!el) return;
   let todos = [];
+  const fechaHoy = obtenerFechaCalendarioHoy();
   GRUPOS_MUNDIAL.forEach(g => {
     if (calFiltro !== 'all' && g.grupo !== calFiltro) return;
-    g.partidos.forEach(p => todos.push({...p, grupo: g.grupo}));
+    g.partidos.forEach(p => {
+      if (calFechaFiltro === 'hoy' && p.fecha !== fechaHoy) return;
+      todos.push({...p, grupo: g.grupo});
+    });
   });
   const porFecha = {};
   todos.forEach(p => { if (!porFecha[p.fecha]) porFecha[p.fecha]=[]; porFecha[p.fecha].push(p); });
@@ -1259,11 +1291,31 @@ function calcularClasificacionGrupo(grupo) {
   );
 }
 
+let clasFiltro = 'all';
+function filtrarClasificacion(g, btn) {
+  clasFiltro = g;
+  document.querySelectorAll('[data-clas-group]').forEach(b => { b.style.background='rgba(255,255,255,.08)'; b.style.color='#aaa'; b.classList.remove('active-g'); });
+  if (btn) { btn.style.background='var(--amarillo)'; btn.style.color='#333'; btn.classList.add('active-g'); }
+  renderClasificacion();
+}
+
 function renderClasificacion() {
   const el = document.getElementById('clasificacion-container');
   if (!el) return;
 
-  const gruposHtml = GRUPOS_MUNDIAL.map(grupo => {
+  const grupos = GRUPOS_MUNDIAL.filter(grupo => clasFiltro === 'all' || grupo.grupo === clasFiltro);
+  const filtroHtml = `<div class="card" style="padding:10px 12px;margin-bottom:12px">
+    <div style="font-size:0.7rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Filtrar por grupo</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
+      ${['all','A','B','C','D','E','F','G','H','I','J','K','L'].map(g => {
+        const activo = clasFiltro === g;
+        const label = g === 'all' ? 'Todos' : `Grupo ${g}${g === 'H' ? ' 🇪🇸' : ''}`;
+        return `<button class="cal-gbtn ${activo ? 'active-g' : ''}" data-clas-group onclick="filtrarClasificacion('${g}',this)" style="${activo ? 'background:var(--amarillo);color:#333' : ''}">${label}</button>`;
+      }).join('')}
+    </div>
+  </div>`;
+
+  const gruposHtml = grupos.map(grupo => {
     const color = GRUPO_COLORS[grupo.grupo] || '#fff';
     const filas = calcularClasificacionGrupo(grupo).map((s, i) => `
       <tr>
@@ -1285,7 +1337,10 @@ function renderClasificacion() {
         <span style="font-size:.7rem;color:#888">${grupo.partidos.filter(p => p.resultado).length}/6 jugados</span>
       </div>
       <div style="overflow-x:auto">
-        <table class="ap-table">
+        <table class="ap-table clas-table">
+          <colgroup>
+            <col style="width:42%"><col span="8" style="width:7.25%">
+          </colgroup>
           <thead><tr>
             <th style="text-align:left;padding-left:8px">Equipo</th>
             <th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th>
@@ -1322,6 +1377,7 @@ function renderClasificacion() {
       <h3>📈 Clasificación por grupos</h3>
       <p class="text-muted">Orden: puntos, diferencia de goles y goles a favor.</p>
     </div>
+    ${filtroHtml}
     ${gruposHtml}
     <div class="card">
       <h3>🏆 Eliminatorias</h3>
