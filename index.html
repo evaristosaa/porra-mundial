@@ -299,22 +299,22 @@ const PARTICIPANTES_DEFAULT = [
   "Jorge casa 9",
   "Jose casa 12",
   "José casa 49",
-  "José Manuel casa ?",
-  "Juan Antonio casa ?",
+  "José Manuel casa 27",
+  "Juan Antonio casa 28",
   "Juanma casa 30",
   "Miguel casa 3",
   "Pedro casa 1",
-  "Rafa casa ?",
+  "Rafa casa 73",
   "Rogelio casa 63",
   "Santi casa 15",
-  "Pablo casa ?",
-  "Siempre en lo más alto ?",
+  "Pablo casa 77",
+  "Antonio",
   "Jose casa 17",
-  "+34 642 69 03 94 ?",
+  "Junior",
   "Giancarlo casa 44",
   "Miguel casa 40",
   "Pedro casa 72",
-  "Alejandro casa ?",
+  "Alejandro casa 16",
   "Toni casa 15",
   "Antonio casa 65"
 ];
@@ -395,6 +395,16 @@ function aplicarStateRemoto(data) {
 
 function normalizarNombreParticipante(nombre) {
   if (PARTICIPANTES_DEFAULT.includes(nombre)) return nombre;
+  const renombrados = {
+    "José Manuel casa ?": "José Manuel casa 27",
+    "Juan Antonio casa ?": "Juan Antonio casa 28",
+    "Rafa casa ?": "Rafa casa 73",
+    "Pablo casa ?": "Pablo casa 77",
+    "Siempre en lo más alto ?": "Antonio",
+    "+34 642 69 03 94 ?": "Junior",
+    "Alejandro casa ?": "Alejandro casa 16"
+  };
+  if (renombrados[nombre]) return renombrados[nombre];
   const limpio = nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\uFFFD/g, '');
   return {
     Jess: 'Jesus',
