@@ -1,0 +1,101 @@
+name: Apply Estado filter patch
+
+on:
+  push:
+    paths:
+      - .github/workflows/apply-estado-filter.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index.html
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          old_html = '''<h3>📋 Apuestas por porra</h3>
+    <div id="estado-detalle"></div>'''
+          new_html = '''<h3>📋 Apuestas por porra</h3>
+    <div id="estado-filtros" style="display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin:8px 0 12px"></div>
+    <div id="estado-detalle"></div>'''
+          if 'id="estado-filtros"' not in text:
+              text = text.replace(old_html, new_html, 1)
+
+          if 'let estadoFiltroPorra' not in text:
+              marker = '''// ============================================================
+// ESTADO
+// ============================================================
+function renderEstado() {'''
+              helpers = '''// ============================================================
+// ESTADO
+// ============================================================
+let estadoFiltroPorra = 'all';
+
+function renderEstadoFiltros() {
+  const filtros = document.getElementById('estado-filtros');
+  if (!filtros) return;
+  const activa = state.porras.find(p => p.estado === 'activa');
+  const opciones = [
+    `<option value="all"${estadoFiltroPorra === 'all' ? ' selected' : ''}>Todas</option>`,
+    ...state.porras.map(p => `<option value="${p.id}"${estadoFiltroPorra === String(p.id) ? ' selected' : ''}>${p.nombre}</option>`)
+  ].join('');
+  filtros.innerHTML = `
+    <div class="form-group" style="min-width:180px;margin:0">
+      <label>Porra</label>
+      <select onchange="filtrarEstadoPorra(this.value)">${opciones}</select>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="irEstadoPorraActiva()" ${activa ? '' : 'disabled'}>Porra activa</button>`;
+}
+
+function filtrarEstadoPorra(valor) {
+  estadoFiltroPorra = valor || 'all';
+  renderEstado();
+}
+
+function irEstadoPorraActiva() {
+  const activa = state.porras.find(p => p.estado === 'activa');
+  if (!activa) return;
+  estadoFiltroPorra = String(activa.id);
+  renderEstado();
+  setTimeout(() => document.getElementById(`estado-porra-${activa.id}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' }), 0);
+}
+
+function renderEstado() {'''
+              text = text.replace(marker, helpers, 1)
+
+          if 'renderEstadoFiltros();' not in text:
+              text = text.replace("  if (!el) return;\n", "  if (!el) return;\n  renderEstadoFiltros();\n", 1)
+
+          old_map = "  el.innerHTML = state.porras.map(porra => {"
+          new_map = "  const porrasVisibles = estadoFiltroPorra === 'all'\n    ? state.porras\n    : state.porras.filter(p => String(p.id) === estadoFiltroPorra);\n  if (porrasVisibles.length === 0) { el.innerHTML='<p class=\"text-muted\">Sin porras para mostrar</p>'; return; }\n  el.innerHTML = porrasVisibles.map(porra => {"
+          if old_map in text:
+              text = text.replace(old_map, new_map, 1)
+
+          old_card = '''return `<div style="margin-bottom:22px;opacity:${isPend?.5:1}">'''
+          new_card = '''return `<div id="estado-porra-${porra.id}" style="margin-bottom:22px;opacity:${isPend?.5:1}">'''
+          if old_card in text:
+              text = text.replace(old_card, new_card, 1)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit patch and remove workflow
+        run: |
+          git config user.name "Codex"
+          git config user.email "codex@openai.com"
+          git rm .github/workflows/apply-estado-filter.yml
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Add Estado porra filter"
+            git push
+          fi
