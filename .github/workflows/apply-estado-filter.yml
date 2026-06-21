@@ -1,3 +1,4 @@
+# trigger: estado-filter
 name: Apply Estado filter patch
 
 on:
