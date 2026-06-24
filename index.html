@@ -203,6 +203,7 @@
 <div id="tab-estado" class="panel">
   <div class="card">
     <h3>📋 Apuestas por porra</h3>
+    <div id="estado-filtros" style="display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin:8px 0 12px"></div>
     <div id="estado-detalle"></div>
   </div>
 </div>
@@ -332,7 +333,7 @@ const PORRAS_DEFAULT = [
     p2:{ local:"España",   visitante:"Arabia Saudí",fecha:"Dom 21 Jun", hora:"18:00",   resultadoReal:null },
     estado:"pendiente",ganador:null },
   { id:3, nombre:"Porra 3 - Liguilla",
-    p1:{ local:"TBD",      visitante:"TBD",         fecha:"Por definir",hora:"",         resultadoReal:null },
+    p1:{ local:"Portugal", visitante:"Colombia",    fecha:"Sáb 27 Jun", hora:"01:30🌙", resultadoReal:null },
     p2:{ local:"Uruguay",  visitante:"España",      fecha:"Vie 26 Jun", hora:"02:00🌙", resultadoReal:null },
     estado:"pendiente",ganador:null },
   { id:4, nombre:"Porra 4 - 16avos",
@@ -806,19 +807,56 @@ function renderRanking() {
 // ============================================================
 // ESTADO
 // ============================================================
+let estadoFiltroPorra = 'all';
+
+function renderEstadoFiltros() {
+  const filtros = document.getElementById('estado-filtros');
+  if (!filtros) return;
+  const activa = state.porras.find(p => p.estado === 'activa');
+  const opciones = [
+    `<option value="all"${estadoFiltroPorra === 'all' ? ' selected' : ''}>Todas</option>`,
+    ...state.porras.map(p => `<option value="${p.id}"${estadoFiltroPorra === String(p.id) ? ' selected' : ''}>${p.nombre}</option>`)
+  ].join('');
+  filtros.innerHTML = `
+    <div class="form-group" style="min-width:180px;margin:0">
+      <label>Porra</label>
+      <select onchange="filtrarEstadoPorra(this.value)">${opciones}</select>
+    </div>
+    <button class="btn btn-primary btn-sm" style="height:36px" onclick="irEstadoPorraActiva()" ${activa ? '' : 'disabled'}>Porra activa</button>`;
+}
+
+function filtrarEstadoPorra(valor) {
+  estadoFiltroPorra = valor || 'all';
+  renderEstado();
+}
+
+function irEstadoPorraActiva() {
+  const activa = state.porras.find(p => p.estado === 'activa');
+  if (!activa) return;
+  estadoFiltroPorra = String(activa.id);
+  renderEstado();
+  setTimeout(() => document.getElementById(`estado-porra-${activa.id}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' }), 0);
+}
+
 function renderEstado() {
   const el = document.getElementById('estado-detalle');
   if (!el) return;
+  renderEstadoFiltros();
   if (state.participantes.length === 0) { el.innerHTML='<p class="text-muted">Sin participantes</p>'; return; }
-  el.innerHTML = state.porras.map(porra => {
+  const porrasVisibles = estadoFiltroPorra === 'all'
+    ? state.porras
+    : state.porras.filter(p => String(p.id) === estadoFiltroPorra);
+  if (porrasVisibles.length === 0) { el.innerHTML='<p class="text-muted">Sin porras para mostrar</p>'; return; }
+  el.innerHTML = porrasVisibles.map(porra => {
     const isPend = porra.estado === 'pendiente';
-    return `<div style="margin-bottom:22px;opacity:${isPend?.5:1}">
+    const partidosOrdenados = clavesPartidosOrdenadas(porra);
+    return `<div id="estado-porra-${porra.id}" style="margin-bottom:22px;opacity:${isPend?.5:1}">
       <div class="flex-between" style="margin-bottom:7px">
         <div style="font-weight:700;color:var(--amarillo);font-size:0.88rem">${porra.nombre}</div>
         <span class="badge badge-${porra.estado}">${porra.estado}</span>
       </div>
       <div style="font-size:0.78rem;color:#888;margin-bottom:8px">
-        ${clavesPartidosOrdenadas(porra).map(k => {
+        ${partidosOrdenados.map(k => {
           const pt = porra[k];
           return `${k === 'p2' ? '🇪🇸' : '⚽'} ${pt.local} vs ${pt.visitante} · 📅 ${pt.fecha} ${pt.hora} ${pt.resultadoReal?`· <b style="color:#2ecc71">${pt.resultadoReal}</b>`:''}`;
         }).join('<br>')}
@@ -827,22 +865,25 @@ function renderEstado() {
         <table class="ap-table">
           <thead><tr>
             <th style="text-align:left;padding-left:8px">Jugador</th>
-            <th>⚽ Partido</th>
-            <th>🇪🇸 España</th>
+            ${partidosOrdenados.map(k => {
+              const pt = porra[k];
+              return `<th>${k === 'p2' ? '🇪🇸 ' : '⚽ '}${pt.local} vs ${pt.visitante}<br><span style="font-size:.58rem;color:#888">${pt.fecha} ${pt.hora}</span></th>`;
+            }).join('')}
             <th>Estado</th>
           </tr></thead>
           <tbody>
             ${state.participantes.map(nombre => {
               const ap = state.apuestas[nombre]?.[porra.id] || {};
-              const ok1 = porra.p1.resultadoReal && ap.p1 === porra.p1.resultadoReal;
-              const ok2 = porra.p2.resultadoReal && ap.p2 === porra.p2.resultadoReal;
-              const f1 = porra.p1.resultadoReal && ap.p1 && !ok1;
-              const f2 = porra.p2.resultadoReal && ap.p2 && !ok2;
               const tieneApuesta = ap.p1 && ap.p2;
               return `<tr>
                 <td class="td-nombre">${nombre}</td>
-                <td style="font-weight:900;color:${ap.p1?'#2ecc71':'#888'}">${ap.p1||'—'}${ok1?' ✅':f1?' ❌':''}</td>
-                <td style="font-weight:900;color:${ap.p2?'#2ecc71':'#888'}">${ap.p2||'—'}${ok2?' ✅':f2?' ❌':''}</td>
+                ${partidosOrdenados.map(k => {
+                  const pt = porra[k];
+                  const valor = ap[k];
+                  const ok = pt.resultadoReal && valor === pt.resultadoReal;
+                  const fail = pt.resultadoReal && valor && !ok;
+                  return `<td style="font-weight:900;color:${valor?'#2ecc71':'#888'}">${valor||'—'}${ok?' ✅':fail?' ❌':''}</td>`;
+                }).join('')}
                 <td>${tieneApuesta
                   ? '<span style="color:#2ecc71;font-size:.75rem;font-weight:800">Hecho</span>'
                   : '<span style="color:#888;font-size:.75rem;font-weight:800">Pendiente</span>'
@@ -963,15 +1004,26 @@ function renderAdminPorra() {
   const el = document.getElementById('admin-porra');
   if (!el) return;
   el.innerHTML = state.porras.map(p => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
-      <div>
+    <div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <div class="flex-between" style="gap:8px;margin-bottom:8px">
         <div style="font-weight:600;font-size:.85rem">${p.nombre} <span class="badge badge-${p.estado}">${p.estado}</span></div>
-        <div style="font-size:.72rem;color:#888">${clavesPartidosOrdenadas(p).map(k => `${k === 'p2' ? '🇪🇸' : '⚽'} ${p[k].local} vs ${p[k].visitante} · ${p[k].fecha}`).join(' <span style="color:#666">+</span> ')}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end">
+          ${p.estado==='pendiente' ? `<button class="btn btn-success btn-sm" onclick="activarPorra(${p.id})">Activar</button>` : ''}
+          <button class="btn btn-primary btn-sm" onclick="guardarEdicionPorra(${p.id})">Guardar</button>
+        </div>
       </div>
-      <div style="display:flex;gap:5px">
-        ${p.estado==='pendiente' ? `<button class="btn btn-success btn-sm" onclick="activarPorra(${p.id})">Activar</button>` : ''}
-        <button class="btn btn-ghost btn-sm" onclick="editarPorra(${p.id})">✏️</button>
-      </div>
+      ${['p1','p2'].map(k => {
+        const label = k === 'p1' ? '⚽ Partido libre' : '🇪🇸 Partido España';
+        return `<div style="background:rgba(0,0,0,.16);border-radius:8px;padding:8px;margin-bottom:7px">
+          <div style="font-size:.72rem;color:#aaa;font-weight:800;text-transform:uppercase;margin-bottom:6px">${label}</div>
+          <div class="form-row" style="margin-bottom:0">
+            <div class="form-group"><label>Local</label><input id="porra-${p.id}-${k}-local" value="${escapeAttr(p[k].local)}"></div>
+            <div class="form-group"><label>Visitante</label><input id="porra-${p.id}-${k}-visitante" value="${escapeAttr(p[k].visitante)}"></div>
+            <div class="form-group"><label>Fecha</label><input id="porra-${p.id}-${k}-fecha" value="${escapeAttr(p[k].fecha)}"></div>
+            <div class="form-group"><label>Hora</label><input id="porra-${p.id}-${k}-hora" value="${escapeAttr(p[k].hora)}"></div>
+          </div>
+        </div>`;
+      }).join('')}
     </div>`).join('');
 }
 
@@ -984,16 +1036,20 @@ function activarPorra(id) {
   toast(`✅ ${p.nombre} activada`);
 }
 
-function editarPorra(id) {
+function escapeAttr(valor) {
+  return String(valor ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function guardarEdicionPorra(id) {
   const p = state.porras.find(x => x.id === id);
   if (!p) return;
   for (const k of ['p1','p2']) {
-    const label = k==='p1' ? '⚽ Partido libre' : '🇪🇸 Partido España';
-    const local = prompt(`${label} - Equipo local:`, p[k].local); if (local===null) return;
-    const visit = prompt(`${label} - Visitante:`, p[k].visitante); if (visit===null) return;
-    const fecha = prompt(`${label} - Fecha:`, p[k].fecha); if (fecha===null) return;
-    const hora  = prompt(`${label} - Hora:`, p[k].hora); if (hora===null) return;
-    p[k] = { ...p[k], local, visitante: visit, fecha, hora };
+    const local = document.getElementById(`porra-${id}-${k}-local`)?.value?.trim();
+    const visitante = document.getElementById(`porra-${id}-${k}-visitante`)?.value?.trim();
+    const fecha = document.getElementById(`porra-${id}-${k}-fecha`)?.value?.trim();
+    const hora = document.getElementById(`porra-${id}-${k}-hora`)?.value?.trim();
+    if (!local || !visitante || !fecha) { toast('⚠️ Local, visitante y fecha son obligatorios', 'error'); return; }
+    p[k] = { ...p[k], local, visitante, fecha, hora: hora || '' };
   }
   guardarState(); renderAll();
   toast('✅ Porra actualizada');
@@ -1036,11 +1092,25 @@ function guardarResultado(porraId) {
   toast(`✅ Resultados guardados`);
 }
 
+function clavesPartidosConResultado(porra) {
+  return clavesPartidosOrdenadas(porra).filter(k => porra[k].resultadoReal);
+}
+
+function aspirantesPorra(porra) {
+  const clavesConResultado = clavesPartidosConResultado(porra);
+  if (clavesConResultado.length === 0) return [];
+  return state.participantes.filter(nombre => {
+    const ap = state.apuestas[nombre]?.[porra.id] || {};
+    return clavesConResultado.every(k => ap[k] === porra[k].resultadoReal);
+  });
+}
+
 function renderAdminResolver() {
   const el = document.getElementById('admin-resolver');
   if (!el) return;
   const activa = state.porras.find(p => p.estado === 'activa');
-  if (!activa || !activa.p1.resultadoReal || !activa.p2.resultadoReal) { el.innerHTML = '<p class="text-muted">Introduce primero los dos resultados reales</p>'; return; }
+  if (!activa) { el.innerHTML = '<p class="text-muted">No hay porra activa</p>'; return; }
+  if (!activa.p1.resultadoReal || !activa.p2.resultadoReal) { el.innerHTML = '<p class="text-muted">Introduce primero los dos resultados reales</p>'; return; }
 
   const ganadores = state.participantes.filter(p => {
     const ap = state.apuestas[p]?.[activa.id] || {};
@@ -1157,32 +1227,32 @@ const GRUPOS_MUNDIAL = [
   { grupo:'G', equipos:['Bélgica 🇧🇪','Egipto 🇪🇬','Irán 🇮🇷','Nueva Zelanda 🇳🇿'], partidos:[
     {j:1,fecha:'Lun 15 Jun',hora:'21:00', local:'Bélgica',       visitante:'Egipto',       sede:'Lumen Field, Seattle', resultado:'1-1'},
     {j:1,fecha:'Lun 15 Jun',hora:'03:00🌙',local:'Irán',          visitante:'Nueva Zelanda',sede:'SoFi Stadium, Los Angeles', resultado:'2-2'},
-    {j:2,fecha:'Dom 21 Jun',hora:'21:00', local:'Bélgica',       visitante:'Irán',         sede:'SoFi Stadium, Los Angeles'},
-    {j:2,fecha:'Lun 22 Jun',hora:'03:00🌙',local:'Nueva Zelanda', visitante:'Egipto',       sede:'BC Place, Vancouver'},
+    {j:2,fecha:'Dom 21 Jun',hora:'21:00', local:'Bélgica',       visitante:'Irán',         sede:'SoFi Stadium, Los Angeles', resultado:'0-0'},
+    {j:2,fecha:'Lun 22 Jun',hora:'03:00🌙',local:'Nueva Zelanda', visitante:'Egipto',       sede:'BC Place, Vancouver', resultado:'1-3'},
     {j:3,fecha:'Vie 26 Jun',hora:'05:00🌙',local:'Nueva Zelanda', visitante:'Bélgica',      sede:'BC Place, Vancouver'},
     {j:3,fecha:'Vie 26 Jun',hora:'05:00🌙',local:'Egipto',        visitante:'Irán',         sede:'Lumen Field, Seattle'},
   ]},
   { grupo:'H', equipos:['España 🇪🇸','Cabo Verde 🇨🇻','Arabia Saudí 🇸🇦','Uruguay 🇺🇾'], partidos:[
     {j:1,fecha:'Lun 15 Jun',hora:'18:00', local:'España',      visitante:'Cabo Verde',  sede:'Mercedes-Benz Stadium, Atlanta', resultado:'0-0'},
     {j:1,fecha:'Lun 15 Jun',hora:'00:00🌙',local:'Arabia Saudí',visitante:'Uruguay',    sede:'Hard Rock Stadium, Miami', resultado:'1-1'},
-    {j:2,fecha:'Dom 21 Jun',hora:'18:00', local:'España',      visitante:'Arabia Saudí',sede:'Mercedes-Benz Stadium, Atlanta'},
-    {j:2,fecha:'Dom 21 Jun',hora:'00:00🌙',local:'Uruguay',     visitante:'Cabo Verde', sede:'Hard Rock Stadium, Miami'},
+    {j:2,fecha:'Dom 21 Jun',hora:'18:00', local:'España',      visitante:'Arabia Saudí',sede:'Mercedes-Benz Stadium, Atlanta', resultado:'4-0'},
+    {j:2,fecha:'Dom 21 Jun',hora:'00:00🌙',local:'Uruguay',     visitante:'Cabo Verde', sede:'Hard Rock Stadium, Miami', resultado:'2-2'},
     {j:3,fecha:'Vie 26 Jun',hora:'02:00🌙',local:'Uruguay',     visitante:'España',     sede:'Estadio Akron, Guadalajara'},
     {j:3,fecha:'Vie 26 Jun',hora:'02:00🌙',local:'Cabo Verde',  visitante:'Arabia Saudí',sede:'NRG Stadium, Houston'},
   ]},
   { grupo:'I', equipos:['Francia 🇫🇷','Senegal 🇸🇳','Irak 🇮🇶','Noruega 🇳🇴'], partidos:[
     {j:1,fecha:'Mar 16 Jun',hora:'21:00', local:'Francia', visitante:'Senegal',sede:'MetLife Stadium, New Jersey', resultado:'3-1'},
     {j:1,fecha:'Mar 16 Jun',hora:'00:00🌙',local:'Irak',    visitante:'Noruega',sede:'Gillette Stadium, Boston', resultado:'1-4'},
-    {j:2,fecha:'Lun 22 Jun',hora:'23:00', local:'Francia', visitante:'Irak',   sede:'Lincoln Financial Field, Philadelphia'},
-    {j:2,fecha:'Mar 23 Jun',hora:'02:00🌙',local:'Noruega', visitante:'Senegal',sede:'MetLife Stadium, New Jersey'},
+    {j:2,fecha:'Lun 22 Jun',hora:'23:00', local:'Francia', visitante:'Irak',   sede:'Lincoln Financial Field, Philadelphia', resultado:'3-0'},
+    {j:2,fecha:'Mar 23 Jun',hora:'02:00🌙',local:'Noruega', visitante:'Senegal',sede:'MetLife Stadium, New Jersey', resultado:'3-2'},
     {j:3,fecha:'Vie 26 Jun',hora:'21:00', local:'Noruega', visitante:'Francia',sede:'Gillette Stadium, Boston'},
     {j:3,fecha:'Vie 26 Jun',hora:'21:00', local:'Senegal', visitante:'Irak',   sede:'BMO Field, Toronto'},
   ]},
   { grupo:'J', equipos:['Argentina 🇦🇷','Argelia 🇩🇿','Austria 🇦🇹','Jordania 🇯🇴'], partidos:[
     {j:1,fecha:'Mar 16 Jun',hora:'03:00🌙',local:'Argentina',visitante:'Argelia', sede:'Arrowhead Stadium, Kansas City', resultado:'3-0'},
     {j:1,fecha:'Mar 16 Jun',hora:'06:00🌙',local:'Austria',  visitante:'Jordania',sede:"Levi's Stadium, Santa Clara", resultado:'3-1'},
-    {j:2,fecha:'Lun 22 Jun',hora:'19:00', local:'Argentina',visitante:'Austria', sede:'AT&T Stadium, Arlington'},
-    {j:2,fecha:'Lun 22 Jun',hora:'05:00🌙',local:'Jordania', visitante:'Argelia', sede:"Levi's Stadium, Santa Clara"},
+    {j:2,fecha:'Lun 22 Jun',hora:'19:00', local:'Argentina',visitante:'Austria', sede:'AT&T Stadium, Arlington', resultado:'2-0'},
+    {j:2,fecha:'Lun 22 Jun',hora:'05:00🌙',local:'Jordania', visitante:'Argelia', sede:"Levi's Stadium, Santa Clara", resultado:'1-2'},
     {j:3,fecha:'Sáb 27 Jun',hora:'04:00🌙',local:'Jordania', visitante:'Argentina',sede:'AT&T Stadium, Arlington'},
     {j:3,fecha:'Sáb 27 Jun',hora:'04:00🌙',local:'Argelia',  visitante:'Austria', sede:'Arrowhead Stadium, Kansas City'},
   ]},
