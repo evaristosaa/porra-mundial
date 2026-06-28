@@ -124,22 +124,30 @@
   /* CALENDARIO */
   .cal-gbtn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 700; background: rgba(255,255,255,.08); color: #aaa; transition: all .15s; }
   .cal-gbtn.active-g { background: var(--amarillo); color: #333; }
-  .bracket-wrap { overflow-x: auto; padding-bottom: 4px; }
-  .bracket { display: grid; grid-template-columns: 220px 180px 160px 180px 220px; gap: 14px; min-width: 980px; align-items: stretch; }
-  .bracket-col { display: flex; flex-direction: column; justify-content: space-around; gap: 10px; }
-  .bracket-title { color: var(--amarillo); font-size: .72rem; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
-  .bracket-match { background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.08); border-radius: 8px; padding: 8px; min-height: 76px; }
+  .bracket-wrap { overflow: hidden; padding-bottom: 4px; }
+  .bracket { display: grid; grid-template-columns: minmax(118px,1.15fr) minmax(104px,.92fr) minmax(96px,.78fr) minmax(104px,.92fr) minmax(118px,1.15fr); gap: 8px; width: 100%; align-items: stretch; }
+  .bracket-col { display: flex; flex-direction: column; justify-content: space-around; gap: 6px; }
+  .bracket-title { color: var(--amarillo); font-size: .62rem; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 6px; }
+  .bracket-match { background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.08); border-radius: 7px; padding: 6px; min-height: 58px; }
   .bracket-match.pending { opacity: .55; }
-  .bracket-teams { color: #fff; font-size: .78rem; font-weight: 800; line-height: 1.35; }
-  .bracket-meta { color: #888; font-size: .66rem; margin-top: 5px; }
-  .bracket-center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; min-height: 560px; }
-  .champion-box { width: 130px; height: 130px; border-radius: 50%; border: 2px solid rgba(241,196,15,.45); display: flex; align-items: center; justify-content: center; text-align: center; color: var(--amarillo); font-weight: 900; font-size: .78rem; background: radial-gradient(circle, rgba(241,196,15,.16), rgba(0,0,0,.35)); }
+  .bracket-teams { color: #fff; font-size: .66rem; font-weight: 800; line-height: 1.25; }
+  .bracket-meta { color: #888; font-size: .56rem; margin-top: 4px; white-space: nowrap; }
+  .bracket-team { display:flex; align-items:center; gap:3px; min-width:0; }
+  .bracket-team-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bracket-center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 430px; }
+  .champion-box { width: 94px; height: 94px; border-radius: 50%; border: 2px solid rgba(241,196,15,.45); display: flex; align-items: center; justify-content: center; text-align: center; color: var(--amarillo); font-weight: 900; font-size: .68rem; background: radial-gradient(circle, rgba(241,196,15,.16), rgba(0,0,0,.35)); }
   .elim-list-row { display:flex; align-items:center; gap:8px; background:rgba(0,0,0,.2); border-radius:8px; padding:8px 10px; margin-bottom:5px; border-left:3px solid var(--amarillo); }
 
   @media (max-width: 480px) {
     .hero h1 { font-size: 1.35rem; }
     .bote-cantidad { font-size: 2.4rem !important; }
     .ap-table { font-size: 0.72rem; }
+    .bracket { gap: 5px; grid-template-columns: 1.1fr .8fr .7fr .8fr 1.1fr; }
+    .bracket-match { padding: 4px; min-height: 52px; }
+    .bracket-teams { font-size: .56rem; }
+    .bracket-meta { font-size: .48rem; white-space: normal; }
+    .bracket-title { font-size: .5rem; }
+    .champion-box { width: 68px; height: 68px; font-size: .52rem; }
   }
 </style>
 </head>
@@ -1484,10 +1492,21 @@ function renderClasificacion() {
   const el = document.getElementById('clasificacion-container');
   if (!el) return;
 
+  const BANDERAS = {
+    'Sudáfrica':'🇿🇦', 'Canadá':'🇨🇦', 'Brasil':'🇧🇷', 'Japón':'🇯🇵',
+    'Alemania':'🇩🇪', 'Paraguay':'🇵🇾', 'Países Bajos':'🇳🇱', 'Marruecos':'🇲🇦',
+    'Costa de Marfil':'🇨🇮', 'Noruega':'🇳🇴', 'Francia':'🇫🇷', 'Suecia':'🇸🇪',
+    'México':'🇲🇽', 'Ecuador':'🇪🇨', 'Inglaterra':'🏴', 'R.D. Congo':'🇨🇩',
+    'Bélgica':'🇧🇪', 'Senegal':'🇸🇳', 'EE.UU.':'🇺🇸', 'Bosnia':'🇧🇦',
+    'España':'🇪🇸', 'Austria':'🇦🇹', 'Portugal':'🇵🇹', 'Croacia':'🇭🇷',
+    'Suiza':'🇨🇭', 'Argelia':'🇩🇿', 'Australia':'🇦🇺', 'Egipto':'🇪🇬',
+    'Argentina':'🇦🇷', 'Cabo Verde':'🇨🇻', 'Colombia':'🇨🇴', 'Ghana':'🇬🇭'
+  };
+  const equipoHtml = nombre => `<div class="bracket-team"><span>${BANDERAS[nombre] || ''}</span><span class="bracket-team-name">${nombre}</span></div>`;
   const r32 = ELIMINATORIAS[0].partidos;
   const matchBox = (partido, label) => `<div class="bracket-match ${partido.pendiente ? 'pending' : ''}">
-    <div style="color:var(--amarillo);font-size:.62rem;font-weight:900;text-transform:uppercase;margin-bottom:4px">${label}</div>
-    <div class="bracket-teams">${partido.pendiente ? 'Por definir' : `${partido.local}<br><span style="color:#888">vs</span><br>${partido.visitante}`}</div>
+    <div style="color:var(--amarillo);font-size:.58rem;font-weight:900;text-transform:uppercase;margin-bottom:3px">${label}</div>
+    <div class="bracket-teams">${partido.pendiente ? 'Por definir' : `${equipoHtml(partido.local)}<div style="color:#888;font-size:.54rem;line-height:1.1">vs</div>${equipoHtml(partido.visitante)}`}</div>
     <div class="bracket-meta">${partido.pendiente ? 'Clasificados pendientes' : `${partido.fecha} · ${partido.hora}`}</div>
   </div>`;
   const pending = label => ({ pendiente: label });
