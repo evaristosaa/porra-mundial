@@ -124,6 +124,17 @@
   /* CALENDARIO */
   .cal-gbtn { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 700; background: rgba(255,255,255,.08); color: #aaa; transition: all .15s; }
   .cal-gbtn.active-g { background: var(--amarillo); color: #333; }
+  .bracket-wrap { overflow-x: auto; padding-bottom: 4px; }
+  .bracket { display: grid; grid-template-columns: 220px 180px 160px 180px 220px; gap: 14px; min-width: 980px; align-items: stretch; }
+  .bracket-col { display: flex; flex-direction: column; justify-content: space-around; gap: 10px; }
+  .bracket-title { color: var(--amarillo); font-size: .72rem; font-weight: 900; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
+  .bracket-match { background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.08); border-radius: 8px; padding: 8px; min-height: 76px; }
+  .bracket-match.pending { opacity: .55; }
+  .bracket-teams { color: #fff; font-size: .78rem; font-weight: 800; line-height: 1.35; }
+  .bracket-meta { color: #888; font-size: .66rem; margin-top: 5px; }
+  .bracket-center { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; min-height: 560px; }
+  .champion-box { width: 130px; height: 130px; border-radius: 50%; border: 2px solid rgba(241,196,15,.45); display: flex; align-items: center; justify-content: center; text-align: center; color: var(--amarillo); font-weight: 900; font-size: .78rem; background: radial-gradient(circle, rgba(241,196,15,.16), rgba(0,0,0,.35)); }
+  .elim-list-row { display:flex; align-items:center; gap:8px; background:rgba(0,0,0,.2); border-radius:8px; padding:8px 10px; margin-bottom:5px; border-left:3px solid var(--amarillo); }
 
   @media (max-width: 480px) {
     .hero h1 { font-size: 1.35rem; }
@@ -1276,6 +1287,34 @@ const GRUPOS_MUNDIAL = [
 
 const ORDEN_FECHAS = ['Jue 11 Jun','Vie 12 Jun','Sáb 13 Jun','Dom 14 Jun','Lun 15 Jun','Mar 16 Jun','Mié 17 Jun','Jue 18 Jun','Vie 19 Jun','Sáb 20 Jun','Dom 21 Jun','Lun 22 Jun','Mar 23 Jun','Mié 24 Jun','Jue 25 Jun','Vie 26 Jun','Sáb 27 Jun'];
 const GRUPO_COLORS = {A:'#e74c3c',B:'#e67e22',C:'#f1c40f',D:'#2ecc71',E:'#1abc9c',F:'#3498db',G:'#9b59b6',H:'#e91e8c',I:'#ff5722',J:'#00bcd4',K:'#8bc34a',L:'#ff9800'};
+const ELIMINATORIAS = [
+  {
+    nombre: 'Dieciseisavos',
+    estado: 'Definidos',
+    partidos: [
+      { fecha:'Dom 28 Jun', hora:'21:00', local:'Sudáfrica', visitante:'Canadá' },
+      { fecha:'Lun 29 Jun', hora:'19:00', local:'Brasil', visitante:'Japón' },
+      { fecha:'Lun 29 Jun', hora:'22:30', local:'Alemania', visitante:'Paraguay' },
+      { fecha:'Mar 30 Jun', hora:'03:00🌙', local:'Países Bajos', visitante:'Marruecos' },
+      { fecha:'Mar 30 Jun', hora:'19:00', local:'Costa de Marfil', visitante:'Noruega' },
+      { fecha:'Mar 30 Jun', hora:'23:00', local:'Francia', visitante:'Suecia' },
+      { fecha:'Mié 1 Jul', hora:'03:00🌙', local:'México', visitante:'Ecuador' },
+      { fecha:'Mié 1 Jul', hora:'18:00', local:'Inglaterra', visitante:'R.D. Congo' },
+      { fecha:'Mié 1 Jul', hora:'22:00', local:'Bélgica', visitante:'Senegal' },
+      { fecha:'Jue 2 Jul', hora:'02:00🌙', local:'EE.UU.', visitante:'Bosnia' },
+      { fecha:'Jue 2 Jul', hora:'21:00', local:'España', visitante:'Austria' },
+      { fecha:'Vie 3 Jul', hora:'01:00🌙', local:'Portugal', visitante:'Croacia' },
+      { fecha:'Vie 3 Jul', hora:'05:00🌙', local:'Suiza', visitante:'Argelia' },
+      { fecha:'Vie 3 Jul', hora:'20:00', local:'Australia', visitante:'Egipto' },
+      { fecha:'Sáb 4 Jul', hora:'00:00🌙', local:'Argentina', visitante:'Cabo Verde' },
+      { fecha:'Sáb 4 Jul', hora:'03:30🌙', local:'Colombia', visitante:'Ghana' }
+    ]
+  },
+  { nombre: 'Octavos', estado: 'Por definir', partidos: Array.from({ length: 8 }, (_, i) => ({ pendiente: `Octavos ${i + 1}` })) },
+  { nombre: 'Cuartos', estado: 'Por definir', partidos: Array.from({ length: 4 }, (_, i) => ({ pendiente: `Cuartos ${i + 1}` })) },
+  { nombre: 'Semifinal', estado: 'Por definir', partidos: Array.from({ length: 2 }, (_, i) => ({ pendiente: `Semifinal ${i + 1}` })) },
+  { nombre: 'Final', estado: 'Por definir', partidos: [{ pendiente: 'Final' }] }
+];
 
 let calFiltro = 'all';
 let calFechaFiltro = 'all';
@@ -1305,6 +1344,46 @@ function obtenerFechaCalendarioHoy() {
   return `${capitalizar(valor('weekday'))} ${valor('day')} ${capitalizar(valor('month'))}`;
 }
 
+function valorOrdenFecha(fecha) {
+  const fechas = [...ORDEN_FECHAS, 'Dom 28 Jun', 'Lun 29 Jun', 'Mar 30 Jun', 'Mié 1 Jul', 'Jue 2 Jul', 'Vie 3 Jul', 'Sáb 4 Jul'];
+  const idx = fechas.indexOf(fecha);
+  return idx >= 0 ? idx : 999;
+}
+
+function valorOrdenHora(hora) {
+  const limpia = (hora || '').replace('🌙', '');
+  const [hh = 99, mm = 0] = limpia.split(':').map(n => parseInt(n, 10));
+  return (Number.isNaN(hh) ? 99 : hh) * 60 + (Number.isNaN(mm) ? 0 : mm);
+}
+
+function renderListaEliminatorias(filtroFecha = 'all') {
+  const fechaHoy = obtenerFechaCalendarioHoy();
+  const fases = ELIMINATORIAS
+    .map(fase => ({
+      ...fase,
+      partidos: fase.partidos.filter(p => !p.pendiente && (filtroFecha !== 'hoy' || p.fecha === fechaHoy))
+    }))
+    .filter(fase => fase.partidos.length);
+  if (!fases.length) return '';
+  return `<div class="card" style="margin-bottom:12px">
+    <h3>🏆 Eliminatorias</h3>
+    ${fases.map(fase => `
+      <div style="font-weight:800;font-size:.86rem;color:var(--amarillo);margin:10px 0 8px">${fase.nombre}</div>
+      ${fase.partidos
+        .slice()
+        .sort((a,b) => valorOrdenFecha(a.fecha) - valorOrdenFecha(b.fecha) || valorOrdenHora(a.hora) - valorOrdenHora(b.hora))
+        .map(p => `<div class="elim-list-row">
+          <div style="min-width:82px;flex-shrink:0;text-align:center">
+            <div style="font-size:.76rem;font-weight:900;color:${p.hora.includes('🌙')?'#f39c12':'#fff'}">${p.hora.replace('🌙','')}</div>
+            <div style="font-size:.62rem;color:#888">${p.fecha}</div>
+          </div>
+          <div style="flex:1;min-width:0;font-weight:800;font-size:.86rem">⚽ ${p.local} <span style="color:#888">vs</span> ${p.visitante}</div>
+          <span style="flex-shrink:0;background:rgba(241,196,15,.14);border:1px solid rgba(241,196,15,.38);color:var(--amarillo);border-radius:10px;padding:2px 7px;font-size:.68rem;font-weight:800">${fase.nombre}</span>
+        </div>`).join('')}
+    `).join('')}
+  </div>`;
+}
+
 function renderCalendario() {
   const el = document.getElementById('cal-container');
   if (!el) return;
@@ -1320,7 +1399,8 @@ function renderCalendario() {
   const porFecha = {};
   todos.forEach(p => { if (!porFecha[p.fecha]) porFecha[p.fecha]=[]; porFecha[p.fecha].push(p); });
   const fechas = ORDEN_FECHAS.filter(f => porFecha[f]);
-  if (!fechas.length) { el.innerHTML='<p class="text-muted" style="padding:20px;text-align:center">Sin partidos</p>'; return; }
+  const eliminatoriasHtml = calFiltro === 'all' ? renderListaEliminatorias(calFechaFiltro) : '';
+  if (!fechas.length && !eliminatoriasHtml) { el.innerHTML='<p class="text-muted" style="padding:20px;text-align:center">Sin partidos</p>'; return; }
   el.innerHTML = fechas.map(fecha => {
     const ps = porFecha[fecha].sort((a,b) => {
       const mad = h => h.includes('🌙') ? 1 : 0;
@@ -1346,7 +1426,7 @@ function renderCalendario() {
         </div>`;
       }).join('')}
     </div>`;
-  }).join('');
+  }).join('') + eliminatoriasHtml;
 }
 
 // ============================================================
@@ -1404,109 +1484,55 @@ function renderClasificacion() {
   const el = document.getElementById('clasificacion-container');
   if (!el) return;
 
-  const grupos = GRUPOS_MUNDIAL.filter(grupo => clasFiltro === 'all' || grupo.grupo === clasFiltro);
-  const filtroHtml = `<div class="card" style="padding:10px 12px;margin-bottom:12px">
-    <div style="font-size:0.7rem;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Filtrar por grupo</div>
-    <div style="display:flex;gap:5px;flex-wrap:wrap">
-      ${['all','A','B','C','D','E','F','G','H','I','J','K','L'].map(g => {
-        const activo = clasFiltro === g;
-        const label = g === 'all' ? 'Todos' : `Grupo ${g}${g === 'H' ? ' 🇪🇸' : ''}`;
-        return `<button class="cal-gbtn ${activo ? 'active-g' : ''}" data-clas-group onclick="filtrarClasificacion('${g}',this)" style="${activo ? 'background:var(--amarillo);color:#333' : ''}">${label}</button>`;
-      }).join('')}
+  const r32 = ELIMINATORIAS[0].partidos;
+  const matchBox = (partido, label) => `<div class="bracket-match ${partido.pendiente ? 'pending' : ''}">
+    <div style="color:var(--amarillo);font-size:.62rem;font-weight:900;text-transform:uppercase;margin-bottom:4px">${label}</div>
+    <div class="bracket-teams">${partido.pendiente ? 'Por definir' : `${partido.local}<br><span style="color:#888">vs</span><br>${partido.visitante}`}</div>
+    <div class="bracket-meta">${partido.pendiente ? 'Clasificados pendientes' : `${partido.fecha} · ${partido.hora}`}</div>
+  </div>`;
+  const pending = label => ({ pendiente: label });
+  const octavos = ELIMINATORIAS[1].partidos;
+  const cuartos = ELIMINATORIAS[2].partidos;
+  const semis = ELIMINATORIAS[3].partidos;
+  const final = ELIMINATORIAS[4].partidos[0];
+  const fasesHtml = `<div class="card">
+    <h3>🏆 Cuadro de eliminatorias</h3>
+    <p class="text-muted">Horarios en España peninsular.</p>
+    <div class="bracket-wrap">
+      <div class="bracket">
+        <div>
+          <div class="bracket-title">Dieciseisavos</div>
+          <div class="bracket-col">${r32.slice(0,8).map((p,i) => matchBox(p, `D${i+1}`)).join('')}</div>
+        </div>
+        <div>
+          <div class="bracket-title">Octavos / Cuartos</div>
+          <div class="bracket-col">
+            ${octavos.slice(0,4).map((p,i) => matchBox(p, `O${i+1}`)).join('')}
+            ${cuartos.slice(0,2).map((p,i) => matchBox(p, `C${i+1}`)).join('')}
+          </div>
+        </div>
+        <div class="bracket-center">
+          ${matchBox(semis[0] || pending('Semifinal 1'), 'S1')}
+          ${matchBox(final || pending('Final'), 'Final')}
+          <div class="champion-box">Campeón<br>Mundial</div>
+          ${matchBox(semis[1] || pending('Semifinal 2'), 'S2')}
+        </div>
+        <div>
+          <div class="bracket-title">Cuartos / Octavos</div>
+          <div class="bracket-col">
+            ${cuartos.slice(2,4).map((p,i) => matchBox(p, `C${i+3}`)).join('')}
+            ${octavos.slice(4,8).map((p,i) => matchBox(p, `O${i+5}`)).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="bracket-title">Dieciseisavos</div>
+          <div class="bracket-col">${r32.slice(8,16).map((p,i) => matchBox(p, `D${i+9}`)).join('')}</div>
+        </div>
+      </div>
     </div>
   </div>`;
 
-  const gruposHtml = grupos.map(grupo => {
-    const color = GRUPO_COLORS[grupo.grupo] || '#fff';
-    const filas = calcularClasificacionGrupo(grupo).map((s, i) => `
-      <tr>
-        <td class="td-nombre"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:${i < 2 ? 'rgba(46,204,113,.18)' : 'rgba(255,255,255,.08)'};color:${i < 2 ? '#2ecc71' : '#aaa'};font-weight:900;margin-right:6px">${i + 1}</span>${s.equipo}</td>
-        <td>${s.pj}</td>
-        <td>${s.g}</td>
-        <td>${s.e}</td>
-        <td>${s.p}</td>
-        <td>${s.gf}</td>
-        <td>${s.gc}</td>
-        <td style="font-weight:800;color:${s.dg > 0 ? '#2ecc71' : s.dg < 0 ? '#e74c3c' : '#aaa'}">${s.dg > 0 ? '+' : ''}${s.dg}</td>
-        <td style="font-weight:900;color:var(--amarillo)">${s.pts}</td>
-      </tr>
-    `).join('');
-
-    return `<div class="card" style="margin-bottom:12px;border-left:3px solid ${color}">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <h3 style="margin:0;color:${color}">Grupo ${grupo.grupo}</h3>
-        <span style="font-size:.7rem;color:#888">${grupo.partidos.filter(p => p.resultado).length}/6 jugados</span>
-      </div>
-      <div style="overflow-x:auto">
-        <table class="ap-table clas-table">
-          <colgroup>
-            <col style="width:42%"><col span="8" style="width:7.25%">
-          </colgroup>
-          <thead><tr>
-            <th style="text-align:left;padding-left:8px">Equipo</th>
-            <th>PJ</th><th>G</th><th>E</th><th>P</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th>
-          </tr></thead>
-          <tbody>${filas}</tbody>
-        </table>
-      </div>
-    </div>`;
-  }).join('');
-
-  const eliminatorias = [
-    {
-      nombre: 'Dieciseisavos',
-      estado: 'Definidos',
-      partidos: [
-        { fecha:'Dom 28 Jun', hora:'21:00', local:'Sudáfrica', visitante:'Canadá' },
-        { fecha:'Lun 29 Jun', hora:'19:00', local:'Brasil', visitante:'Japón' },
-        { fecha:'Lun 29 Jun', hora:'22:30', local:'Alemania', visitante:'Paraguay' },
-        { fecha:'Mar 30 Jun', hora:'03:00🌙', local:'Países Bajos', visitante:'Marruecos' },
-        { fecha:'Mar 30 Jun', hora:'19:00', local:'Costa de Marfil', visitante:'Noruega' },
-        { fecha:'Mar 30 Jun', hora:'23:00', local:'Francia', visitante:'Suecia' },
-        { fecha:'Mié 1 Jul', hora:'03:00🌙', local:'México', visitante:'Ecuador' },
-        { fecha:'Mié 1 Jul', hora:'18:00', local:'Inglaterra', visitante:'R.D. Congo' },
-        { fecha:'Mié 1 Jul', hora:'22:00', local:'Bélgica', visitante:'Senegal' },
-        { fecha:'Jue 2 Jul', hora:'02:00🌙', local:'EE.UU.', visitante:'Bosnia' },
-        { fecha:'Jue 2 Jul', hora:'21:00', local:'España', visitante:'Austria' },
-        { fecha:'Vie 3 Jul', hora:'01:00🌙', local:'Portugal', visitante:'Croacia' },
-        { fecha:'Vie 3 Jul', hora:'05:00🌙', local:'Suiza', visitante:'Argelia' },
-        { fecha:'Vie 3 Jul', hora:'20:00', local:'Australia', visitante:'Egipto' },
-        { fecha:'Sáb 4 Jul', hora:'00:00🌙', local:'Argentina', visitante:'Cabo Verde' },
-        { fecha:'Sáb 4 Jul', hora:'03:30🌙', local:'Colombia', visitante:'Ghana' }
-      ]
-    },
-    { nombre: 'Octavos', estado: 'Por definir', partidos: Array.from({ length: 8 }, (_, i) => ({ pendiente: `Partido ${i + 1}` })) },
-    { nombre: 'Cuartos', estado: 'Por definir', partidos: Array.from({ length: 4 }, (_, i) => ({ pendiente: `Partido ${i + 1}` })) },
-    { nombre: 'Semifinal', estado: 'Por definir', partidos: Array.from({ length: 2 }, (_, i) => ({ pendiente: `Partido ${i + 1}` })) },
-    { nombre: 'Final', estado: 'Por definir', partidos: [{ pendiente: 'Final' }] }
-  ];
-  const fasesHtml = eliminatorias.map(fase => `
-    <div class="card" style="margin-bottom:12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <h3 style="margin:0">${fase.nombre}</h3>
-        <span class="badge ${fase.estado === 'Definidos' ? 'badge-activa' : 'badge-pendiente'}">${fase.estado}</span>
-      </div>
-      ${fase.partidos.map((partido, i) => `
-        <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.2);border-radius:8px;padding:8px 10px;margin-bottom:5px">
-          <span style="color:#aaa;font-size:.82rem">${partido.pendiente || `Partido ${i + 1}`}</span>
-          <span style="color:${partido.pendiente ? '#666' : 'var(--amarillo)'};font-size:.78rem;font-weight:${partido.pendiente ? '400' : '800'}">${partido.pendiente ? 'Clasificados pendientes' : `${partido.local} vs ${partido.visitante}`}</span>
-          ${partido.pendiente ? '' : `<span style="color:#888;font-size:.72rem;min-width:92px;text-align:right">${partido.fecha} ${partido.hora}</span>`}
-        </div>
-      `).join('')}
-    </div>
-  `).join('');
-
   el.innerHTML = `
-    <div class="card">
-      <h3>📈 Clasificación por grupos</h3>
-      <p class="text-muted">Orden: puntos, diferencia de goles y goles a favor.</p>
-    </div>
-    ${filtroHtml}
-    ${gruposHtml}
-    <div class="card">
-      <h3>🏆 Eliminatorias</h3>
-      <p class="text-muted">Horarios en España peninsular.</p>
-    </div>
     ${fasesHtml}
   `;
 }
