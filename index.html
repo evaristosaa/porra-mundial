@@ -1452,22 +1452,45 @@ function renderClasificacion() {
     </div>`;
   }).join('');
 
-  const fases = [
-    ['Octavos', 8],
-    ['Cuartos', 4],
-    ['Semifinal', 2],
-    ['Final', 1]
+  const eliminatorias = [
+    {
+      nombre: 'Dieciseisavos',
+      estado: 'Definidos',
+      partidos: [
+        { fecha:'Dom 28 Jun', hora:'21:00', local:'Sudáfrica', visitante:'Canadá' },
+        { fecha:'Lun 29 Jun', hora:'19:00', local:'Brasil', visitante:'Japón' },
+        { fecha:'Lun 29 Jun', hora:'22:30', local:'Alemania', visitante:'Paraguay' },
+        { fecha:'Mar 30 Jun', hora:'03:00🌙', local:'Países Bajos', visitante:'Marruecos' },
+        { fecha:'Mar 30 Jun', hora:'19:00', local:'Costa de Marfil', visitante:'Noruega' },
+        { fecha:'Mar 30 Jun', hora:'23:00', local:'Francia', visitante:'Suecia' },
+        { fecha:'Mié 1 Jul', hora:'03:00🌙', local:'México', visitante:'Ecuador' },
+        { fecha:'Mié 1 Jul', hora:'18:00', local:'Inglaterra', visitante:'R.D. Congo' },
+        { fecha:'Mié 1 Jul', hora:'22:00', local:'Bélgica', visitante:'Senegal' },
+        { fecha:'Jue 2 Jul', hora:'02:00🌙', local:'EE.UU.', visitante:'Bosnia' },
+        { fecha:'Jue 2 Jul', hora:'21:00', local:'España', visitante:'Austria' },
+        { fecha:'Vie 3 Jul', hora:'01:00🌙', local:'Portugal', visitante:'Croacia' },
+        { fecha:'Vie 3 Jul', hora:'05:00🌙', local:'Suiza', visitante:'Argelia' },
+        { fecha:'Vie 3 Jul', hora:'20:00', local:'Australia', visitante:'Egipto' },
+        { fecha:'Sáb 4 Jul', hora:'00:00🌙', local:'Argentina', visitante:'Cabo Verde' },
+        { fecha:'Sáb 4 Jul', hora:'03:30🌙', local:'Colombia', visitante:'Ghana' }
+      ]
+    },
+    { nombre: 'Octavos', estado: 'Por definir', partidos: Array.from({ length: 8 }, (_, i) => ({ pendiente: `Partido ${i + 1}` })) },
+    { nombre: 'Cuartos', estado: 'Por definir', partidos: Array.from({ length: 4 }, (_, i) => ({ pendiente: `Partido ${i + 1}` })) },
+    { nombre: 'Semifinal', estado: 'Por definir', partidos: Array.from({ length: 2 }, (_, i) => ({ pendiente: `Partido ${i + 1}` })) },
+    { nombre: 'Final', estado: 'Por definir', partidos: [{ pendiente: 'Final' }] }
   ];
-  const fasesHtml = fases.map(([nombre, partidos]) => `
+  const fasesHtml = eliminatorias.map(fase => `
     <div class="card" style="margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <h3 style="margin:0">${nombre}</h3>
-        <span class="badge badge-pendiente">Por definir</span>
+        <h3 style="margin:0">${fase.nombre}</h3>
+        <span class="badge ${fase.estado === 'Definidos' ? 'badge-activa' : 'badge-pendiente'}">${fase.estado}</span>
       </div>
-      ${Array.from({ length: partidos }, (_, i) => `
+      ${fase.partidos.map((partido, i) => `
         <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.2);border-radius:8px;padding:8px 10px;margin-bottom:5px">
-          <span style="color:#aaa;font-size:.82rem">Partido ${i + 1}</span>
-          <span style="color:#666;font-size:.78rem">Clasificados pendientes</span>
+          <span style="color:#aaa;font-size:.82rem">${partido.pendiente || `Partido ${i + 1}`}</span>
+          <span style="color:${partido.pendiente ? '#666' : 'var(--amarillo)'};font-size:.78rem;font-weight:${partido.pendiente ? '400' : '800'}">${partido.pendiente ? 'Clasificados pendientes' : `${partido.local} vs ${partido.visitante}`}</span>
+          ${partido.pendiente ? '' : `<span style="color:#888;font-size:.72rem;min-width:92px;text-align:right">${partido.fecha} ${partido.hora}</span>`}
         </div>
       `).join('')}
     </div>
@@ -1482,7 +1505,7 @@ function renderClasificacion() {
     ${gruposHtml}
     <div class="card">
       <h3>🏆 Eliminatorias</h3>
-      <p class="text-muted">Se completarán cuando terminen los grupos.</p>
+      <p class="text-muted">Horarios en España peninsular.</p>
     </div>
     ${fasesHtml}
   `;
