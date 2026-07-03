@@ -608,10 +608,7 @@ function calcularBotePorra(porraId) {
 }
 
 function valorOrdenPartido(partido) {
-  const fechaIdx = ORDEN_FECHAS.indexOf(partido.fecha);
-  const fechaOrden = fechaIdx >= 0 ? fechaIdx : 999;
-  const [hh = 99, mm = 0] = (partido.hora || '').replace('🌙', '').split(':').map(n => parseInt(n, 10));
-  return fechaOrden * 1440 + (Number.isNaN(hh) ? 0 : hh * 60) + (Number.isNaN(mm) ? 0 : mm);
+  return valorOrdenFecha(partido.fecha) * 1440 + valorOrdenHora(partido.hora);
 }
 
 function clavesPartidosOrdenadas(porra) {
@@ -1363,7 +1360,13 @@ function obtenerFechaCalendarioHoy() {
 }
 
 function valorOrdenFecha(fecha) {
-  const fechas = [...ORDEN_FECHAS, 'Dom 28 Jun', 'Lun 29 Jun', 'Mar 30 Jun', 'Mié 1 Jul', 'Jue 2 Jul', 'Vie 3 Jul', 'Sáb 4 Jul'];
+  const fechas = [
+    ...ORDEN_FECHAS,
+    'Dom 28 Jun', 'Lun 29 Jun', 'Mar 30 Jun', 'Mié 1 Jul', 'Jue 2 Jul', 'Vie 3 Jul', 'Sáb 4 Jul',
+    'Dom 5 Jul', 'Dom 05 Jul', 'Lun 6 Jul', 'Lun 06 Jul', 'Mar 7 Jul', 'Mar 07 Jul', 'Mié 8 Jul', 'Mié 08 Jul',
+    'Jue 9 Jul', 'Jue 09 Jul', 'Vie 10 Jul', 'Sáb 11 Jul', 'Dom 12 Jul', 'Lun 13 Jul', 'Mar 14 Jul',
+    'Mié 15 Jul', 'Jue 16 Jul', 'Vie 17 Jul', 'Sáb 18 Jul', 'Dom 19 Jul'
+  ];
   const idx = fechas.indexOf(fecha);
   return idx >= 0 ? idx : 999;
 }
