@@ -717,7 +717,11 @@ function renderApuestasParticipante() {
     return;
   }
   const apuestas = state.apuestas[participante] || {};
-  container.innerHTML = state.porras.map(p => {
+  const porrasOrdenadas = [
+    ...state.porras.filter(p => p.estado === 'activa'),
+    ...state.porras.filter(p => p.estado !== 'activa')
+  ];
+  container.innerHTML = porrasOrdenadas.map(p => {
     const ap = apuestas[p.id] || {};
     const esActiva = p.estado === 'activa';
     const pendiente = p.estado === 'pendiente';
