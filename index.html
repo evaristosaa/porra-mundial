@@ -137,6 +137,9 @@
   .bracket-team { display:flex; align-items:center; gap:3px; min-width:0; }
   .bracket-team-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .flag-img { width: 14px; height: 10px; object-fit: cover; border-radius: 1px; flex-shrink: 0; box-shadow: 0 0 0 1px rgba(255,255,255,.16); }
+  .team-inline { display:inline-flex; align-items:center; gap:4px; min-width:0; vertical-align:middle; }
+  .team-inline .flag-img { width: 16px; height: 11px; }
+  .match-inline { display:inline-flex; align-items:center; gap:5px; flex-wrap:wrap; }
   .champion-box { width: 78px; height: 78px; border-radius: 50%; border: 2px solid rgba(241,196,15,.45); display: flex; align-items: center; justify-content: center; text-align: center; color: var(--amarillo); font-weight: 900; font-size: .58rem; background: radial-gradient(circle, rgba(241,196,15,.16), rgba(0,0,0,.35)); justify-self:center; align-self:center; }
   .bracket-conn { position: relative; pointer-events: none; align-self: stretch; justify-self: stretch; }
   .bracket-conn::before, .bracket-conn::after { content: ''; position: absolute; border-color: rgba(241,196,15,.28); border-style: solid; }
@@ -656,7 +659,7 @@ function renderInicio() {
           ? '<div class="resultado-badge">' + pt.resultadoReal + '</div>'
           : '<div class="resultado-pendiente">Por jugar</div>';
         return '<div class="partido-row" style="margin-top:6px"><div>' +
-          '<div class="partido-equipos">' + (k==='p2'?'🇪🇸':'⚽') + ' ' + pt.local + ' vs ' + pt.visitante + '</div>' +
+          '<div class="partido-equipos">' + partidoConBanderas(pt) + '</div>' +
           '<div class="partido-fecha">📅 ' + pt.fecha + ' · ' + pt.hora + '</div>' +
           '</div>' + resHtml + '</div>';
       }).join('')}`;
@@ -671,7 +674,7 @@ function renderInicio() {
       <div class="flex-between" style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
         <div>
           <div style="font-weight:600;font-size:0.88rem">${p.nombre}</div>
-          <div style="font-size:0.72rem;color:#888">${p.p1.local} vs ${p.p1.visitante} (${p.p1.resultadoReal||'?'}) · 🇪🇸 ${p.p2.local} vs ${p.p2.visitante} (${p.p2.resultadoReal||'?'})</div>
+          <div style="font-size:0.72rem;color:#888">${partidoConBanderas(p.p1)} (${p.p1.resultadoReal||'?'}) · ${partidoConBanderas(p.p2)} (${p.p2.resultadoReal||'?'})</div>
         </div>
         ${p.estado === 'ganada'
           ? `<span style="color:#f1c40f;font-size:0.8rem;font-weight:700">🏆 ${p.ganador}</span>`
@@ -736,7 +739,7 @@ function renderApuestasParticipante() {
         return `
         <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.15);border-radius:8px;padding:7px 10px;margin-bottom:4px">
           <div>
-            <div style="font-size:.83rem;font-weight:600">${k==='p2'?'🇪🇸':''} ${pt.local} vs ${pt.visitante}</div>
+            <div style="font-size:.83rem;font-weight:600">${partidoConBanderas(pt)}</div>
             <div style="font-size:.7rem;color:#888">${pt.fecha} ${pt.hora}</div>
           </div>
           <div style="font-weight:800;font-size:1rem;color:${okk?'#2ecc71':failk?'#e74c3c':'#aaa'}">
@@ -812,7 +815,7 @@ function renderRanking() {
   const porrasVis = state.porras.filter(p => p.estado !== 'pendiente');
   if (porrasVis.length === 0) { hdr.innerHTML=''; bdy.innerHTML='<tr><td colspan="3" class="text-muted" style="padding:16px;text-align:center">Sin datos aún</td></tr>'; return; }
   hdr.innerHTML = '<th class="td-nombre">Nombre</th>' +
-    porrasVis.map(p=>`<th>${p.p1.local.substring(0,3).toUpperCase()} vs ${p.p1.visitante.substring(0,3).toUpperCase()}<br><span style="font-size:.58rem;color:#888">${p.p1.fecha}</span><br><span style="font-size:.7rem;color:#e91e8c">+ 🇪🇸 ${p.p2.visitante.substring(0,3).toUpperCase()}</span></th>`).join('') +
+    porrasVis.map(p=>`<th>${partidoConBanderas(p.p1)}<br><span style="font-size:.58rem;color:#888">${p.p1.fecha}</span><br><span style="font-size:.7rem;color:#e91e8c">${partidoConBanderas(p.p2)}</span></th>`).join('') +
     '<th>€</th><th>✅</th>';
   bdy.innerHTML = sorted.map(([nombre]) => {
     const celdas = porrasVis.map(p => {
@@ -884,7 +887,7 @@ function renderEstado() {
       <div style="font-size:0.78rem;color:#888;margin-bottom:8px">
         ${partidosOrdenados.map(k => {
           const pt = porra[k];
-          return `${k === 'p2' ? '🇪🇸' : '⚽'} ${pt.local} vs ${pt.visitante} · 📅 ${pt.fecha} ${pt.hora} ${pt.resultadoReal?`· <b style="color:#2ecc71">${pt.resultadoReal}</b>`:''}`;
+          return `${partidoConBanderas(pt)} · 📅 ${pt.fecha} ${pt.hora} ${pt.resultadoReal?`· <b style="color:#2ecc71">${pt.resultadoReal}</b>`:''}`;
         }).join('<br>')}
       </div>
       <div style="overflow-x:auto">
@@ -893,7 +896,7 @@ function renderEstado() {
             <th style="text-align:left;padding-left:8px">Jugador</th>
             ${partidosOrdenados.map(k => {
               const pt = porra[k];
-              return `<th>${k === 'p2' ? '🇪🇸 ' : '⚽ '}${pt.local} vs ${pt.visitante}<br><span style="font-size:.58rem;color:#888">${pt.fecha} ${pt.hora}</span></th>`;
+              return `<th>${partidoConBanderas(pt)}<br><span style="font-size:.58rem;color:#888">${pt.fecha} ${pt.hora}</span></th>`;
             }).join('')}
             <th>Estado</th>
           </tr></thead>
@@ -937,23 +940,22 @@ function abrirModal(participante, porraId) {
   document.getElementById('modal-title').textContent = `🎯 ${participante} · ${porra.nombre}`;
   document.getElementById('modal-content').innerHTML =
     clavesPartidosOrdenadas(porra).map(k => {
-      const ico = k === 'p2' ? '🇪🇸' : '⚽';
       const pt = porra[k];
       const apK = apActual[k] || '';
       const [gAk, gBk] = apK ? apK.split('-') : ['',''];
       return `<div style="margin-bottom:14px">
         <div style="text-align:center;margin-bottom:8px">
-          <div style="font-weight:700;font-size:.95rem">${ico} ${pt.local} vs ${pt.visitante}</div>
+          <div style="font-weight:700;font-size:.95rem">${partidoConBanderas(pt)}</div>
           <div style="font-size:.75rem;color:#888">📅 ${pt.fecha} · ${pt.hora}</div>
         </div>
         <div style="display:flex;align-items:center;justify-content:center;gap:10px">
           <div style="text-align:center">
-            <div style="font-size:.7rem;color:#aaa;margin-bottom:3px">${pt.local}</div>
+            <div style="font-size:.7rem;color:#aaa;margin-bottom:3px">${equipoConBandera(pt.local)}</div>
             <input type="number" min="0" max="20" id="gol-${k}-a" value="${gAk}" placeholder="0" style="width:55px;font-size:1.5rem;text-align:center;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:white;padding:7px;border-radius:8px;font-weight:900">
           </div>
           <div style="font-size:1.6rem;font-weight:900;color:#888;padding-top:16px">—</div>
           <div style="text-align:center">
-            <div style="font-size:.7rem;color:#aaa;margin-bottom:3px">${pt.visitante}</div>
+            <div style="font-size:.7rem;color:#aaa;margin-bottom:3px">${equipoConBandera(pt.visitante)}</div>
             <input type="number" min="0" max="20" id="gol-${k}-b" value="${gBk}" placeholder="0" style="width:55px;font-size:1.5rem;text-align:center;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);color:white;padding:7px;border-radius:8px;font-weight:900">
           </div>
         </div>
@@ -1089,11 +1091,10 @@ function renderAdminResultado() {
   el.innerHTML = `
     <p style="font-size:.82rem;color:#aaa;margin-bottom:10px">${activa.nombre}</p>
     ${clavesPartidosOrdenadas(activa).map(k => {
-      const ico = k === 'p2' ? '🇪🇸' : '⚽';
       const pt = activa[k];
       const [gA,gB] = pt.resultadoReal ? pt.resultadoReal.split('-') : ['',''];
       return `<div style="margin-bottom:10px">
-        <div style="font-size:.78rem;color:#aaa;margin-bottom:5px">${ico} ${pt.local} vs ${pt.visitante} · ${pt.fecha}</div>
+        <div style="font-size:.78rem;color:#aaa;margin-bottom:5px">${partidoConBanderas(pt)} · ${pt.fecha}</div>
         <div class="form-row">
           <div class="res-input">
             <input type="number" min="0" max="20" id="res-${k}-a" value="${gA}" placeholder="0">
@@ -1144,7 +1145,7 @@ function renderAdminResolver() {
   });
 
   el.innerHTML = `
-    <p style="font-size:.82rem;margin-bottom:12px">${activa.nombre} · ${clavesPartidosOrdenadas(activa).map(k => `${k === 'p2' ? '🇪🇸 ' : ''}${activa[k].local} vs ${activa[k].visitante}: <b style="color:#2ecc71">${activa[k].resultadoReal||'?'}</b>`).join(' · ')}</p>
+    <p style="font-size:.82rem;margin-bottom:12px">${activa.nombre} · ${clavesPartidosOrdenadas(activa).map(k => `${partidoConBanderas(activa[k])}: <b style="color:#2ecc71">${activa[k].resultadoReal||'?'}</b>`).join(' · ')}</p>
     ${ganadores.length > 0
       ? `<p style="color:#2ecc71;margin-bottom:10px">🏆 Ganador${ganadores.length>1?'es':''}: <b>${ganadores.join(', ')}</b></p>
          <div class="form-row">
@@ -1302,6 +1303,30 @@ const GRUPOS_MUNDIAL = [
 
 const ORDEN_FECHAS = ['Jue 11 Jun','Vie 12 Jun','Sáb 13 Jun','Dom 14 Jun','Lun 15 Jun','Mar 16 Jun','Mié 17 Jun','Jue 18 Jun','Vie 19 Jun','Sáb 20 Jun','Dom 21 Jun','Lun 22 Jun','Mar 23 Jun','Mié 24 Jun','Jue 25 Jun','Vie 26 Jun','Sáb 27 Jun'];
 const GRUPO_COLORS = {A:'#e74c3c',B:'#e67e22',C:'#f1c40f',D:'#2ecc71',E:'#1abc9c',F:'#3498db',G:'#9b59b6',H:'#e91e8c',I:'#ff5722',J:'#00bcd4',K:'#8bc34a',L:'#ff9800'};
+const FLAG_CODES = {
+  'Sudáfrica':'za', 'Canadá':'ca', 'Brasil':'br', 'Japón':'jp',
+  'Alemania':'de', 'Paraguay':'py', 'Países Bajos':'nl', 'Marruecos':'ma',
+  'Costa de Marfil':'ci', 'Noruega':'no', 'Francia':'fr', 'Suecia':'se',
+  'México':'mx', 'Ecuador':'ec', 'Inglaterra':'gb-eng', 'R.D. Congo':'cd',
+  'Bélgica':'be', 'Senegal':'sn', 'EE.UU.':'us', 'Bosnia':'ba',
+  'España':'es', 'Austria':'at', 'Portugal':'pt', 'Croacia':'hr',
+  'Suiza':'ch', 'Argelia':'dz', 'Australia':'au', 'Egipto':'eg',
+  'Argentina':'ar', 'Cabo Verde':'cv', 'Colombia':'co', 'Ghana':'gh',
+  'Cabo Verde':'cv', 'Arabia Saudí':'sa', 'Uruguay':'uy', 'Irán':'ir',
+  'Nueva Zelanda':'nz', 'Irak':'iq', 'Qatar':'qa', 'Corea del Sur':'kr',
+  'Rep. Checa':'cz', 'Haití':'ht', 'Escocia':'gb-sct', 'Turquía':'tr',
+  'Curazao':'cw', 'Uzbekistán':'uz', 'Panamá':'pa'
+};
+function banderaPais(nombre) {
+  const code = FLAG_CODES[nombre];
+  return code ? `<img class="flag-img" src="https://flagcdn.com/${code}.svg" alt="">` : '';
+}
+function equipoConBandera(nombre) {
+  return `<span class="team-inline">${banderaPais(nombre)}<span>${nombre}</span></span>`;
+}
+function partidoConBanderas(partido) {
+  return `<span class="match-inline">${equipoConBandera(partido.local)} <span style="color:#888">vs</span> ${equipoConBandera(partido.visitante)}</span>`;
+}
 const ELIMINATORIAS = [
   {
     nombre: 'Dieciseisavos',
@@ -1398,7 +1423,7 @@ function renderListaEliminatorias(filtroFecha = 'all') {
             <div style="font-size:.76rem;font-weight:900;color:${p.hora.includes('🌙')?'#f39c12':'#fff'}">${p.hora.replace('🌙','')}</div>
             <div style="font-size:.62rem;color:#888">${p.fecha}</div>
           </div>
-          <div style="flex:1;min-width:0;font-weight:800;font-size:.86rem">⚽ ${p.local} <span style="color:#888">vs</span> ${p.visitante}</div>
+          <div style="flex:1;min-width:0;font-weight:800;font-size:.86rem">${partidoConBanderas(p)}</div>
           <span style="flex-shrink:0;background:rgba(241,196,15,.14);border:1px solid rgba(241,196,15,.38);color:var(--amarillo);border-radius:10px;padding:2px 7px;font-size:.68rem;font-weight:800">${fase.nombre}</span>
         </div>`).join('')}
     `).join('')}
@@ -1439,7 +1464,7 @@ function renderCalendario() {
             ${mad?'<div style="font-size:.6rem;color:#f39c12">🌙</div>':''}
           </div>
           <div style="flex:1;min-width:0">
-            <div style="font-weight:700;font-size:.86rem">⚽ ${p.local} <span style="color:#888">vs</span> ${p.visitante}</div>
+            <div style="font-weight:700;font-size:.86rem">${partidoConBanderas(p)}</div>
             <div style="font-size:.68rem;color:#666;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.sede}</div>
           </div>
           ${p.resultado ? `<span style="flex-shrink:0;background:rgba(46,204,113,.2);border:1px solid rgba(46,204,113,.45);color:#2ecc71;border-radius:8px;padding:3px 8px;font-size:.78rem;font-weight:900">${p.resultado}</span>` : ''}
@@ -1505,21 +1530,7 @@ function renderClasificacion() {
   const el = document.getElementById('clasificacion-container');
   if (!el) return;
 
-  const FLAG_CODES = {
-    'Sudáfrica':'za', 'Canadá':'ca', 'Brasil':'br', 'Japón':'jp',
-    'Alemania':'de', 'Paraguay':'py', 'Países Bajos':'nl', 'Marruecos':'ma',
-    'Costa de Marfil':'ci', 'Noruega':'no', 'Francia':'fr', 'Suecia':'se',
-    'México':'mx', 'Ecuador':'ec', 'Inglaterra':'gb-eng', 'R.D. Congo':'cd',
-    'Bélgica':'be', 'Senegal':'sn', 'EE.UU.':'us', 'Bosnia':'ba',
-    'España':'es', 'Austria':'at', 'Portugal':'pt', 'Croacia':'hr',
-    'Suiza':'ch', 'Argelia':'dz', 'Australia':'au', 'Egipto':'eg',
-    'Argentina':'ar', 'Cabo Verde':'cv', 'Colombia':'co', 'Ghana':'gh'
-  };
-  const equipoHtml = nombre => {
-    const code = FLAG_CODES[nombre];
-    const flag = code ? `<img class="flag-img" src="https://flagcdn.com/${code}.svg" alt="">` : '';
-    return `<div class="bracket-team">${flag}<span class="bracket-team-name">${nombre}</span></div>`;
-  };
+  const equipoHtml = nombre => equipoConBandera(nombre).replace('team-inline', 'bracket-team').replace('<span>' + nombre + '</span>', `<span class="bracket-team-name">${nombre}</span>`);
   const r32 = ELIMINATORIAS[0].partidos;
   const matchBox = (partido, label, gridStyle = '') => `<div class="bracket-match fill ${partido.pendiente ? 'pending' : ''}" style="${gridStyle}">
     <div style="color:var(--amarillo);font-size:.58rem;font-weight:900;text-transform:uppercase;margin-bottom:3px">${label}</div>
