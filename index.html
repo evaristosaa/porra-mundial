@@ -51,15 +51,24 @@
     margin: 0 auto 14px;
     border-radius: 10px;
     background:
-      linear-gradient(90deg, rgba(255,255,255,.28), transparent 18%, rgba(0,0,0,.16) 34%, transparent 52%, rgba(255,255,255,.2) 68%, transparent 86%),
+      repeating-linear-gradient(105deg, rgba(255,255,255,.28) 0 8%, rgba(255,255,255,0) 11% 20%, rgba(0,0,0,.18) 23% 31%, rgba(255,255,255,0) 34% 43%),
       linear-gradient(to bottom, #aa151b 0 25%, #f1bf00 25% 75%, #aa151b 75% 100%);
+    background-size: 180% 100%, 100% 100%;
     box-shadow: 0 10px 26px rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.28);
     transform-origin: left center;
-    animation: spainFlagWave 2.2s ease-in-out infinite;
+    animation: spainFlagWave 2.6s ease-in-out infinite;
   }
   @keyframes spainFlagWave {
-    0%, 100% { transform: perspective(620px) rotateY(-8deg) skewY(0deg); filter: brightness(1); }
-    50% { transform: perspective(620px) rotateY(9deg) skewY(-2deg); filter: brightness(1.08); }
+    0%, 100% {
+      clip-path: polygon(0 4%, 12% 8%, 25% 4%, 38% 8%, 51% 4%, 64% 8%, 77% 4%, 90% 8%, 100% 4%, 100% 96%, 90% 92%, 77% 96%, 64% 92%, 51% 96%, 38% 92%, 25% 96%, 12% 92%, 0 96%);
+      background-position: 0% 0, 0 0;
+      transform: perspective(700px) rotateY(-7deg) translateY(0);
+    }
+    50% {
+      clip-path: polygon(0 8%, 12% 4%, 25% 8%, 38% 4%, 51% 8%, 64% 4%, 77% 8%, 90% 4%, 100% 8%, 100% 92%, 90% 96%, 77% 92%, 64% 96%, 51% 92%, 38% 96%, 25% 92%, 12% 96%, 0 92%);
+      background-position: 100% 0, 0 0;
+      transform: perspective(700px) rotateY(7deg) translateY(-2px);
+    }
   }
   .final-home-kicker { font-size: .82rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
   .final-home-title { font-size: clamp(2.4rem, 8vw, 5.2rem); font-weight: 1000; line-height: .95; text-transform: uppercase; text-shadow: 2px 2px 0 rgba(255,255,255,.35); }
