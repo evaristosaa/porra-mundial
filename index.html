@@ -35,6 +35,20 @@
   .card h3 { font-size: 0.95rem; margin-bottom: 10px; color: var(--amarillo); }
 
   /* BOTE */
+  .final-home-banner {
+    background: linear-gradient(135deg, #c0392b 0%, #f1c40f 48%, #c0392b 100%);
+    color: #1a1a2e;
+    border-radius: 16px;
+    padding: 20px 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(241,196,15,.35);
+    border: 2px solid rgba(255,255,255,.22);
+  }
+  .final-home-kicker { font-size: .82rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+  .final-home-title { font-size: clamp(2.4rem, 8vw, 5.2rem); font-weight: 1000; line-height: .95; text-transform: uppercase; text-shadow: 2px 2px 0 rgba(255,255,255,.35); }
+  .final-home-sub { margin-top: 8px; font-size: 1rem; font-weight: 800; }
+
   .bote-banner { background: linear-gradient(135deg, #f1c40f, #e67e22); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(241,196,15,.3); }
   .bote-label { font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: #333; letter-spacing: 1px; }
   .bote-cantidad { font-size: 3rem; font-weight: 900; color: #1a1a2e; line-height: 1; }
@@ -183,6 +197,11 @@
 
 <!-- INICIO -->
 <div id="tab-inicio" class="panel active">
+  <div class="final-home-banner">
+    <div class="final-home-kicker">🇪🇸 Hoy juega España la final</div>
+    <div class="final-home-title">¡VAMOS ESPAÑA!</div>
+    <div class="final-home-sub">A por el Mundial 2026</div>
+  </div>
   <div class="bote-banner">
     <div class="bote-label">💰 Bote acumulado</div>
     <div class="bote-cantidad" id="bote-total">0 €</div>
