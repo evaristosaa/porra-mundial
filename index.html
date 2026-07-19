@@ -45,6 +45,22 @@
     box-shadow: 0 4px 24px rgba(241,196,15,.35);
     border: 2px solid rgba(255,255,255,.22);
   }
+  .spain-flag-wave {
+    width: min(420px, 90%);
+    aspect-ratio: 3 / 2;
+    margin: 0 auto 14px;
+    border-radius: 10px;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,.28), transparent 18%, rgba(0,0,0,.16) 34%, transparent 52%, rgba(255,255,255,.2) 68%, transparent 86%),
+      linear-gradient(to bottom, #aa151b 0 25%, #f1bf00 25% 75%, #aa151b 75% 100%);
+    box-shadow: 0 10px 26px rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.28);
+    transform-origin: left center;
+    animation: spainFlagWave 2.2s ease-in-out infinite;
+  }
+  @keyframes spainFlagWave {
+    0%, 100% { transform: perspective(620px) rotateY(-8deg) skewY(0deg); filter: brightness(1); }
+    50% { transform: perspective(620px) rotateY(9deg) skewY(-2deg); filter: brightness(1.08); }
+  }
   .final-home-kicker { font-size: .82rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
   .final-home-title { font-size: clamp(2.4rem, 8vw, 5.2rem); font-weight: 1000; line-height: .95; text-transform: uppercase; text-shadow: 2px 2px 0 rgba(255,255,255,.35); }
   .final-home-sub { margin-top: 8px; font-size: 1rem; font-weight: 800; }
@@ -198,6 +214,7 @@
 <!-- INICIO -->
 <div id="tab-inicio" class="panel active">
   <div class="final-home-banner">
+    <div class="spain-flag-wave" aria-label="Bandera de España ondeando"></div>
     <div class="final-home-kicker">🇪🇸 Hoy juega España la final</div>
     <div class="final-home-title">¡VAMOS ESPAÑA!</div>
     <div class="final-home-sub">A por el Mundial 2026</div>
